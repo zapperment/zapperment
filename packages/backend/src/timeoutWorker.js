@@ -1,5 +1,11 @@
-const { parentPort, workerData } = require("worker_threads");
+const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { STOP_WORKER } = require("./constants");
+
+if (isMainThread) {
+  throw new Error(
+    "Module timeoutWorker.js may only be used as a worker thread"
+  );
+}
 
 const time = Date.now();
 let running = true;

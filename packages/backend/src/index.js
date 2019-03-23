@@ -1,15 +1,19 @@
-const { setInterval, setTimeout, cancelInterval } = require("./timeout");
-const start = Date.now();
+const path = require("path");
+const runWorker = require("./runWorker");
+const { START_PLAYING } = require("./constants");
 
-console.log(Date.now() - start, "setting interval for blub");
-const handle = setInterval(() => console.log(Date.now() - start, "BLUB"), 1000);
-console.log(Date.now() - start, "setting timeout to cancel blub", handle);
-setTimeout(
-  () =>
-    console.log(
-      Date.now() - start,
-      cancelInterval(handle) ? "cancelled" : "not cancelled",
-      handle
-    ),
-  3500
+const midiBeat = runWorker(
+  path.join(__dirname, "./midiBeatWorker.js"),
+  err => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("done");
+  },
+  {
+    tempo: 120
+  }
 );
+
+midiBeat.postMessage(START_PLAYING);
