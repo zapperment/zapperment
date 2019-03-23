@@ -1,5 +1,7 @@
 const uuidv4 = require("uuid/v4");
 const runWorker = require("./runWorker");
+const path = require("path");
+const { STOP_WORKER } = require("./constants");
 
 const timeoutState = {};
 const intervalState = {};
@@ -32,7 +34,7 @@ const setTimeout = (callback, time) => {
 
 const cancelTimeout = id => {
   if (timeoutState[id]) {
-    timeoutState[id].terminate();
+    timeoutState[id].postMessage(STOP_WORKER);
     timeoutState[id] = undefined;
     return true;
   }
@@ -56,7 +58,11 @@ const setInterval = (callback, time) => {
   const id = uuidv4();
 
   function execute() {
-    intervalState[id] = setTimeout(() => {
+    intervalState[id] = setTimeout(err => {
+      if (err) {
+        console.error(err);
+        return;
+      }
       callback();
       execute();
     }, time);
