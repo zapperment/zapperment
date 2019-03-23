@@ -1,0 +1,28 @@
+{
+  "name": "zapperment",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pahund/zapperment.git"
+  },
+  "author": "Patrick Hund <pahund@team.mobile.de> (https://ebaytech.berlin/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pahund/zapperment/issues"
+  },
+  "homepage": "https://github.com/pahund/zapperment#readme",
+  "devDependencies": {
+    "prettier": "^1.16.4"
+  },
+  "dependencies": {
+    "uuid": "^3.3.2"
+  }
+}
