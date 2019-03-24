@@ -1,5 +1,7 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { START_PLAYING, STOP_PLAYING, STOP_WORKER } = require("./constants");
+const { midiPortName } = require("./config");
+const jzz = require("jzz");
 
 if (isMainThread) {
   throw new Error(
@@ -8,7 +10,6 @@ if (isMainThread) {
 }
 let nextBeatTime = null;
 let running = true;
-let beats = 0;
 const beatInterval = 60000 / workerData.tempo;
 
 parentPort.on("message", message => {
@@ -40,5 +41,10 @@ function run() {
 run();
 
 function beat() {
-  console.log("BEAT!", ++beats);
+  jzz()
+    .openMidiOut(midiPortName)
+    .or("Cannot open MIDI Out port!")
+    .send([0x90, 60, 127]) // note on
+    .wait(500)
+    .send([0x80, 60, 0]); // note off
 }
