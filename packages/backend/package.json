@@ -4,7 +4,7 @@
   "description": "Zapperment backend (Express server)",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon",
+    "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Patrick Hund <pahund@team.mobile.de> (https://ebaytech.berlin/)",

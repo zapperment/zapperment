@@ -1,8 +1,3 @@
-const { BEAT } = require("./constants");
-const init = require("./init");
+const start = require("./start");
 
-init();
-
-module.exports = {
-  BEAT
-};
+start();
