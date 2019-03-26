@@ -4,11 +4,12 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@zapperment/shared": "^0.0.1",
+    "classnames": "^2.2.6",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "react-scripts": "2.1.8",
-    "socket.io-client": "^2.2.0",
-    "@zapperment/shared": "^0.0.1"
+    "socket.io-client": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
