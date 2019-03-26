@@ -1,5 +1,11 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
-const { START_PLAYING, STOP_PLAYING, STOP_WORKER } = require("./constants");
+const {
+  START_PLAYING,
+  STOP_PLAYING,
+  STOP_WORKER,
+  WORKER_STOPPED,
+} = require("./constants");
+const { BEAT } = require('@zapperment/shared');
 const { midiPortName } = require("./config");
 const jzz = require("jzz");
 
@@ -29,7 +35,7 @@ parentPort.on("message", message => {
 
 function run() {
   if (!running) {
-    parentPort.postMessage({});
+    parentPort.postMessage(WORKER_STOPPED);
     return;
   }
   if (nextBeatTime && Date.now() > nextBeatTime) {
@@ -47,4 +53,5 @@ function beat() {
     .send([0x90, 60, 127]) // note on
     .wait(500)
     .send([0x80, 60, 0]); // note off
+  parentPort.postMessage(BEAT);
 }
