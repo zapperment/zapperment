@@ -4,7 +4,7 @@ const openSocket = require('socket.io');
 const path = require('path');
 const { Worker } = require('worker_threads');
 const { START_PLAYING } = require('./constants');
-const { BEAT } = require('@zapperment/shared');
+const { BEAT, STATS_CLAP } = require('@zapperment/shared');
 const { initialTempo, port } = require('./config');
 
 module.exports = () => {
@@ -14,6 +14,12 @@ module.exports = () => {
   const midiBeat = new Worker(path.join(__dirname, './midiBeatWorker.js'), {
     workerData: { tempo: initialTempo },
   });
+  
+  io.on('connection', (socket) => {
+   socket.on(STATS_CLAP, () => {
+     console.log("clap received");
+   });
+    
   midiBeat.on('message', message => {
     switch (message) {
       case BEAT:
@@ -23,6 +29,7 @@ module.exports = () => {
     }
   });
 
+
   db.init(err => {
     if (err) {
       throw err;
@@ -30,4 +37,5 @@ module.exports = () => {
     midiBeat.postMessage(START_PLAYING);
     app.listen(port);
   });
+ });
 };
