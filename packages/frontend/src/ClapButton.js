@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { STATS_CLAP } from "@zapperment/shared";
 import cx from "classnames";
-import "./ClapButton.css";
+import icon from "./icons/clap.svg";
+
+import styles from "./ClapButton.module.css";
 
 export default ({ socket }) => {
   const [clapsCount, updateClapsCount] = useState(0);
@@ -13,8 +15,11 @@ export default ({ socket }) => {
 
   return (
     <button
-      className={cx("ClapButton")}
+      className={cx(styles.component)}
       onClick={handleClick}
-    >{`Clap [${clapsCount}]`}</button>
+    >
+      <img src={icon} alt="clap" className={styles.icon} />
+      <span className={styles.label}>{`${clapsCount} claps`}</span>
+    </button>
   );
 };

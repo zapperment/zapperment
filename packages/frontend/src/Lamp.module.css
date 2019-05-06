@@ -1,4 +1,4 @@
-.Lamp {
+.component {
   width: 20px;
   height: 20px;
   border-radius: 50px;
@@ -6,7 +6,7 @@
   transition: all 1s cubic-bezier(0.3, 0.93, 0.56, 0.96);
 }
 
-.Lamp.on {
+.isOn {
   background-color: lime;
   transition: all 0s;
   box-shadow: 0 0 4px 2px lime;

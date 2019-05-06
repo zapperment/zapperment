@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
-import './App.css';
 import io from 'socket.io-client';
 import Lamp from './Lamp';
 import ClapButton from "./ClapButton";
+
+import styles from './App.module.css';
 
 const socket = io('http://localhost:3001');
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div className={styles.component}>
         <Lamp socket={socket} />
 
-        <ClapButton socket={socket} />
+        <div className={styles.actions}>
+          <ClapButton socket={socket} />
+        </div>
+
       </div>
     );
   }
