@@ -1,25 +1,18 @@
 const db = require('./db');
 const http = require('http');
-const openSocket = require('socket.io');
+const socket = require('./socket');
 const path = require('path');
 const { Worker } = require('worker_threads');
 const { START_PLAYING } = require('./constants');
-const { BEAT, STATS_CLAP } = require('@zapperment/shared');
+const { BEAT } = require('@zapperment/shared');
 const { initialTempo, port } = require('./config');
 
 module.exports = () => {
   const app = http.createServer();
-  const io = openSocket(app);
-  
-  io.set('origins', '*:*');
+  const io = socket.configure(app);
+
   const midiBeat = new Worker(path.join(__dirname, './midiBeatWorker.js'), {
     workerData: { tempo: initialTempo },
-  });
-
-  io.on('connection', socket => {
-    socket.on(STATS_CLAP, () => {
-      console.log('clap received');
-    });
   });
 
   midiBeat.on('message', message => {
