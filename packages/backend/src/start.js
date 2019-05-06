@@ -3,15 +3,20 @@ const http = require('http');
 const socket = require('./socket');
 const path = require('path');
 const { Worker } = require('worker_threads');
-const { START_PLAYING } = require('./constants');
+const { START_PLAYING, STOP_PLAYING } = require('./constants');
 const { BEAT, NEW_SCENE } = require('@zapperment/shared');
 const { initialTempo, port } = require('./config');
+
+let midiBeat = null;
+
+process.on('SIGTERM', stop);
+process.on('SIGINT', stop);
 
 module.exports = () => {
   const app = http.createServer();
   const io = socket.configure(app);
 
-  const midiBeat = new Worker(path.join(__dirname, './midiBeatWorker.js'), {
+  midiBeat = new Worker(path.join(__dirname, './midiBeatWorker.js'), {
     workerData: { tempo: initialTempo },
   });
 
@@ -35,3 +40,7 @@ module.exports = () => {
     app.listen(port);
   });
 };
+
+function stop() {
+  midiBeat.postMessage(STOP_PLAYING);
+}
