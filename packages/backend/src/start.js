@@ -10,16 +10,18 @@ const { initialTempo, port } = require('./config');
 module.exports = () => {
   const app = http.createServer();
   const io = openSocket(app);
+  
   io.set('origins', '*:*');
   const midiBeat = new Worker(path.join(__dirname, './midiBeatWorker.js'), {
     workerData: { tempo: initialTempo },
   });
-  
-  io.on('connection', (socket) => {
-   socket.on(STATS_CLAP, () => {
-     console.log("clap received");
-   });
-    
+
+  io.on('connection', socket => {
+    socket.on(STATS_CLAP, () => {
+      console.log('clap received');
+    });
+  });
+
   midiBeat.on('message', message => {
     switch (message) {
       case BEAT:
@@ -29,7 +31,6 @@ module.exports = () => {
     }
   });
 
-
   db.init(err => {
     if (err) {
       throw err;
@@ -37,5 +38,4 @@ module.exports = () => {
     midiBeat.postMessage(START_PLAYING);
     app.listen(port);
   });
- });
 };
