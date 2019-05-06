@@ -10,10 +10,11 @@
   "author": "Patrick Hund <pahund@team.mobile.de> (https://ebaytech.berlin/)",
   "license": "MIT",
   "dependencies": {
+    "@zapperment/shared": "^0.0.1",
     "express": "^4.16.4",
     "jzz": "^0.7.1",
+    "mongodb": "^3.2.3",
     "nodemon": "^1.18.10",
-    "socket.io": "^2.2.0",
-    "@zapperment/shared": "^0.0.1"
+    "socket.io": "^2.2.0"
   }
 }
