@@ -3,7 +3,7 @@ const openSocket = require("socket.io");
 const path = require("path");
 const { Worker } = require("worker_threads");
 const { START_PLAYING } = require("./constants");
-const { BEAT } = require("@zapperment/shared");
+const { BEAT, STATS_CLAP } = require("@zapperment/shared");
 const { initialTempo, port } = require("./config");
 
 module.exports = () => {
@@ -26,4 +26,10 @@ module.exports = () => {
       default:
     }
   });
+
+  io.on('connection', (socket) => {
+   socket.on(STATS_CLAP, () => {
+     console.log("clap received");
+   });
+ });
 };

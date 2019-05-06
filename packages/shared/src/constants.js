@@ -1,3 +1,4 @@
 module.exports = {
-  BEAT: "beat"
+  BEAT: "beat",
+  STATS_CLAP: "statsClap",
 };
