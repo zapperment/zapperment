@@ -5,19 +5,19 @@ const path = require('path');
 const { Worker } = require('worker_threads');
 const { START_PLAYING, STOP_PLAYING } = require('./constants');
 const { BEAT, NEW_SCENE } = require('@zapperment/shared');
-const { initialTempo, port } = require('./config');
+const { initialTempo, barsPerLoop, port } = require('./config');
 
 let midiBeat = null;
 
-process.on('SIGTERM', stop);
-process.on('SIGINT', stop);
+process.on("SIGTERM", stop);
+process.on("SIGINT", stop);
 
 module.exports = () => {
   const app = http.createServer();
   const io = socket.configure(app);
 
   midiBeat = new Worker(path.join(__dirname, './midiBeatWorker.js'), {
-    workerData: { tempo: initialTempo },
+    workerData: { tempo: initialTempo, barsPerLoop },
   });
 
   midiBeat.on('message', message => {
