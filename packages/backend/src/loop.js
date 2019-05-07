@@ -14,6 +14,9 @@ const loop = {
         { channel: 8, mute: true },
         { channel: 9, mute: true },
       ],
+      percussion: {
+        pattern: 0,
+      },
     },
     previous: {
       mixer: [
@@ -27,6 +30,9 @@ const loop = {
         { channel: 8, mute: true },
         { channel: 9, mute: true },
       ],
+      percussion: {
+        pattern: 0,
+      },
     },
   },
   stats: {
