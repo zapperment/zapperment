@@ -1,5 +1,6 @@
 const db = require('./db');
 const http = require('http');
+const express = require('express');
 const socket = require('./socket');
 const path = require('path');
 const { Worker } = require('worker_threads');
@@ -14,8 +15,9 @@ process.on('SIGTERM', stop);
 process.on('SIGINT', stop);
 
 module.exports = () => {
-  const app = http.createServer();
-  const io = socket.configure(app);
+  const app = express();
+  const server = http.Server(app);
+  const io = socket.configure(server);
 
   midiBeat = new Worker(path.join(__dirname, './midiBeatWorker.js'), {
     workerData: { tempo: initialTempo, barsPerLoop },
@@ -39,7 +41,7 @@ module.exports = () => {
       throw err;
     }
     midiBeat.postMessage(START_PLAYING);
-    app.listen(port);
+    server.listen(port);
   });
 };
 
