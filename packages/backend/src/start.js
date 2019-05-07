@@ -4,7 +4,7 @@ const socket = require('./socket');
 const path = require('path');
 const { Worker } = require('worker_threads');
 const { START_PLAYING, STOP_PLAYING } = require('./constants');
-const { BEAT, NEW_SCENE } = require('@zapperment/shared');
+const { BEAT, NEW_SCENE, STATS_RESET_CLAP } = require('@zapperment/shared');
 const { initialTempo, barsPerLoop, port } = require('./config');
 const { updateScene } = require('./loop');
 
@@ -28,6 +28,7 @@ module.exports = () => {
         break;
       case NEW_SCENE:
         updateScene(message.data);
+        io.emit(STATS_RESET_CLAP, { for: 'everyone' });
         break;
       default:
     }

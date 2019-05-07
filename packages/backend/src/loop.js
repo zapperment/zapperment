@@ -47,6 +47,7 @@ const updateScene = async scene => {
   });
   loop.scene.previous = loop.scene.current;
   loop.scene.current = scene;
+  loop.stats.claps = 0;
 };
 
 module.exports = {

@@ -19,6 +19,6 @@
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
-    "jest": "^24.8.0"
+    "jest": "^23.6.0"
   }
 }
