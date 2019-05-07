@@ -5,7 +5,7 @@ import ClapButton from "./ClapButton";
 
 import styles from './App.module.css';
 
-const socket = io('http://localhost:3001');
+const socket = io(':3001');
 
 class App extends Component {
   render() {

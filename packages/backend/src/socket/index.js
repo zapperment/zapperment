@@ -10,6 +10,7 @@ module.exports = {
 
     io.on('connection', socket => {
       socket.on(STATS_CLAP, () => {
+        console.log('CLAPPED!'); // PH_TODO
         loop.stats.claps++;
       });
     });
