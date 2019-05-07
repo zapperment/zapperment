@@ -7,6 +7,7 @@ const {
 } = require("./constants");
 const { BEAT } = require("@zapperment/shared");
 const { midiPortName } = require("./config");
+const MidiClock = require('./MidiClock');
 const jzz = require("jzz");
 const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
@@ -18,23 +19,22 @@ if (isMainThread) {
     "Module midiBeatWorker.js may only be used as a worker thread"
   );
 }
-let nextClockTime = null;
 let running = true;
+let midiClock = null;
 let midiOut = jzz()
   .openMidiOut(midiPortName)
   .or("Cannot open MIDI Out port!");
-const clockInterval = 60000 / tempo / clocksPerBeat;
 let clockCounter = 0;
 
 parentPort.on("message", message => {
   switch (message) {
     case START_PLAYING:
       midiOut.send(jzz.MIDI.start());
-      nextClockTime = Date.now();
+      midiClock = new MidiClock(tempo);
       break;
     case STOP_PLAYING:
       midiOut.send(jzz.MIDI.stop());
-      nextClockTime = null;
+      midiClock = null;
       break;
     case STOP_WORKER:
       running = false;
@@ -48,8 +48,7 @@ function run() {
     parentPort.postMessage(WORKER_STOPPED);
     return;
   }
-  const now = Date.now();
-  if (nextClockTime && now >= nextClockTime) {
+  if (midiClock && midiClock.hasTicked()) {
     if (clockCounter % clocksPerLoop === 0) {
       loop();
     }
@@ -60,7 +59,6 @@ function run() {
       beat();
     }
     clock();
-    nextClockTime = now + clockInterval;
     clockCounter++;
   }
   setImmediate(run);
