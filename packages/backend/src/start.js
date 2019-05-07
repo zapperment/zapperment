@@ -44,4 +44,5 @@ module.exports = () => {
 
 function stop() {
   midiBeat.postMessage(STOP_PLAYING);
+  process.exit(0);
 }
