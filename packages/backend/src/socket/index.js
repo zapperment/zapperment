@@ -1,7 +1,7 @@
 const openSocket = require('socket.io');
 const { STATS_CLAP, NEW_SCENE } = require('@zapperment/shared');
 
-const loop = require('../loop');
+const { loop } = require('../loop');
 
 module.exports = {
   configure: app => {
@@ -10,9 +10,9 @@ module.exports = {
 
     io.on('connection', socket => {
       socket.on(STATS_CLAP, () => {
-				loop.stats.claps++;
+        loop.stats.claps++;
       });
-		});
+    });
     return io;
   },
 };
