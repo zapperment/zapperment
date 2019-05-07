@@ -5,16 +5,20 @@
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Patrick Hund <pahund@team.mobile.de> (https://ebaytech.berlin/)",
   "license": "MIT",
   "dependencies": {
     "@zapperment/shared": "^0.0.1",
+    "brain.js": "^1.6.1",
     "express": "^4.16.4",
     "jzz": "^0.7.1",
     "mongodb": "^3.2.3",
     "nodemon": "^1.18.10",
     "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
   }
 }
