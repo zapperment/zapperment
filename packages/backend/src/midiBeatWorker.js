@@ -1,15 +1,16 @@
-const { isMainThread, parentPort, workerData } = require('worker_threads');
+const { isMainThread, parentPort, workerData } = require("worker_threads");
 const {
   START_PLAYING,
   STOP_PLAYING,
   STOP_WORKER,
   WORKER_STOPPED,
-  NEW_SCENE,
-} = require('./constants');
-const { BEAT } = require('@zapperment/shared');
-const { midiPortName } = require('./config');
-const MidiClock = require('./MidiClock');
-const jzz = require('jzz');
+  NEW_SCENE
+} = require("./constants");
+const { BEAT } = require("@zapperment/shared");
+const { midiPortName } = require("./config");
+const MidiClock = require("./MidiClock");
+const MidiController = require('./MidiController');
+const jzz = require("jzz");
 const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
 const clocksPerBar = clocksPerBeat * 4;
@@ -17,17 +18,18 @@ const clocksPerLoop = clocksPerBar * barsPerLoop;
 
 if (isMainThread) {
   throw new Error(
-    'Module midiBeatWorker.js may only be used as a worker thread'
+    "Module midiBeatWorker.js may only be used as a worker thread"
   );
 }
 let running = true;
 let midiClock = null;
-let midiOut = jzz()
+const midiOut = jzz()
   .openMidiOut(midiPortName)
-  .or('Cannot open MIDI Out port!');
+  .or("Cannot open MIDI Out port!");
+const midiController = new MidiController(midiOut);
 let clockCounter = 0;
 
-parentPort.on('message', message => {
+parentPort.on("message", message => {
   switch (message) {
     case START_PLAYING:
       midiOut.send(jzz.MIDI.start());
@@ -71,14 +73,45 @@ function clock() {
 }
 
 function beat() {
-  console.log('**** **** beat');
+  console.log("**** **** beat");
   parentPort.postMessage({ type: BEAT });
 }
 
 function bar() {
-  console.log('**** bar');
+  console.log("**** bar");
 }
 
 function loop() {
-  parentPort.postMessage({ type: NEW_SCENE, data: 'scene' });
+  const scene = makeAScene();
+  midiController.changeScene(scene);
+  parentPort.postMessage({ type: NEW_SCENE, data: scene });
+}
+
+function randomBool() {
+  return  Math.random()<.5;
+}
+
+function makeAScene() {
+  return {
+    mixer: [
+      // bass
+      { channel: 1, muted: randomBool() },
+      // kick
+      { channel: 2, muted: randomBool() },
+      // tom
+      { channel: 3, muted: randomBool() },
+      // hi hat
+      { channel: 4, muted: randomBool() },
+      // fx
+      { channel: 5, muted: randomBool() },
+      // spel gtr 1
+      { channel: 6, muted: randomBool() },
+      // spel gtr 2
+      { channel: 7, muted: randomBool() },
+      // spel gtr 3
+      { channel: 8, muted: randomBool() },
+      // spel gtr 4
+      { channel: 9, muted: randomBool() },
+    ]
+  };
 }
