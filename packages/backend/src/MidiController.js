@@ -15,7 +15,7 @@ class MidiController {
       this.send(0, channel + 101, muted ? 127 : 0);
     }
     // percussion
-    this.send(1, scene.percussion.pattern + 101, 127);
+    this.send(1, scene.percussion.pattern + 102, 127);
     // bonanza bassline
     this.send(2, 102, scene.bonanza.pulsarLevel);
     this.send(2, 103, scene.bonanza.filter);

@@ -129,7 +129,7 @@ function makeAScene() {
     },
     bonanza: {
       pulsarLevel: randomInt(0, 127),
-      filter: randomInt(0, 127),
+      filter: randomInt(0, 90),
       filterEnv: randomInt(0, 127),
       lowCut: randomBool(),
       rateOneEighth: randomBool(),
