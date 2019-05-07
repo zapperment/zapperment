@@ -117,7 +117,9 @@ function makeAScene() {
       // spel gtr 3
       { channel: 8, muted: randomBool() },
       // spel gtr 4
-      { channel: 9, muted: randomBool() }
+      { channel: 9, muted: randomBool() },
+      // e-piano
+      { channel: 10, muted: randomBool() }
     ],
     percussion: {
       pattern: randomInt(0, 6)
