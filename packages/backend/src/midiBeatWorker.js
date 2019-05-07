@@ -84,6 +84,7 @@ function bar() {
 function loop() {
   const scene = makeAScene();
   midiController.changeScene(scene);
+  console.info(`NEW SCENE:\n${JSON.stringify(scene, null, 4)}`);
   parentPort.postMessage({ type: NEW_SCENE, data: scene });
 }
 
@@ -119,10 +120,20 @@ function makeAScene() {
       // spel gtr 4
       { channel: 9, muted: randomBool() },
       // e-piano
-      { channel: 10, muted: randomBool() }
+      { channel: 10, muted: randomBool() },
+      // bonanza bassline
+      { channel: 11, muted: randomBool() }
     ],
     percussion: {
       pattern: randomInt(0, 6)
+    },
+    bonanza: {
+      pulsarLevel: randomInt(0, 127),
+      filter: randomInt(0, 127),
+      filterEnv: randomInt(0, 127),
+      lowCut: randomBool(),
+      rateOneEighth: randomBool(),
+      sawSolo: randomBool()
     }
   };
 }
