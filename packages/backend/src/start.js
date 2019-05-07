@@ -6,6 +6,7 @@ const { Worker } = require('worker_threads');
 const { START_PLAYING, STOP_PLAYING } = require('./constants');
 const { BEAT, NEW_SCENE } = require('@zapperment/shared');
 const { initialTempo, barsPerLoop, port } = require('./config');
+const { updateScene } = require('./loop');
 
 let midiBeat = null;
 
@@ -26,7 +27,7 @@ module.exports = () => {
         io.emit(BEAT, { for: 'everyone' });
         break;
       case NEW_SCENE:
-        console.log(message.data);
+        updateScene(message.data);
         break;
       default:
     }
