@@ -9,8 +9,8 @@ const { initialTempo, barsPerLoop, port } = require('./config');
 
 let midiBeat = null;
 
-process.on("SIGTERM", stop);
-process.on("SIGINT", stop);
+process.on('SIGTERM', stop);
+process.on('SIGINT', stop);
 
 module.exports = () => {
   const app = http.createServer();
@@ -21,12 +21,12 @@ module.exports = () => {
   });
 
   midiBeat.on('message', message => {
-    switch (message) {
+    switch (message.type) {
       case BEAT:
         io.emit(BEAT, { for: 'everyone' });
         break;
       case NEW_SCENE:
-        // updateScene();
+        console.log(message.data);
         break;
       default:
     }

@@ -1,14 +1,15 @@
-const { isMainThread, parentPort, workerData } = require("worker_threads");
+const { isMainThread, parentPort, workerData } = require('worker_threads');
 const {
   START_PLAYING,
   STOP_PLAYING,
   STOP_WORKER,
-  WORKER_STOPPED
-} = require("./constants");
-const { BEAT } = require("@zapperment/shared");
-const { midiPortName } = require("./config");
+  WORKER_STOPPED,
+  NEW_SCENE,
+} = require('./constants');
+const { BEAT } = require('@zapperment/shared');
+const { midiPortName } = require('./config');
 const MidiClock = require('./MidiClock');
-const jzz = require("jzz");
+const jzz = require('jzz');
 const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
 const clocksPerBar = clocksPerBeat * 4;
@@ -16,17 +17,17 @@ const clocksPerLoop = clocksPerBar * barsPerLoop;
 
 if (isMainThread) {
   throw new Error(
-    "Module midiBeatWorker.js may only be used as a worker thread"
+    'Module midiBeatWorker.js may only be used as a worker thread'
   );
 }
 let running = true;
 let midiClock = null;
 let midiOut = jzz()
   .openMidiOut(midiPortName)
-  .or("Cannot open MIDI Out port!");
+  .or('Cannot open MIDI Out port!');
 let clockCounter = 0;
 
-parentPort.on("message", message => {
+parentPort.on('message', message => {
   switch (message) {
     case START_PLAYING:
       midiOut.send(jzz.MIDI.start());
@@ -71,7 +72,7 @@ function clock() {
 
 function beat() {
   console.log('**** **** beat');
-  parentPort.postMessage(BEAT);
+  parentPort.postMessage({ type: BEAT });
 }
 
 function bar() {
@@ -79,5 +80,5 @@ function bar() {
 }
 
 function loop() {
-  console.log('loop');
+  parentPort.postMessage({ type: NEW_SCENE, data: 'scene' });
 }
