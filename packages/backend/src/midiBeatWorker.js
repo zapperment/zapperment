@@ -9,7 +9,7 @@ const {
 const { BEAT } = require("@zapperment/shared");
 const { midiPortName } = require("./config");
 const MidiClock = require("./MidiClock");
-const MidiController = require('./MidiController');
+const MidiController = require("./MidiController");
 const jzz = require("jzz");
 const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
@@ -52,7 +52,7 @@ function run() {
     return;
   }
   if (midiClock && midiClock.hasTicked()) {
-    if (clockCounter % clocksPerLoop === 0) {
+    if ((clockCounter + 1) % clocksPerLoop === 0) {
       loop();
     }
     if (clockCounter % clocksPerBar === 0) {
@@ -88,7 +88,13 @@ function loop() {
 }
 
 function randomBool() {
-  return  Math.random()<.5;
+  return Math.random() < 0.5;
+}
+
+function randomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function makeAScene() {
@@ -111,7 +117,10 @@ function makeAScene() {
       // spel gtr 3
       { channel: 8, muted: randomBool() },
       // spel gtr 4
-      { channel: 9, muted: randomBool() },
-    ]
+      { channel: 9, muted: randomBool() }
+    ],
+    percussion: {
+      pattern: randomInt(0, 6)
+    }
   };
 }
