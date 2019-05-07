@@ -1,3 +1,5 @@
+const db = require('./db');
+
 const loop = {
   scene: {
     current: {
@@ -33,10 +35,10 @@ const loop = {
 };
 
 const updateScene = async scene => {
-  console.log('NEW SCENE')
-  const { db } = require('./db');
-  await db.collection('loops').insertOne(loop);
-
+  await db.db.collection('loops').insertOne({
+    ...loop,
+    _id: Date.now(),
+  });
   loop.scene.previous = loop.scene.current;
   loop.scene.current = scene;
 };
