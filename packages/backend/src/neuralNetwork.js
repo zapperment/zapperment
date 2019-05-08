@@ -1,5 +1,7 @@
 const brain = require("brain.js");
-const testData = require("./testData");
+const db = require("./db");
+
+const CONFIG_SCENE_QUALITY = 0.7;
 
 const normalizeScene = ({ mixer }) => {
   return mixer.map(channel => (channel.mute ? 1 : 0));
@@ -63,14 +65,22 @@ const buildNewScene = trainedNet => {
   do {
     input = normalizeScene(getRandomScene());
     output = trainedNet(input);
-  } while (output < 0.8);
+  } while (output < CONFIG_SCENE_QUALITY);
 
   return denormalizeScene(input);
 };
 
 // use it like:
-// const trainedNet = train(testData);
-// console.log(buildNewScene(trainedNet));
+// db.init(() => {
+//   db.db
+//     .collection("loops")
+//     .find({})
+//     .toArray(function(err, docs) {
+//       const trainedNet = train(docs);
+//       const newScene = buildNewScene(trainedNet);
+//       console.log(newScene);
+//     });
+// });
 
 module.exports = {
   normalize,
