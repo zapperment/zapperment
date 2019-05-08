@@ -4,9 +4,11 @@ import Lamp from './Lamp';
 import ClapButton from './ClapButton';
 import Applaus from './Applaus';
 
-import styles from './App.module.css';
+import styles from "./App.module.css";
 
-const socket = io(':3001');
+const { protocol, hostname } = window.location;
+const serverUrl = `${protocol}//${hostname}:3001`;
+const socket = io(serverUrl);
 
 class App extends Component {
   state = { claps: 0 };
@@ -30,6 +32,12 @@ class App extends Component {
             socket={socket}
             onClaps={this.handleClaps}
           />
+        </div>
+        <div className={styles.controls}>
+          <audio controls autoPlay preload="none">
+            <source src={`${serverUrl}/stream.mp3`} type="audio/mpeg" />
+            <p>Oops – your browser doesn't support HTML5 audio!</p>
+          </audio>
         </div>
       </div>
     );
