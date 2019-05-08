@@ -19,7 +19,7 @@ class App extends Component {
           <ClapButton socket={socket} />
         </div>
         <div className={styles.controls}>
-          <audio controls>
+          <audio controls autoPlay preload="none">
             <source src={`${serverUrl}/stream.mp3`} type="audio/mpeg" />
             <p>Oops – your browser doesn't support HTML5 audio!</p>
           </audio>
