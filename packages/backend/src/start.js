@@ -34,6 +34,7 @@ module.exports = () => {
   const app = express();
   const server = http.Server(app);
   const io = socket.configure(server);
+  app.use('/', express.static(`${__dirname}/../../frontend/build`));
 
   app.get("/stream.mp3", (req, res) => {
     res.set({
