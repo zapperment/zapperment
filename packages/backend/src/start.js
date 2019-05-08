@@ -8,9 +8,9 @@ const lame = require("lame");
 const audioInput = new audio.Input();
 const { Worker } = require("worker_threads");
 const { START_PLAYING, STOP_PLAYING } = require("./constants");
-const { BEAT, NEW_SCENE, STATS_RESET_CLAP } = require("@zapperment/shared");
+const { BEAT, NEW_LOOP, STATS_RESET_CLAP } = require("@zapperment/shared");
 const { initialTempo, barsPerLoop, port } = require("./config");
-const { updateScene } = require("./loop");
+const { updateScene } = require("./model/loop");
 
 let midiBeat = null;
 
@@ -52,7 +52,7 @@ module.exports = () => {
       case BEAT:
         io.emit(BEAT, { for: "everyone" });
         break;
-      case NEW_SCENE:
+      case NEW_LOOP:
         updateScene(message.data);
         io.emit(STATS_RESET_CLAP, { for: "everyone" });
         break;
