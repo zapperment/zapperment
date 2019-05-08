@@ -1,0 +1,19 @@
+.emoji {
+  display: block;
+  position: absolute;
+  top: 0;
+  animation: rain linear infinite;
+  transform: translate3d(0, 0, 0);
+
+  animation-duration: 4s;
+  font-size: 2.5rem;
+}
+
+@keyframes rain {
+  from {
+    top: 0;
+  }
+  to {
+    top: 100%;
+  }
+}

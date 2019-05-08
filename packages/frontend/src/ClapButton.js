@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { STATS_NEW_CLAP, STATS_RESET_CLAP, STATS_NEW_SHARED_CLAPS } from "@zapperment/shared";
-import cx from "classnames";
-import icon from "./icons/clap.svg";
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  STATS_NEW_CLAP,
+  STATS_RESET_CLAP,
+  STATS_NEW_SHARED_CLAPS,
+} from '@zapperment/shared';
+import cx from 'classnames';
+import icon from './icons/clap.svg';
 
-import styles from "./ClapButton.module.css";
+import styles from './ClapButton.module.css';
+import Applaus from './Applaus';
 
 export default ({ socket }) => {
   const [clapsCount, updateClapsCount] = useState(0);
@@ -17,7 +22,7 @@ export default ({ socket }) => {
     const resetClaps = () => {
       updateClapsCount(0);
     };
-    const updateClaps = (number) => {
+    const updateClaps = number => {
       updateClapsCount(number);
     };
     socket.on(STATS_RESET_CLAP, resetClaps);
@@ -25,13 +30,17 @@ export default ({ socket }) => {
     return () => {
       socket.off(STATS_RESET_CLAP, resetClaps);
       socket.off(STATS_NEW_SHARED_CLAPS, updateClaps);
-    }
+    };
   });
-
+  const memo =  useMemo(() => memo + clapsCount, []);
+  console.log()
   return (
-    <button className={cx(styles.component)} onClick={handleClick}>
-      <img src={icon} alt="clap" className={styles.icon} />
-      <span className={styles.label}>{`${clapsCount} claps`}</span>
-    </button>
+    <>
+      
+      <button className={cx(styles.component)} onClick={handleClick}>
+        <img src={icon} alt="clap" className={styles.icon} />
+        <span className={styles.label}>{`${clapsCount} claps`}</span>
+      </button>
+    </>
   );
 };
