@@ -33,13 +33,10 @@ export default ({ socket, onClaps }) => {
       socket.off(STATS_NEW_SHARED_CLAPS, updateClaps);
     };
   });
-
   return (
-    <>
-      <button className={cx(styles.component)} onClick={handleClick}>
-        <img src={icon} alt="clap" className={styles.icon} />
-        <span className={styles.label}>{`${clapsCount} claps`}</span>
-      </button>
-    </>
+    <button className={cx(styles.component)} onClick={handleClick}>
+      <img src={icon} alt="clap" className={styles.icon} />
+      <span className={styles.label}>{`${clapsCount} claps`}</span>
+    </button>
   );
 };

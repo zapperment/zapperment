@@ -1,0 +1,19 @@
+.component {
+  background: white;
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 16px;
+  line-height: 1.3em;
+  min-width: 7rem;
+  cursor: pointer;
+}
+
+.icon {
+  width: 3rem;
+}
+
+.label {
+  display: block;
+  padding-top: 0.5rem;
+}
