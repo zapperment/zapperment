@@ -1,7 +1,7 @@
 const openSocket = require("socket.io");
 const { STATS_NEW_CLAP, STATS_NEW_SHARED_CLAPS } = require("@zapperment/shared");
 
-const { loop } = require("../loop");
+const { loop } = require("../model/loop");
 
 module.exports = {
   configure: app => {
