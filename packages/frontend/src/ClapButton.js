@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   STATS_NEW_CLAP,
   STATS_RESET_CLAP,
@@ -8,9 +8,8 @@ import cx from 'classnames';
 import icon from './icons/clap.svg';
 
 import styles from './ClapButton.module.css';
-import Applaus from './Applaus';
 
-export default ({ socket }) => {
+export default ({ socket, onClaps }) => {
   const [clapsCount, updateClapsCount] = useState(0);
 
   const handleClick = () => {
@@ -21,9 +20,11 @@ export default ({ socket }) => {
   useEffect(() => {
     const resetClaps = () => {
       updateClapsCount(0);
+      onClaps(0);
     };
     const updateClaps = number => {
       updateClapsCount(number);
+      onClaps(number);
     };
     socket.on(STATS_RESET_CLAP, resetClaps);
     socket.on(STATS_NEW_SHARED_CLAPS, updateClaps);
@@ -32,11 +33,9 @@ export default ({ socket }) => {
       socket.off(STATS_NEW_SHARED_CLAPS, updateClaps);
     };
   });
-  const memo =  useMemo(() => memo + clapsCount, []);
-  console.log()
+
   return (
     <>
-      
       <button className={cx(styles.component)} onClick={handleClick}>
         <img src={icon} alt="clap" className={styles.icon} />
         <span className={styles.label}>{`${clapsCount} claps`}</span>

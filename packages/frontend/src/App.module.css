@@ -9,4 +9,5 @@
 
 .actions {
   padding-top: 4em;
+  z-index: 100;
 }

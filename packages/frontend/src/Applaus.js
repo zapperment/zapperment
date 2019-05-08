@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Applaus.css';
 
 export default () => {
-  const horizontalPosition = `${Math.floor(Math.random() * 100)  + 1}vw`;
+  const defaultPosition = `${Math.floor(Math.random() * 100) + 1}vw`;
+  const [horizontalPosition] = useState(defaultPosition);
   return (
-    <div className="emoji" style={{ left: horizontalPosition }}>
+    <span
+      className="emoji"
+      role="img"
+      aria-label="applaus"
+      style={{ left: horizontalPosition }}
+    >
       👏🏼
-    </div>
+    </span>
   );
 };
