@@ -37,7 +37,7 @@ module.exports = () => {
 
   app.get("/stream.mp3", (req, res) => {
     res.set({
-      "Content-Type": "audio/mpeg3",
+      "Content-Type": "audio/mpeg",
       "Transfer-Encoding": "chunked"
     });
     encoder.pipe(res);
