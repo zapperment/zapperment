@@ -4,6 +4,10 @@ const db = require("../db");
 const CONFIG_SCENE_QUALITY = 0.7;
 const CONFIG_CHANNELS = 11;
 
+const PREFIX_MIXER = "mix";
+const PREFIX_PERCUSSION = "per";
+const PREFIX_BONANZA = "bon";
+
 let trainedNet;
 
 function randomBool() {
@@ -56,22 +60,100 @@ function buildRandomScene() {
   };
 }
 
-const normalizeScene = ({ mixer }) => {
-  return mixer.map(channel => (channel.muted ? 1 : 0));
+const normalizeNumber = (value, max) => {
+  return value / max;
+};
+
+const denormalizeNumber = (value, max) => {
+  return Math.floor(value * max);
+};
+
+const normalizeMixer = mixer =>
+  mixer.reduce(
+    (acc, channel) => ({
+      ...acc,
+      [`${PREFIX_MIXER}_${("" + channel.channel).padStart(
+        2,
+        "0"
+      )}`]: channel.muted ? 1 : 0
+    }),
+    {}
+  );
+
+const normalizePercussion = percussion => ({
+  [`${PREFIX_PERCUSSION}_pattern`]: normalizeNumber(percussion.pattern, 6)
+});
+
+const normalizeBonanza = bonanza => ({
+  [`${PREFIX_BONANZA}_pulsarLevel`]: normalizeNumber(bonanza.pulsarLevel, 127),
+  [`${PREFIX_BONANZA}_filter`]: normalizeNumber(bonanza.filter, 90),
+  [`${PREFIX_BONANZA}_filterEnv`]: normalizeNumber(bonanza.filterEnv, 127),
+  [`${PREFIX_BONANZA}_lowCut`]: bonanza.lowCut ? 1 : 0,
+  [`${PREFIX_BONANZA}_rateOneEighth`]: bonanza.rateOneEighth ? 1 : 0,
+  [`${PREFIX_BONANZA}_sawSolo`]: bonanza.sawSolo ? 1 : 0
+});
+
+const normalizeScene = ({ mixer, percussion, bonanza }) => {
+  return {
+    ...normalizeMixer(mixer),
+    ...normalizePercussion(percussion),
+    ...normalizeBonanza(bonanza)
+  };
 };
 
 const normalizeClaps = (claps, maxClaps) => {
   return claps / maxClaps;
 };
 
+const bonanzaBoolKeys = ["lowCut", "rateOneEighth", "sawSolo"];
+const bonanzaMaxMap = {
+  pulsarLevel: 127,
+  filter: 90,
+  filterEnv: 127
+};
+
+const denormalizeBonanza = (normalizedValue, key) => {
+  if (bonanzaBoolKeys.includes(key)) {
+    return Boolean(normalizedValue);
+  }
+
+  return denormalizeNumber(normalizedValue, bonanzaMaxMap[key]);
+};
+
 const denormalizeScene = normalizedScene => {
-  return {
-    ...buildRandomScene(),
-    mixer: normalizedScene.map((muteFloat, index) => ({
-      channel: index + 1,
-      muted: Boolean(muteFloat)
-    }))
+  const result = {
+    mixer: [],
+    percussion: {},
+    bonanza: {}
   };
+
+  Object.keys(normalizedScene).map(key => {
+    const prefix = key.split("_")[0];
+
+    if (prefix === PREFIX_MIXER) {
+      result.mixer.push({
+        channel: parseInt(key.split("_")[1], 10),
+        muted: Boolean(normalizedScene[key])
+      });
+    }
+
+    if (prefix === PREFIX_PERCUSSION) {
+      result.percussion[key.split("_")[1]] = denormalizeNumber(
+        normalizedScene[key],
+        6
+      );
+    }
+
+    if (prefix === PREFIX_BONANZA) {
+      const bonanzaKey = key.split("_")[1];
+      result.bonanza[bonanzaKey] = denormalizeBonanza(
+        normalizedScene[key],
+        bonanzaKey
+      );
+    }
+  });
+
+  return result;
 };
 
 const normalize = rawData => {
@@ -82,7 +164,11 @@ const normalize = rawData => {
   return rawData
     .map(loop => {
       // protect from corrupted data
-      if (!loop.scene.current || !loop.scene.current.mixer) {
+      if (
+        !loop.scene.current ||
+        !loop.scene.current.mixer ||
+        loop.scene.current.mixer.length !== CONFIG_CHANNELS
+      ) {
         return null;
       }
 
@@ -91,8 +177,7 @@ const normalize = rawData => {
         output: [normalizeClaps(loop.stats.claps, maxClaps)]
       };
     })
-    .filter(Boolean)
-    .filter(({input}) => input.length === CONFIG_CHANNELS);
+    .filter(Boolean);
 };
 
 const trainNetwork = data => {
