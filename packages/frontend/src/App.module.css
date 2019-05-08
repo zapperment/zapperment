@@ -16,6 +16,10 @@
   margin: 0 1rem;
 }
 
+.logo {
+  padding-bottom: 4em;
+}
+
 .controls {
   padding-top: 4em;
 }

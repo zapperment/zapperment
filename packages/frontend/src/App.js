@@ -37,7 +37,10 @@ class App extends Component {
             <Emoji key={i} icon={'💩'}/>
           ))}
         </div>
-        
+
+        <div className={styles.logo}>
+          <img src="./zapperment-logo.png"/>
+        </div>
         <Lamp socket={socket} />
         <div className={styles.actions}>
           <ClapButton socket={socket} onClaps={this.handleClaps} />
