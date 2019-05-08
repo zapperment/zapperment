@@ -8,7 +8,7 @@ const lame = require("lame");
 const audioInput = new audio.Input();
 const { Worker } = require("worker_threads");
 const { START_PLAYING, STOP_PLAYING } = require("./constants");
-const { BEAT, NEW_LOOP, STATS_RESET_CLAP } = require("@zapperment/shared");
+const { BEAT, NEW_LOOP, STATS_RESET_CLAP, STATS_RESET_BOO } = require("@zapperment/shared");
 const { initialTempo, barsPerLoop, port } = require("./config");
 const { updateScene } = require("./model/loop");
 
@@ -55,7 +55,12 @@ module.exports = () => {
         break;
       case NEW_LOOP:
         updateScene(message.data);
+<<<<<<< HEAD
         io.emit(STATS_RESET_CLAP, { for: "everyone" });
+=======
+        io.emit(STATS_RESET_CLAP, { for: 'everyone' });
+        io.emit(STATS_RESET_BOO, { for: 'everyone' });
+>>>>>>> implement backend boos
         break;
       default:
     }
