@@ -33,7 +33,6 @@ export default ({ socket, onClaps }) => {
       socket.off(STATS_NEW_SHARED_CLAPS, updateClaps);
     };
   });
-  console.log();
   return (
     <>
       <button className={cx(styles.component)} onClick={handleClick}>
