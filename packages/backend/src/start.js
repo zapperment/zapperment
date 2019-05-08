@@ -55,12 +55,8 @@ module.exports = () => {
         break;
       case NEW_LOOP:
         updateScene(message.data);
-<<<<<<< HEAD
-        io.emit(STATS_RESET_CLAP, { for: "everyone" });
-=======
         io.emit(STATS_RESET_CLAP, { for: 'everyone' });
         io.emit(STATS_RESET_BOO, { for: 'everyone' });
->>>>>>> implement backend boos
         break;
       default:
     }

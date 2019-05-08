@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import io from 'socket.io-client';
 import Lamp from './Lamp';
 import ClapButton from './ClapButton';
-import Applaus from './Applaus';
+import Emoji from './Emoji';
 
 import styles from './App.module.css';
 import BooButton from './BooButton';
@@ -23,14 +23,21 @@ class App extends Component {
   };
 
   render() {
-    const { claps } = this.state;
+    const { claps, boos } = this.state;
     return (
       <div className={styles.component}>
-        <div>
+        <div className="claps">
           {[...new Array(claps)].map((e, i) => (
-            <Applaus key={i} />
+            <Emoji key={i} icon={'👏'}/>
           ))}
         </div>
+
+        <div className="boos">
+          {[...new Array(boos)].map((e, i) => (
+            <Emoji key={i} icon={'💩'}/>
+          ))}
+        </div>
+        
         <Lamp socket={socket} />
         <div className={styles.actions}>
           <ClapButton socket={socket} onClaps={this.handleClaps} />
