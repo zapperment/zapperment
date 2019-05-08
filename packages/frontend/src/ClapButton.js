@@ -34,11 +34,9 @@ export default ({ socket, onClaps }) => {
     };
   });
   return (
-    <>
-      <button className={cx(styles.component)} onClick={handleClick}>
-        <img src={icon} alt="clap" className={styles.icon} />
-        <span className={styles.label}>{`${clapsCount} claps`}</span>
-      </button>
-    </>
+    <button className={cx(styles.component)} onClick={handleClick}>
+      <img src={icon} alt="clap" className={styles.icon} />
+      <span className={styles.label}>{`${clapsCount} claps`}</span>
+    </button>
   );
 };

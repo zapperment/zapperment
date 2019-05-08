@@ -4,17 +4,22 @@ import Lamp from './Lamp';
 import ClapButton from './ClapButton';
 import Applaus from './Applaus';
 
-import styles from "./App.module.css";
+import styles from './App.module.css';
+import BooButton from './BooButton';
 
 const { protocol, hostname } = window.location;
 const serverUrl = `${protocol}//${hostname}:3001`;
 const socket = io(serverUrl);
 
 class App extends Component {
-  state = { claps: 0 };
+  state = { claps: 0, boos: 0 };
 
   handleClaps = claps => {
     this.setState({ claps });
+  };
+
+  handleBoos = boos => {
+    this.setState({ boos });
   };
 
   render() {
@@ -28,10 +33,8 @@ class App extends Component {
         </div>
         <Lamp socket={socket} />
         <div className={styles.actions}>
-          <ClapButton
-            socket={socket}
-            onClaps={this.handleClaps}
-          />
+          <ClapButton socket={socket} onClaps={this.handleClaps} />
+          <BooButton socket={socket} onBoos={this.handleBoos} />
         </div>
         <div className={styles.controls}>
           <audio controls autoPlay preload="none">
