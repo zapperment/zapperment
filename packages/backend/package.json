@@ -10,7 +10,7 @@
   "author": "Patrick Hund <pahund@team.mobile.de> (https://ebaytech.berlin/)",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/shared": "^0.0.1",
+    "@zapperment/shared": "^0.0.2",
     "brain.js": "^1.6.1",
     "express": "^4.16.4",
     "jzz": "^0.7.1",
@@ -18,6 +18,7 @@
     "mongodb": "^3.2.3",
     "nodemon": "^1.18.10",
     "osx-audio": "^1.0.0",
+    "prettier": "^1.16.4",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
