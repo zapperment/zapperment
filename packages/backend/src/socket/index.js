@@ -20,7 +20,7 @@ module.exports = {
         io.emit(STATS_NEW_SHARED_CLAPS, loop.stats.claps, { for: 'everyone' });
       });
       socket.on(STATS_NEW_BOO, () => {
-        console.log("BOO'D!"); // PH_TODO
+        console.log("BOO'D!");
         loop.stats.boos++;
         io.emit(STATS_NEW_SHARED_BOOS, loop.stats.boos, { for: 'everyone' });
       });

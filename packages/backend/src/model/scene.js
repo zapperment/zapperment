@@ -2,6 +2,7 @@ const brain = require("brain.js");
 const db = require("../db");
 
 const CONFIG_SCENE_QUALITY = 0.7;
+const MAX_ATTEMPTS = 5;
 const CONFIG_CHANNELS = 11;
 
 const PREFIX_MIXER = "mix";
@@ -202,13 +203,14 @@ const initSceneGeneration = () => {
 const buildNewScene = () => {
   let output;
   let input = [];
+  let attempts = 0;
 
   do {
     input = normalizeScene(buildRandomScene());
     output = trainedNet(input);
-  } while (output < CONFIG_SCENE_QUALITY);
+  } while (output < CONFIG_SCENE_QUALITY && ++attempts < MAX_ATTEMPTS);
 
-  console.log(`NEW SCENE PREDICTION: ${output}`);
+  console.log(`NEW SCENE PREDICTION: ${output} (${attempts} attempts)`);
 
   return denormalizeScene(input);
 };
