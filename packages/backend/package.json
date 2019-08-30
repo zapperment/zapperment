@@ -19,7 +19,8 @@
     "nodemon": "^1.18.10",
     "osx-audio": "^1.0.0",
     "prettier": "^1.16.4",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "socket.io-stream": "^0.9.1"
   },
   "devDependencies": {
     "jest": "^23.6.0"
