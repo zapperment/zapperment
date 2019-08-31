@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/backend",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Zapperment backend (Express server)",
   "main": "src/index.js",
   "scripts": {
