@@ -3,9 +3,6 @@ const http = require("http");
 const express = require("express");
 const socket = require("./socket");
 const path = require("path");
-const audio = require("osx-audio");
-const lame = require("lame");
-const audioInput = new audio.Input();
 const { Worker } = require("worker_threads");
 const { START_PLAYING, STOP_PLAYING } = require("./constants");
 const {
@@ -22,32 +19,11 @@ let midiBeat = null;
 process.on("SIGTERM", stop);
 process.on("SIGINT", stop);
 
-const encoder = new lame.Encoder({
-  // input
-  channels: 2, // 2 channels (left and right)
-  bitDepth: 16, // 16-bit samples
-  sampleRate: 44100, // 44,100 Hz sample rate
-
-  // output
-  bitRate: 128,
-  outSampleRate: 22050,
-  mode: lame.STEREO
-});
-audioInput.pipe(encoder);
-
 module.exports = () => {
   const app = express();
   const server = http.Server(app);
   const io = socket.configure(server);
   app.use("/", express.static(`${__dirname}/../../frontend/build`));
-
-  app.get("/stream.mp3", (req, res) => {
-    res.set({
-      "Content-Type": "audio/mpeg",
-      "Transfer-Encoding": "chunked"
-    });
-    encoder.pipe(res);
-  });
 
   midiBeat = new Worker(path.join(__dirname, "./midiBeatWorker.js"), {
     workerData: { tempo: initialTempo, barsPerLoop }
