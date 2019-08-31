@@ -4,8 +4,7 @@ import ss from "socket.io-stream";
 import Lamp from "./Lamp";
 import ClapButton from "./ClapButton";
 import Emoji from "./Emoji";
-import SoundController from './SoundController';
-
+import { getAudioContext, withWaveHeader } from "./utils";
 import styles from "./App.module.css";
 import BooButton from "./BooButton";
 
@@ -13,10 +12,14 @@ const { protocol, hostname } = window.location;
 const serverUrl = `${protocol}//${hostname}:3001`;
 const socket = io(serverUrl);
 
+/* delay to avoid timing issues */
+const delay = 1;
+const samplingRate = 44100;
+const chunkSize = 1024;
+const chunkDuration = chunkSize / samplingRate;
+
 class App extends Component {
   state = { claps: 0, boos: 0 };
-
-  soundController = new SoundController();
 
   handleClaps = claps => {
     this.setState({ claps });
@@ -28,19 +31,19 @@ class App extends Component {
 
   componentDidMount() {
     ss(socket).on("audio-stream", stream => {
-      this.soundController.nextTime = 0;
-      let init = false;
-      const audioCache = [];
+      const audioContext = getAudioContext().audioContext;
+      let nextTime = delay;
       console.log("receiving audio stream");
-      stream.on("data", data => {
-        const buffer = this.soundController.createBufferFromChunk(data);
-        audioCache.push(buffer);
-        if (init || audioCache.length > 5) {
-          init = true;
-          this.soundController.playCache(audioCache);
-        }
+      stream.on("data", async data => {
+        const audioBufferChunk = await audioContext.decodeAudioData(
+          withWaveHeader(data)
+        );
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBufferChunk;
+        source.connect(audioContext.destination);
+        source.start(nextTime);
+        nextTime += chunkDuration;
       });
-      stream.on("end", () => console.log("end of audio stream"));
     });
   }
 
@@ -61,7 +64,7 @@ class App extends Component {
         </div>
 
         <div className={styles.logo}>
-          <img src="./zapperment-logo.png" />
+          <img src="./zapperment-logo.png" alt="" />
         </div>
         <Lamp socket={socket} />
         <div className={styles.actions}>
