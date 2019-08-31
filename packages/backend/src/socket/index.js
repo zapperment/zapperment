@@ -1,6 +1,6 @@
 const createIo = require("socket.io");
 const ss = require("socket.io-stream");
-const audio = require("osx-audio");
+const { Input } = require("osx-audio");
 
 const {
   STATS_NEW_CLAP,
@@ -11,7 +11,7 @@ const {
 
 const { loop } = require("../model/loop");
 
-const audioInput = new audio.Input();
+const audioInput = new Input();
 
 module.exports = {
   configure: app => {

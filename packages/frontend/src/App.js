@@ -4,6 +4,7 @@ import ss from "socket.io-stream";
 import Lamp from "./Lamp";
 import ClapButton from "./ClapButton";
 import Emoji from "./Emoji";
+import SoundController from './SoundController';
 
 import styles from "./App.module.css";
 import BooButton from "./BooButton";
@@ -11,28 +12,11 @@ import BooButton from "./BooButton";
 const { protocol, hostname } = window.location;
 const serverUrl = `${protocol}//${hostname}:3001`;
 const socket = io(serverUrl);
-const soundController = {
-  nextTime: 0,
-  speakerContext: new AudioContext(),
-  playCache(cache) {
-    while (cache.length) {
-      const source = soundController.speakerContext.createBufferSource();
-      source.buffer = cache.shift();
-      source.connect(soundController.speakerContext.destination);
-      if (soundController.nextTime === 0) {
-        // add a delay of 0.05 seconds
-        soundController.nextTime =
-          soundController.speakerContext.currentTime + 0.05;
-      }
-      source.start(soundController.nextTime);
-      // schedule buffers to be played consecutively
-      soundController.nextTime += source.buffer.duration;
-    }
-  }
-};
 
 class App extends Component {
   state = { claps: 0, boos: 0 };
+
+  soundController = new SoundController();
 
   handleClaps = claps => {
     this.setState({ claps });
@@ -44,23 +28,16 @@ class App extends Component {
 
   componentDidMount() {
     ss(socket).on("audio-stream", stream => {
-      soundController.nextTime = 0;
+      this.soundController.nextTime = 0;
       let init = false;
       const audioCache = [];
       console.log("receiving audio stream");
       stream.on("data", data => {
-        const array = new Float32Array(data);
-        // const array = Float32Array.from(data);
-        const buffer = soundController.speakerContext.createBuffer(
-          1,
-          2048,
-          44100
-        );
-        buffer.copyToChannel(array, 0);
+        const buffer = this.soundController.createBufferFromChunk(data);
         audioCache.push(buffer);
         if (init || audioCache.length > 5) {
           init = true;
-          soundController.playCache(audioCache);
+          this.soundController.playCache(audioCache);
         }
       });
       stream.on("end", () => console.log("end of audio stream"));
