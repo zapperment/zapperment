@@ -6,5 +6,6 @@ module.exports = {
   STATS_NEW_BOO: "newBoo",
   STATS_RESET_BOO: "resetBoo",
   STATS_NEW_SHARED_BOOS: "sharedBoos",
-  NEW_LOOP: "new loop"
+  NEW_LOOP: "new loop",
+  PLAY: "play"
 };

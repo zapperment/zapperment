@@ -5,9 +5,9 @@ import {
   STATS_NEW_SHARED_CLAPS,
 } from '@zapperment/shared';
 import cx from 'classnames';
-import icon from './icons/clap.svg';
+import icon from './clap.svg';
 
-import styles from './ClapButton.module.css';
+import styles from './Clap.module.css';
 
 export default ({ socket, onClaps }) => {
   const [clapsCount, updateClapsCount] = useState(0);
