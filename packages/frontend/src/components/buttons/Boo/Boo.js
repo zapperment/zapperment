@@ -5,8 +5,8 @@ import {
   STATS_NEW_SHARED_BOOS,
 } from '@zapperment/shared';
 import cx from 'classnames';
-import icon from './icons/boo.svg';
-import styles from './BooButton.module.css';
+import icon from './boo.svg';
+import styles from './Boo.module.css';
 
 export default ({ socket, onBoos }) => {
   const [boosCount, updateBoosCount] = useState(0);

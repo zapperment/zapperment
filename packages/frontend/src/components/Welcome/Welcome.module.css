@@ -1,0 +1,38 @@
+.component {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.85);
+  z-index: 200;
+  top: 0;
+  transition-property: top;
+  transition-duration: 3s;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.component.dismissed {
+  top: -100vh;
+}
+
+.component > div {
+  margin: 1rem;
+  padding: 1rem;
+  border: 0.2rem solid white;
+  width: calc(100% - 2rem);
+  height: calc(100% - 2rem);
+  border-radius: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.component > div > div {
+  display: flex;
+  justify-content: center;
+}
+
+.introText {
+  text-align: center;
+  font-size: 1.2rem;
+  max-width: 30rem;
+}

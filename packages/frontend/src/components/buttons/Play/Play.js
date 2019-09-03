@@ -1,9 +1,9 @@
 import React from "react";
 import cx from "classnames";
 import { AudioContext } from "standardized-audio-context";
-import icon from "./icons/play.svg";
-import styles from "./PlayButton.module.css";
-import { withWaveHeader } from "./utils";
+import icon from "./play.svg";
+import styles from "./Play.module.css";
+import { withWaveHeader } from "../../../utils";
 import ss from "socket.io-stream";
 import { PLAY } from "@zapperment/shared";
 
@@ -13,7 +13,7 @@ const samplingRate = 44100;
 const chunkSize = 1024;
 const chunkDuration = chunkSize / samplingRate;
 
-export default ({ socket }) => {
+export default ({ socket, onPlay }) => {
   const handleClick = () => {
     const audioContext = new AudioContext();
     console.log('play!');
@@ -32,6 +32,7 @@ export default ({ socket }) => {
         nextTime += chunkDuration;
       });
     });
+    onPlay();
   };
   return (
     <button className={cx(styles.component)} onClick={handleClick}>

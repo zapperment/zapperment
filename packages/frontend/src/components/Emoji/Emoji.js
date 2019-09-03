@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Emoji.css';
+import styles from './Emoji.module.css';
 
 export default ({ icon }) => {
   const defaultPosition = `${Math.floor(Math.random() * 100) + 1}vw`;
@@ -10,7 +10,7 @@ export default ({ icon }) => {
 
   return (
     <span
-      className="emoji"
+      className={styles.component}
       role="img"
       aria-label="emoji"
       style={{ fontSize, left: horizontalPosition }}
