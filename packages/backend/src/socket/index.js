@@ -1,9 +1,6 @@
 const createIo = require("socket.io");
-const ss = require("socket.io-stream");
-const { Input } = require("osx-audio");
 
 const {
-  PLAY,
   STATS_NEW_CLAP,
   STATS_NEW_SHARED_CLAPS,
   STATS_NEW_BOO,
@@ -12,20 +9,12 @@ const {
 
 const { loop } = require("../model/loop");
 
-const audioInput = new Input();
-
 module.exports = {
   configure: app => {
     const io = createIo(app);
     io.set("origins", "*:*");
 
     io.on("connection", socket => {
-      socket.on(PLAY, () => {
-        console.log("USER CLICKED PLAY!");
-        const stream = ss.createStream();
-        ss(socket).emit("audio-stream", stream);
-        audioInput.pipe(stream);
-      });
       socket.on(STATS_NEW_CLAP, () => {
         console.log("CLAPPED!");
         loop.stats.claps++;
