@@ -1,7 +1,8 @@
 .component {
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  /*noinspection CssUnresolvedCustomProperty*/
+  height: calc(var(--vh, 1vh) * 100);
   background-color: rgba(0, 0, 0, 0.85);
   z-index: 200;
   top: 0;
@@ -11,7 +12,7 @@
 }
 
 .component.dismissed {
-  top: -100vh;
+  top: -120vh;
 }
 
 .component > div {

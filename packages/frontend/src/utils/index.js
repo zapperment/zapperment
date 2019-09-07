@@ -1,5 +1,3 @@
-import withWaveHeader from "./withWaveHeader";
+import getServerUrl from "./getServerUrl";
 
-export {
-  withWaveHeader
-};
+export { getServerUrl };
