@@ -2,13 +2,14 @@ import React from "react";
 import cx from "classnames";
 import icon from "./play.svg";
 import styles from "./Play.module.css";
-import { Howl} from "howler";
+import { Howl } from "howler";
+import { getServerUrl } from "../../../utils";
 
 export default ({ onPlay }) => {
   const handleClick = () => {
     console.log("play!");
     const howl = new Howl({
-      src: "http://192.168.2.102:3001/stream.mp3",
+      src: `${getServerUrl()}/stream.mp3`,
       html5: true,
       format: ["mp3", "aac"]
     });

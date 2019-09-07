@@ -6,10 +6,9 @@ import Emoji from "../Emoji";
 import Lamp from "../Lamp";
 import Welcome from "../Welcome";
 import styles from "./App.module.css";
+import { getServerUrl } from "../../utils";
 
-const { protocol, hostname } = window.location;
-const serverUrl = `${protocol}//${hostname}:3001`;
-const socket = io(serverUrl);
+const socket = io(getServerUrl());
 
 class App extends Component {
   state = { claps: 0, boos: 0, showWelcome: true };

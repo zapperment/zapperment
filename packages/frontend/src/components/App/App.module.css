@@ -7,7 +7,7 @@
 }
 
 .actions {
-  padding-top: 4em;
+  padding-top: 4rem;
   z-index: 100;
 }
 
@@ -16,9 +16,9 @@
 }
 
 .logo {
-  padding-bottom: 4em;
+  padding-bottom: 4rem;
 }
 
-.controls {
-  padding-top: 4em;
+.logo > img {
+  max-width: calc(100vw - 4rem);
 }
