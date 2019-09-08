@@ -1,5 +1,4 @@
 const brain = require("brain.js");
-const db = require("../db");
 
 const CONFIG_SCENE_QUALITY = 0.7;
 const MAX_ATTEMPTS = 5;
@@ -189,16 +188,13 @@ const trainNetwork = data => {
   return net.toFunction();
 };
 
-const initSceneGeneration = () => {
-  db.init(() => {
-    db.db
-      .collection("loops")
-      .find({})
-      .toArray(function(err, docs) {
-        trainedNet = trainNetwork(docs);
-      });
-  });
-};
+const initSceneGeneration = storage =>
+  storage.db
+    .collection("loops")
+    .find({})
+    .toArray((err, docs) => {
+      trainedNet = trainNetwork(docs);
+    });
 
 const buildNewScene = () => {
   let output;

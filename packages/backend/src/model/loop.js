@@ -1,21 +1,20 @@
-const { buildRandomScene } = require('./scene');
-const db = require('../db');
+const { buildRandomScene } = require("./scene");
 
 const loop = {
   scene: {
     current: buildRandomScene(),
-    previous: {},
+    previous: {}
   },
   stats: {
     claps: 0,
-    boos: 0,
-  },
+    boos: 0
+  }
 };
 
-const updateScene = async scene => {
-  await db.db.collection('loops').insertOne({
+const updateScene = async (storage, scene) => {
+  await storage.db.collection("loops").insertOne({
     ...loop,
-    _id: Date.now(),
+    _id: Date.now()
   });
   loop.scene.previous = loop.scene.current;
   loop.scene.current = scene;
@@ -25,5 +24,5 @@ const updateScene = async scene => {
 
 module.exports = {
   loop,
-  updateScene,
+  updateScene
 };
