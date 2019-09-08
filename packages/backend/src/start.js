@@ -38,7 +38,7 @@ audioInput.pipe(encoder);
 module.exports = () => {
   const app = express();
   const server = http.Server(app);
-  const io = socket.configure(server);
+  const io = socket.init(server);
 
   app.use("/", express.static(`${__dirname}/../../frontend/build`));
 
