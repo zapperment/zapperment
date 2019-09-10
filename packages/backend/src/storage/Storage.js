@@ -1,7 +1,7 @@
 const mongo = require("mongodb").MongoClient;
 
 const url = "mongodb://localhost:27017";
-const options = { useNewUrlParser: true };
+const options = { useNewUrlParser: true, useUnifiedTopology: true };
 
 module.exports = class {
   constructor() {
