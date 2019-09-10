@@ -1,4 +1,4 @@
-const db = require("./db");
+const { Storage } = require("./storage");
 const http = require("http");
 const express = require("express");
 const socket = require("./socket");
@@ -35,10 +35,11 @@ const encoder = new lame.Encoder({
 });
 audioInput.pipe(encoder);
 
-module.exports = () => {
+module.exports = async () => {
   const app = express();
   const server = http.Server(app);
-  const io = socket.configure(server);
+  const io = socket.init(server);
+  const storage = new Storage();
 
   app.use("/", express.static(`${__dirname}/../../frontend/build`));
 
@@ -49,6 +50,13 @@ module.exports = () => {
     });
     encoder.pipe(res);
   });
+  try {
+    await storage.init();
+  } catch (err) {
+    console.error("Error initializing storage in main app");
+    console.error(err);
+    process.exit(1);
+  }
 
   midiBeat = new Worker(path.join(__dirname, "./midiBeatWorker.js"), {
     workerData: { tempo: initialTempo, barsPerLoop }
@@ -60,7 +68,7 @@ module.exports = () => {
         io.emit(BEAT, { for: "everyone" });
         break;
       case NEW_LOOP:
-        updateScene(message.data);
+        updateScene(storage, message.data);
         io.emit(STATS_RESET_CLAP, { for: "everyone" });
         io.emit(STATS_RESET_BOO, { for: "everyone" });
         break;
@@ -73,13 +81,8 @@ module.exports = () => {
     console.info(`Beat worker exited with code ${code}`)
   );
 
-  db.init(err => {
-    if (err) {
-      throw err;
-    }
-    midiBeat.postMessage(START_PLAYING);
-    server.listen(port);
-  });
+  midiBeat.postMessage(START_PLAYING);
+  server.listen(port);
 };
 
 function stop() {

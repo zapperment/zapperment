@@ -1,4 +1,5 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
+const { Storage } = require("./storage");
 const jzz = require("jzz");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
@@ -23,70 +24,81 @@ if (isMainThread) {
     "Module midiBeatWorker.js may only be used as a worker thread"
   );
 }
-let running = true;
-let midiClock = null;
-const midiOut = jzz()
-  .openMidiOut(midiPortName)
-  .or("Cannot open MIDI Out port!");
-const midiController = new MidiController(midiOut);
-let clockCounter = 0;
-initSceneGeneration();
 
-parentPort.on("message", message => {
-  switch (message) {
-    case START_PLAYING:
-      midiOut.send(jzz.MIDI.start());
-      midiClock = new MidiClock(tempo);
-      break;
-    case STOP_PLAYING:
-      midiOut.send(jzz.MIDI.stop());
-      midiClock = null;
-      break;
-    case STOP_WORKER:
-      running = false;
-      break;
-    default:
+(async () => {
+  const storage = new Storage();
+  try {
+    await storage.init();
+  } catch (err) {
+    console.error("Error initializing storage in midi beat worker thread");
+    console.error(err);
+    process.exit(1);
   }
-});
+  let running = true;
+  let midiClock = null;
+  const midiOut = jzz()
+    .openMidiOut(midiPortName)
+    .or("Cannot open MIDI Out port!");
+  const midiController = new MidiController(midiOut);
+  let clockCounter = 0;
+  initSceneGeneration(storage);
 
-function run() {
-  if (!running) {
-    parentPort.postMessage(WORKER_STOPPED);
-    return;
+  parentPort.on("message", message => {
+    switch (message) {
+      case START_PLAYING:
+        midiOut.send(jzz.MIDI.start());
+        midiClock = new MidiClock(tempo);
+        break;
+      case STOP_PLAYING:
+        midiOut.send(jzz.MIDI.stop());
+        midiClock = null;
+        break;
+      case STOP_WORKER:
+        running = false;
+        break;
+      default:
+    }
+  });
+
+  function run() {
+    if (!running) {
+      parentPort.postMessage(WORKER_STOPPED);
+      return;
+    }
+    if (midiClock && midiClock.hasTicked()) {
+      if ((clockCounter + 1) % clocksPerLoop === 0) {
+        loop();
+      }
+      if (clockCounter % clocksPerBar === 0) {
+        bar();
+      }
+      if (clockCounter % clocksPerBeat === 0) {
+        beat();
+      }
+      clock();
+      clockCounter++;
+    }
+    setImmediate(run);
   }
-  if (midiClock && midiClock.hasTicked()) {
-    if ((clockCounter + 1) % clocksPerLoop === 0) {
-      loop();
-    }
-    if (clockCounter % clocksPerBar === 0) {
-      bar();
-    }
-    if (clockCounter % clocksPerBeat === 0) {
-      beat();
-    }
-    clock();
-    clockCounter++;
+  setTimeout(run, 100);
+
+  function clock() {
+    midiOut.send(jzz.MIDI.clock());
   }
-  setImmediate(run);
-}
-setTimeout(run, 100);
 
-function clock() {
-  midiOut.send(jzz.MIDI.clock());
-}
+  function beat() {
+    console.log("**** **** beat");
+    parentPort.postMessage({ type: BEAT });
+  }
 
-function beat() {
-  console.log("**** **** beat");
-  parentPort.postMessage({ type: BEAT });
-}
+  function bar() {
+    console.log("**** bar");
+  }
 
-function bar() {
-  console.log("**** bar");
-}
-
-function loop() {
-  const scene = buildNewScene();
-  midiController.changeScene(scene);
-  console.info(`NEW SCENE:\n${JSON.stringify(scene, null, 4)}`);
-  parentPort.postMessage({ type: NEW_LOOP, data: scene });
-}
+  function loop() {
+    const scene = buildNewScene();
+    midiController.changeScene(scene);
+    console.info(`NEW SCENE:\n${JSON.stringify(scene, null, 4)}`);
+    parentPort.postMessage({ type: NEW_LOOP, data: scene });
+  }
+})();
