@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pahund/zapperment.git"
+    "url": "git+https://github.com/technology-ebay-de/zapperment.git"
   },
   "author": "Patrick Hund",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pahund/zapperment/issues"
+    "url": "https://github.com/technology-ebay-de/zapperment/issues"
   },
-  "homepage": "https://github.com/pahund/zapperment#readme",
+  "homepage": "https://github.com/technology-ebay-de/zapperment#readme",
   "devDependencies": {
     "prettier": "^1.16.4"
   },
