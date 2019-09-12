@@ -4,7 +4,7 @@
 
 ![Our mascot Dobby listening to Zapperment at work](assets/dobby-listening-to-zapperment.png)
 
-[Read about this project on Medium.com](https://ebaytech.berlin/zapperment-561877bcdf71)
+[Read about this project on the eBayTech.Berlin blog](https://ebaytech.berlin/zapperment-561877bcdf71)
 
 This project is very much work in progress!
 
