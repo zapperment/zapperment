@@ -18,4 +18,4 @@ See [Running Zapperment on a Mac](https://github.com/technology-ebay-de/zapperme
 
 Copyright © 2019 mobile.de GmbH
 
-![eBay Tech Logo](assets/ebay-tech-logo.png "eBay Tech Logo")
+[![eBay Tech Logo](assets/ebay-tech-logo.png "eBay Tech Logo")](https://ebaytech.berlin)
