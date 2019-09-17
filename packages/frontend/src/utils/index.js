@@ -1,3 +1,4 @@
 import getServerUrl from "./getServerUrl";
+import getIcecastUrl from "./getIcecastUrl";
 
-export { getServerUrl };
+export { getIcecastUrl, getServerUrl };

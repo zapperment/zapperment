@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
 import Amplitude from "amplitudejs";
-import { getServerUrl } from "./utils";
+import{getIcecastUrl}from'./utils';
 
 const vh = window.innerHeight * 0.01;
 document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -14,8 +14,7 @@ ReactDOM.render(<App />, document.getElementById("root"));
 Amplitude.init({
   songs: [
     {
-      // url: `${getServerUrl()}/stream.mp3`,
-      url: `${getServerUrl()}/stream.wav`,
+      url: `${getIcecastUrl()}/stream.ogg`,
       live: true
     }
   ],
