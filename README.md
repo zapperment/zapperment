@@ -10,7 +10,7 @@ This project is very much work in progress!
 
 ## How to install
 
-See [Running Zapperment on a Mac](https://github.com/technology-ebay-de/zapperment/wiki/Running-Zapperment-on-a-Mac)
+See [Running Zapperment on a Mac](https://github.com/technology-ebay-de/zapperment/wiki/Running-Zapperment-on-a-Mac-(v0.0.7-and-later)
 
 ## License
 
