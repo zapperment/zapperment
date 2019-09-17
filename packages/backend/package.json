@@ -14,10 +14,8 @@
     "brain.js": "^1.6.1",
     "express": "^4.16.4",
     "jzz": "^0.7.1",
-    "lame": "^1.2.4",
     "mongodb": "^3.2.3",
     "nodemon": "^1.18.10",
-    "osx-audio": "^1.0.0",
     "prettier": "^1.16.4",
     "socket.io": "^2.2.0"
   },
