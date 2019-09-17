@@ -18,37 +18,3 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
-
-/* ----------- AMPLITUDE ----------- */
-/* Player Styles */
-#player{
-  width: 334px;
-  margin: auto;
-  box-shadow: 1px 5px 5px #888888;
-}
-#player-top{
-  padding: 10px;
-  height: 55px;
-  background-color: white;
-}
-#slash{
-  color: #3b3b3b;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 1px 1px #ffffff;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  margin-top: 20px;
-}
-#track-info-container{
-  float: left;
-  font-size: 10px;
-  width: 170px;
-  overflow: hidden;
-  margin-left: 10px;
-}
-#time-info-container{
-  float: left;
-  margin-top: 15px;
-  font-size: 10px;
-  line-height: 19px;
-}
