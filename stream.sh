@@ -10,8 +10,10 @@ input="avfoundation"
 device="none:default"
 
 hostname="localhost"
-password=Tz48%kv91
 port=8000
+# set the password when executing the script
+# example: password=secret124 ./stream.sh
+# passwort=hackme
 
 # Latency: about 45 seconds
 ffmpeg -f $input \
