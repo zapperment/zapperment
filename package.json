@@ -22,8 +22,5 @@
   "homepage": "https://github.com/technology-ebay-de/zapperment#readme",
   "devDependencies": {
     "prettier": "^1.16.4"
-  },
-  "dependencies": {
-    "uuid": "^3.3.2"
   }
 }

@@ -1,0 +1,8 @@
+module.exports = {
+  CONFIG_SCENE_QUALITY: 0.7,
+  MAX_ATTEMPTS: 5,
+  CONFIG_CHANNELS: 11,
+  PREFIX_MIXER: "mix",
+  PREFIX_PERCUSSION: "per",
+  PREFIX_BONANZA: "bon"
+};

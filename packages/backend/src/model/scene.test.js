@@ -1,4 +1,5 @@
-const { normalize, denormalizeScene } = require("./scene");
+const normalize = require("./normalize");
+const { denormalizeScene } = require("./scene");
 
 const scene = {
   mixer: [
@@ -96,8 +97,6 @@ describe("scene model", () => {
   });
 
   it("should denormalize scene", () => {
-    expect(denormalizeScene(expectedInput)).toMatchObject(
-      scene
-    );
+    expect(denormalizeScene(expectedInput)).toMatchObject(scene);
   });
 });

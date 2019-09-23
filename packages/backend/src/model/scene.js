@@ -1,12 +1,12 @@
-const brain = require("brain.js");
-
-const CONFIG_SCENE_QUALITY = 0.7;
-const MAX_ATTEMPTS = 5;
-const CONFIG_CHANNELS = 11;
-
-const PREFIX_MIXER = "mix";
-const PREFIX_PERCUSSION = "per";
-const PREFIX_BONANZA = "bon";
+const trainNetwork = require("./trainNetwork");
+const normalizeScene = require("./normalize/scene");
+const {
+  PREFIX_BONANZA,
+  PREFIX_PERCUSSION,
+  PREFIX_MIXER,
+  CONFIG_SCENE_QUALITY,
+  MAX_ATTEMPTS
+} = require("./constants");
 
 let trainedNet;
 
@@ -60,49 +60,8 @@ function buildRandomScene() {
   };
 }
 
-const normalizeNumber = (value, max) => {
-  return value / max;
-};
-
 const denormalizeNumber = (value, max) => {
   return Math.floor(value * max);
-};
-
-const normalizeMixer = mixer =>
-  mixer.reduce(
-    (acc, channel) => ({
-      ...acc,
-      [`${PREFIX_MIXER}_${("" + channel.channel).padStart(
-        2,
-        "0"
-      )}`]: channel.muted ? 1 : 0
-    }),
-    {}
-  );
-
-const normalizePercussion = percussion => ({
-  [`${PREFIX_PERCUSSION}_pattern`]: normalizeNumber(percussion.pattern, 6)
-});
-
-const normalizeBonanza = bonanza => ({
-  [`${PREFIX_BONANZA}_pulsarLevel`]: normalizeNumber(bonanza.pulsarLevel, 127),
-  [`${PREFIX_BONANZA}_filter`]: normalizeNumber(bonanza.filter, 90),
-  [`${PREFIX_BONANZA}_filterEnv`]: normalizeNumber(bonanza.filterEnv, 127),
-  [`${PREFIX_BONANZA}_lowCut`]: bonanza.lowCut ? 1 : 0,
-  [`${PREFIX_BONANZA}_rateOneEighth`]: bonanza.rateOneEighth ? 1 : 0,
-  [`${PREFIX_BONANZA}_sawSolo`]: bonanza.sawSolo ? 1 : 0
-});
-
-const normalizeScene = ({ mixer, percussion, bonanza }) => {
-  return {
-    ...normalizeMixer(mixer),
-    ...normalizePercussion(percussion),
-    ...normalizeBonanza(bonanza)
-  };
-};
-
-const normalizeClaps = (claps, maxClaps) => {
-  return claps / maxClaps;
 };
 
 const bonanzaBoolKeys = ["lowCut", "rateOneEighth", "sawSolo"];
@@ -156,38 +115,6 @@ const denormalizeScene = normalizedScene => {
   return result;
 };
 
-const normalize = rawData => {
-  const maxClaps = rawData.reduce((acc, loop) => {
-    return Math.max(acc, loop.stats.claps);
-  }, 0);
-
-  return rawData
-    .map(loop => {
-      // protect from corrupted data
-      if (
-        !loop.scene.current ||
-        !loop.scene.current.mixer ||
-        loop.scene.current.mixer.length !== CONFIG_CHANNELS
-      ) {
-        return null;
-      }
-
-      return {
-        input: normalizeScene(loop.scene.current),
-        output: [normalizeClaps(loop.stats.claps, maxClaps)]
-      };
-    })
-    .filter(Boolean);
-};
-
-const trainNetwork = data => {
-  const net = new brain.NeuralNetwork();
-  const normalizedData = normalize(data);
-  net.train(normalizedData);
-  console.log(`NEURAL NETWORK TRAINED WITH ${normalizedData.length} LOOPS`);
-  return net.toFunction();
-};
-
 const initSceneGeneration = storage =>
   storage.db
     .collection("loops")
@@ -212,7 +139,6 @@ const buildNewScene = () => {
 };
 
 module.exports = {
-  normalize,
   denormalizeScene,
   buildRandomScene,
   buildNewScene,
