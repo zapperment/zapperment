@@ -1,3 +1,4 @@
 const normalize = require("./normalize");
+const normalizeScene = require("./normalizeScene");
 
-module.exports = normalize;
+module.exports = { normalize, normalizeScene };

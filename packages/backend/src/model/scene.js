@@ -1,5 +1,6 @@
+const { getRandomInt, getRandomBool } = require("./utils");
 const trainNetwork = require("./trainNetwork");
-const normalizeScene = require("./normalize/scene");
+const { normalizeScene } = require("./normalize");
 const {
   PREFIX_BONANZA,
   PREFIX_PERCUSSION,
@@ -10,52 +11,42 @@ const {
 
 let trainedNet;
 
-function randomBool() {
-  return Math.random() < 0.5;
-}
-
-function randomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function buildRandomScene() {
   return {
     mixer: [
       // bass
-      { channel: 1, muted: randomBool() },
+      { channel: 1, muted: getRandomBool() },
       // kick
-      { channel: 2, muted: randomBool() },
+      { channel: 2, muted: getRandomBool() },
       // tom
-      { channel: 3, muted: randomBool() },
+      { channel: 3, muted: getRandomBool() },
       // hi hat
-      { channel: 4, muted: randomBool() },
+      { channel: 4, muted: getRandomBool() },
       // fx
-      { channel: 5, muted: randomBool() },
+      { channel: 5, muted: getRandomBool() },
       // spel gtr 1
-      { channel: 6, muted: randomBool() },
+      { channel: 6, muted: getRandomBool() },
       // spel gtr 2
-      { channel: 7, muted: randomBool() },
+      { channel: 7, muted: getRandomBool() },
       // spel gtr 3
-      { channel: 8, muted: randomBool() },
+      { channel: 8, muted: getRandomBool() },
       // spel gtr 4
-      { channel: 9, muted: randomBool() },
+      { channel: 9, muted: getRandomBool() },
       // e-piano
-      { channel: 10, muted: randomBool() },
+      { channel: 10, muted: getRandomBool() },
       // bonanza bassline
-      { channel: 11, muted: randomBool() }
+      { channel: 11, muted: getRandomBool() }
     ],
     percussion: {
-      pattern: randomInt(0, 6)
+      pattern: getRandomInt(0, 6)
     },
     bonanza: {
-      pulsarLevel: randomInt(0, 127),
-      filter: randomInt(0, 90),
-      filterEnv: randomInt(0, 127),
-      lowCut: randomBool(),
-      rateOneEighth: randomBool(),
-      sawSolo: randomBool()
+      pulsarLevel: getRandomInt(0, 127),
+      filter: getRandomInt(0, 90),
+      filterEnv: getRandomInt(0, 127),
+      lowCut: getRandomBool(),
+      rateOneEighth: getRandomBool(),
+      sawSolo: getRandomBool()
     }
   };
 }

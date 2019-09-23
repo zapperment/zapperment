@@ -1,4 +1,4 @@
-const normalize = require("./normalize");
+const { normalize } = require("./normalize");
 const { denormalizeScene } = require("./scene");
 
 const scene = {

@@ -1,5 +1,5 @@
-const normalizeScene = require("./scene");
 const { normalizeClaps } = require("./utils");
+const normalizeScene = require("./normalizeScene");
 const { CONFIG_CHANNELS } = require("../constants");
 
 module.exports = rawData => {

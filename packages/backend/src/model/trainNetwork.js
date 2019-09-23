@@ -1,5 +1,5 @@
 const brain = require("brain.js");
-const normalize = require('./normalize');
+const { normalize } = require("./normalize");
 
 module.exports = data => {
   const net = new brain.NeuralNetwork();
@@ -8,4 +8,3 @@ module.exports = data => {
   console.log(`NEURAL NETWORK TRAINED WITH ${normalizedData.length} LOOPS`);
   return net.toFunction();
 };
-

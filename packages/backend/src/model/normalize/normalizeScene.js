@@ -1,8 +1,8 @@
 const {
-  normalizeMixer,
   normalizePercussion,
-  normalizeBonanza
-} = require("../utils");
+  normalizeBonanza,
+  normalizeMixer
+} = require("./utils");
 
 module.exports = ({ mixer, percussion, bonanza }) => ({
   ...normalizeMixer(mixer),
