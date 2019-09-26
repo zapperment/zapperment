@@ -13,7 +13,6 @@ const {
 const { midiPortName } = require("./config");
 const MidiClock = require("./MidiClock");
 const MidiController = require("./MidiController");
-const { buildNewScene } = require("./model/SceneBuilder");
 
 const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
@@ -98,7 +97,7 @@ if (isMainThread) {
   }
 
   function loop() {
-    const scene = buildNewScene();
+    const scene = sceneBuilder.buildNewScene();
     midiController.changeScene(scene);
     console.info(`NEW SCENE:\n${JSON.stringify(scene, null, 4)}`);
     parentPort.postMessage({ type: NEW_LOOP, data: scene });

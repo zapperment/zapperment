@@ -7,7 +7,7 @@ const {
   STATS_NEW_SHARED_BOOS
 } = require("@zapperment/shared");
 
-const { loop } = require("../model/loop");
+const { loop } = require("../model/LoopManager");
 
 module.exports = app => {
   const io = createIo(app);
