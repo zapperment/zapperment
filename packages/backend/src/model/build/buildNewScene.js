@@ -1,5 +1,5 @@
 const { normalizeScene } = require("../normalize");
-const { buildRandomScene } = require(".");
+const buildRandomScene = require("./buildRandomScene");
 const { CONFIG_SCENE_QUALITY, MAX_ATTEMPTS } = require("../constants");
 const { denormalizeScene } = require("../denormalize");
 

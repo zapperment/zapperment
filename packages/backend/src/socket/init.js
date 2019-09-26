@@ -7,22 +7,24 @@ const {
   STATS_NEW_SHARED_BOOS
 } = require("@zapperment/shared");
 
-const { loop } = require("../model/LoopManager");
-
-module.exports = app => {
-  const io = createIo(app);
+module.exports = ({ loopManager, server }) => {
+  const io = createIo(server);
   io.set("origins", "*:*");
 
   io.on("connection", socket => {
     socket.on(STATS_NEW_CLAP, () => {
       console.log("CLAPPED!");
-      loop.stats.claps++;
-      io.emit(STATS_NEW_SHARED_CLAPS, loop.stats.claps, { for: "everyone" });
+      loopManager.loop.stats.claps++;
+      io.emit(STATS_NEW_SHARED_CLAPS, loopManager.loop.stats.claps, {
+        for: "everyone"
+      });
     });
     socket.on(STATS_NEW_BOO, () => {
       console.log("BOO'D!");
-      loop.stats.boos++;
-      io.emit(STATS_NEW_SHARED_BOOS, loop.stats.boos, { for: "everyone" });
+      loopManager.loop.stats.boos++;
+      io.emit(STATS_NEW_SHARED_BOOS, loopManager.loop.stats.boos, {
+        for: "everyone"
+      });
     });
   });
   return io;

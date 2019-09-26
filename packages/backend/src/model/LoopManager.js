@@ -17,12 +17,12 @@ module.exports = class {
 
   async updateScene(scene) {
     await this.storage.db.collection("loops").insertOne({
-      ...loop,
+      ...this.loop,
       _id: Date.now()
     });
-    loop.scene.previous = loop.scene.current;
-    loop.scene.current = scene;
-    loop.stats.claps = 0;
-    loop.stats.boos = 0;
+    this.loop.scene.previous = this.loop.scene.current;
+    this.loop.scene.current = scene;
+    this.loop.stats.claps = 0;
+    this.loop.stats.boos = 0;
   }
 };

@@ -22,7 +22,6 @@ process.on("SIGINT", stop);
 module.exports = async () => {
   const app = express();
   const server = http.Server(app);
-  const io = socket.init(server);
   const storage = new Storage();
 
   app.use("/", express.static(`${__dirname}/../../frontend/build`));
@@ -36,6 +35,7 @@ module.exports = async () => {
   }
 
   const loopManager = new LoopManager({ storage });
+  const io = socket.init({ loopManager, server });
 
   midiBeat = new Worker(path.join(__dirname, "./midiBeatWorker.js"), {
     workerData: { tempo: initialTempo, barsPerLoop }
