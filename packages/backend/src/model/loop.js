@@ -1,8 +1,8 @@
-const { buildRandomScene } = require("./scene");
+const SceneBuilder = require("./SceneBuilder");
 
 const loop = {
   scene: {
-    current: buildRandomScene(),
+    current: SceneBuilder.buildRandomScene(),
     previous: {}
   },
   stats: {

@@ -1,5 +1,6 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { Storage } = require("./storage");
+const { SceneBuilder } = require("./model");
 const jzz = require("jzz");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
@@ -12,7 +13,7 @@ const {
 const { midiPortName } = require("./config");
 const MidiClock = require("./MidiClock");
 const MidiController = require("./MidiController");
-const { initSceneGeneration, buildNewScene } = require("./model/scene");
+const { buildNewScene } = require("./model/SceneBuilder");
 
 const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
@@ -34,6 +35,7 @@ if (isMainThread) {
     console.error(err);
     process.exit(1);
   }
+  const sceneBuilder = new SceneBuilder({ storage });
   let running = true;
   let midiClock = null;
   const midiOut = jzz()
@@ -41,7 +43,7 @@ if (isMainThread) {
     .or("Cannot open MIDI Out port!");
   const midiController = new MidiController(midiOut);
   let clockCounter = 0;
-  initSceneGeneration(storage);
+  sceneBuilder.init();
 
   parentPort.on("message", message => {
     switch (message) {
