@@ -12,7 +12,7 @@ const {
   STATS_RESET_BOO
 } = require("@zapperment/shared");
 const { initialTempo, barsPerLoop, port } = require("./config");
-const { updateScene } = require("./model/loop");
+const { LoopManager } = require("./model");
 
 let midiBeat = null;
 
@@ -22,7 +22,6 @@ process.on("SIGINT", stop);
 module.exports = async () => {
   const app = express();
   const server = http.Server(app);
-  const io = socket.init(server);
   const storage = new Storage();
 
   app.use("/", express.static(`${__dirname}/../../frontend/build`));
@@ -35,6 +34,9 @@ module.exports = async () => {
     process.exit(1);
   }
 
+  const loopManager = new LoopManager({ storage });
+  const io = socket.init({ loopManager, server });
+
   midiBeat = new Worker(path.join(__dirname, "./midiBeatWorker.js"), {
     workerData: { tempo: initialTempo, barsPerLoop }
   });
@@ -45,7 +47,7 @@ module.exports = async () => {
         io.emit(BEAT, { for: "everyone" });
         break;
       case NEW_LOOP:
-        updateScene(storage, message.data);
+        loopManager.updateScene(message.data);
         io.emit(STATS_RESET_CLAP, { for: "everyone" });
         io.emit(STATS_RESET_BOO, { for: "everyone" });
         break;

@@ -1,4 +1,4 @@
-const { normalize, denormalizeScene } = require("./scene");
+const SceneBuilder = require("./SceneBuilder");
 
 const scene = {
   mixer: [
@@ -48,8 +48,8 @@ const expectedInput = {
   bon_sawSolo: 0
 };
 
-describe("scene model", () => {
-  it("should normalize data", () => {
+describe("scene builder", () => {
+  it("normalizes data", () => {
     const rawData = [
       {
         scene: {
@@ -61,7 +61,7 @@ describe("scene model", () => {
       }
     ];
 
-    expect(normalize(rawData)).toEqual([
+    expect(SceneBuilder.normalize(rawData)).toEqual([
       {
         input: expectedInput,
         output: [1]
@@ -69,7 +69,7 @@ describe("scene model", () => {
     ]);
   });
 
-  it("should normalize claps", () => {
+  it("normalizes claps", () => {
     const rawData = [
       {
         scene: {
@@ -89,15 +89,13 @@ describe("scene model", () => {
       }
     ];
 
-    expect(normalize(rawData)).toEqual([
+    expect(SceneBuilder.normalize(rawData)).toEqual([
       { input: expectedInput, output: [1] },
       { input: expectedInput, output: [0.5] }
     ]);
   });
 
-  it("should denormalize scene", () => {
-    expect(denormalizeScene(expectedInput)).toMatchObject(
-      scene
-    );
+  it("denormalizes scenes", () => {
+    expect(SceneBuilder.denormalizeScene(expectedInput)).toMatchObject(scene);
   });
 });
