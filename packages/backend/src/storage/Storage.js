@@ -2,22 +2,30 @@ const mongo = require("mongodb").MongoClient;
 
 const url = "mongodb://localhost:27017";
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
+const loopsCollection = "loops";
+const zappermentDb = "zapperment";
 
 module.exports = class {
-  constructor() {
-    this.db = null;
+  #db = null;
+
+  async init() {
+    const client = await mongo.connect(url, options);
+    this.#db = client.db(zappermentDb);
   }
 
-  init() {
-    return new Promise((resolve, reject) => {
-      mongo.connect(url, options, (err, client) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        this.db = client.db("zapperment");
-        resolve();
-      });
+  // async, returns a promise
+  saveLoop(loop) {
+    return this.#db.collection(loopsCollection).insertOne({
+      ...loop,
+      _id: Date.now()
     });
+  }
+
+  // async, returns a promise resolving to docs
+  loadLoops() {
+    return this.#db
+      .collection(loopsCollection)
+      .find({})
+      .toArray();
   }
 };

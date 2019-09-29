@@ -9,11 +9,9 @@ module.exports = class {
     this.trainedNet = null;
   }
 
-  init() {
-    this.storage.db
-      .collection("loops")
-      .find({})
-      .toArray((err, docs) => (this.trainedNet = trainNetwork(docs)));
+  async init() {
+    const docs = await this.storage.loadLoops();
+    this.trainedNet = trainNetwork(docs)
   }
 
   buildNewScene() {

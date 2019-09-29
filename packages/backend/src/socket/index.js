@@ -1,5 +1,5 @@
-const init = require("./init");
+const Socket = require("./Socket");
 
 module.exports = {
-  init
+  Socket
 };
