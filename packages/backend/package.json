@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/backend",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Zapperment backend (Express server)",
   "main": "src/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/shared": "^0.0.9",
+    "@zapperment/shared": "^0.0.10",
     "brain.js": "^1.6.1",
     "express": "^4.16.4",
     "jzz": "^0.7.1",
