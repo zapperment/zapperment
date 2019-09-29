@@ -1,6 +1,6 @@
+const { databaseUrl } = require("../config");
 const mongo = require("mongodb").MongoClient;
 
-const url = "mongodb://localhost:27017";
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
 const loopsCollection = "loops";
 const zappermentDb = "zapperment";
@@ -9,7 +9,7 @@ module.exports = class {
   #db = null;
 
   async init() {
-    const client = await mongo.connect(url, options);
+    const client = await mongo.connect(databaseUrl, options);
     this.#db = client.db(zappermentDb);
   }
 

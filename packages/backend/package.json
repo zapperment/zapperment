@@ -12,6 +12,7 @@
   "dependencies": {
     "@zapperment/shared": "^0.0.10",
     "brain.js": "^1.6.1",
+    "dotenv": "^8.1.0",
     "express": "^4.16.4",
     "jzz": "^0.7.1",
     "mongodb": "^3.2.3",
