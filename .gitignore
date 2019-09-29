@@ -2,4 +2,4 @@ icecast.xml
 node_modules
 *.iml
 .idea
-packages/backend/.env
+.env
