@@ -17,13 +17,12 @@ const SceneBuilder = require("./SceneBuilder");
 
 /* ----- CONSTANTS ----- */
 
-const feedbackTypeBoos = 'boos';
-const feedbackTypeClaps = 'claps';
+const feedbackTypeBoos = "boos";
+const feedbackTypeClaps = "claps";
 
 /* ----- CLASS EXPORT ----- */
 
 module.exports = class {
-
   /* ----- PRIVATE FIELDS ----- */
 
   #storage = null;
@@ -56,7 +55,9 @@ module.exports = class {
   }
 
   async updateScene(scene) {
-    await this.#storage.saveLoop(this.#loop);
+    if (this.hasFeedback) {
+      await this.#storage.saveLoop(this.#loop);
+    }
     this.#loop.scene.previous = this.#loop.scene.current;
     this.#loop.scene.current = scene;
     this.#loop.stats.claps = 0;
@@ -71,6 +72,10 @@ module.exports = class {
 
   get claps() {
     return this.#getFeedback(feedbackTypeClaps);
+  }
+
+  get hasFeedback() {
+    return this.boos || this.claps;
   }
 
   /* ----- PRIVATE METHODS ----- */
