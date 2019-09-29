@@ -10,12 +10,17 @@
  * Provides a method to update the scene, which stores the current scene
  * and creates a new one.
  */
+
+/* ----- IMPORTS ----- */
+
 const SceneBuilder = require("./SceneBuilder");
 
 /* ----- CONSTANTS ----- */
 
 const feedbackTypeBoos = 'boos';
 const feedbackTypeClaps = 'claps';
+
+/* ----- CLASS EXPORT ----- */
 
 module.exports = class {
 
