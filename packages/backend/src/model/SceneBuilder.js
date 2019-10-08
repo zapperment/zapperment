@@ -4,6 +4,8 @@ const { denormalizeScene } = require("./denormalize");
 const { normalize } = require("./normalize");
 
 module.exports = class {
+  #foo = 'foo';
+
   constructor({ storage }) {
     this.storage = storage;
     this.trainedNet = null;
