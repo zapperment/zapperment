@@ -1,6 +1,6 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
-const { Storage } = require("./storage");
-const { SceneBuilder } = require("./model");
+const { Storage } = require("../storage");
+const { SceneBuilder } = require("../model");
 const jzz = require("jzz");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
@@ -8,9 +8,9 @@ const {
   STOP_PLAYING,
   STOP_WORKER,
   WORKER_STOPPED
-} = require("./constants");
+} = require("../constants");
 
-const { midiPortName } = require("./config");
+const { midiPortName } = require("../config");
 const MidiClock = require("./MidiClock");
 const MidiController = require("./MidiController");
 
