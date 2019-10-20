@@ -11,7 +11,7 @@ module.exports = class {
 
   async init() {
     const docs = await this.storage.loadLoops();
-    this.trainedNet = trainNetwork(docs)
+    this.trainedNet = trainNetwork(docs);
   }
 
   buildNewScene() {

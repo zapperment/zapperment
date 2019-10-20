@@ -1,6 +1,6 @@
 const jzz = require("jzz");
 
-class MidiController {
+module.exports = class {
   constructor(midiOut) {
     this.midiOut = midiOut;
   }
@@ -24,6 +24,4 @@ class MidiController {
     this.send(2, 106, scene.bonanza.rateOneEighth ? 127 : 0);
     this.send(2, 107, scene.bonanza.sawSolo ? 127 : 0);
   }
-}
-
-module.exports = MidiController;
+};

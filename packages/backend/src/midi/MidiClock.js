@@ -1,9 +1,11 @@
 const clocksPerBeat = 24;
 
-class MidiClock {
+module.exports = class {
   constructor(tempo) {
     this.lastTick = process.hrtime.bigint();
-    this.interval = BigInt(Math.round(60000 / tempo / clocksPerBeat * 1000000));
+    this.interval = BigInt(
+      Math.round((60000 / tempo / clocksPerBeat) * 1000000)
+    );
   }
 
   hasTicked() {
@@ -13,6 +15,4 @@ class MidiClock {
     }
     return hasTicked;
   }
-}
-
-module.exports = MidiClock;
+};
