@@ -14,14 +14,7 @@ module.exports = class {
     for (const { channel, muted } of scene.mixer) {
       this.send(0, channel + 101, muted ? 127 : 0);
     }
-    // percussion
-    this.send(1, scene.percussion.pattern + 102, 127);
-    // bonanza bassline
-    this.send(2, 102, scene.bonanza.pulsarLevel);
-    this.send(2, 103, scene.bonanza.filter);
-    this.send(2, 104, scene.bonanza.filterEnv);
-    this.send(2, 105, scene.bonanza.lowCut ? 127 : 0);
-    this.send(2, 106, scene.bonanza.rateOneEighth ? 127 : 0);
-    this.send(2, 107, scene.bonanza.sawSolo ? 127 : 0);
+    // nervomat
+    this.send(1, 75, scene.nervomat.annoyMe ? 127 : 0);
   }
 };

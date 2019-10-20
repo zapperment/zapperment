@@ -1,15 +1,9 @@
-const { denormalizeNumber, denormalizeBonanza } = require("./utils");
-const {
-  PREFIX_MIXER,
-  PREFIX_PERCUSSION,
-  PREFIX_BONANZA
-} = require("../constants");
+const { PREFIX_MIXER, PREFIX_NERVOMAT } = require("../constants");
 
 module.exports = normalizedScene => {
   const result = {
     mixer: [],
-    percussion: {},
-    bonanza: {}
+    nervomat: {}
   };
 
   Object.keys(normalizedScene).map(key => {
@@ -22,19 +16,8 @@ module.exports = normalizedScene => {
       });
     }
 
-    if (prefix === PREFIX_PERCUSSION) {
-      result.percussion[key.split("_")[1]] = denormalizeNumber(
-        normalizedScene[key],
-        6
-      );
-    }
-
-    if (prefix === PREFIX_BONANZA) {
-      const bonanzaKey = key.split("_")[1];
-      result.bonanza[bonanzaKey] = denormalizeBonanza(
-        normalizedScene[key],
-        bonanzaKey
-      );
+    if (prefix === PREFIX_NERVOMAT) {
+      result.nervomat.annoyMe = Boolean(normalizedScene[key]);
     }
   });
 
