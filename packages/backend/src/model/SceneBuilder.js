@@ -11,11 +11,15 @@ module.exports = class {
 
   async init() {
     const docs = await this.storage.loadLoops();
-    this.trainedNet = trainNetwork(docs);
+    if (docs.length) {
+      this.trainedNet = trainNetwork(docs);
+    }
   }
 
   buildNewScene() {
-    return buildNewScene(this.trainedNet);
+    return this.trainedNet
+      ? buildNewScene(this.trainedNet)
+      : buildRandomScene();
   }
 
   static buildRandomScene() {
