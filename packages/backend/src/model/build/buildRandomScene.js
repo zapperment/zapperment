@@ -2,15 +2,15 @@ const { getRandomBool, getRandomInt } = require("./utils");
 
 module.exports = () => ({
   mixer: [
-    // bass
+    // piano
     { channel: 1, muted: getRandomBool() },
-    // kick
+    // bottle perc
     { channel: 2, muted: getRandomBool() },
-    // tom
+    // dirty beat
     { channel: 3, muted: getRandomBool() },
-    // hi hat
+    // fuzz bass
     { channel: 4, muted: getRandomBool() },
-    // fx
+    // fm arp
     { channel: 5, muted: getRandomBool() },
     // spel gtr 1
     { channel: 6, muted: getRandomBool() },
