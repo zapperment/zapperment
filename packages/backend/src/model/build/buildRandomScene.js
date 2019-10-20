@@ -1,7 +1,30 @@
 const { getRandomBool, getRandomInt } = require("./utils");
 
 module.exports = () => ({
-  mixer: buildMixer(),
+  mixer: [
+    // piano
+    { channel: 1, muted: getRandomBool() },
+    // bottle perc
+    { channel: 2, muted: getRandomBool() },
+    // dirty beat
+    { channel: 3, muted: getRandomBool() },
+    // fuzz bass
+    { channel: 4, muted: getRandomBool() },
+    // fm arp
+    { channel: 5, muted: getRandomBool() },
+    // spel gtr 1
+    { channel: 6, muted: getRandomBool() },
+    // spel gtr 2
+    { channel: 7, muted: getRandomBool() },
+    // spel gtr 3
+    { channel: 8, muted: getRandomBool() },
+    // spel gtr 4
+    { channel: 9, muted: getRandomBool() },
+    // e-piano
+    { channel: 10, muted: getRandomBool() },
+    // bonanza bassline
+    { channel: 11, muted: getRandomBool() }
+  ],
   percussion: {
     pattern: getRandomInt(0, 6)
   },
@@ -14,42 +37,3 @@ module.exports = () => ({
     sawSolo: getRandomBool()
   }
 });
-
-function buildMixer() {
-  let mixer;
-  do {
-    mixer = [
-      // bass
-      { channel: 1, muted: getRandomBool() },
-      // kick
-      { channel: 2, muted: getRandomBool() },
-      // tom
-      { channel: 3, muted: getRandomBool() },
-      // hi hat
-      { channel: 4, muted: getRandomBool() },
-      // fx
-      { channel: 5, muted: getRandomBool() },
-      // spel gtr 1
-      { channel: 6, muted: getRandomBool() },
-      // spel gtr 2
-      { channel: 7, muted: getRandomBool() },
-      // spel gtr 3
-      { channel: 8, muted: getRandomBool() },
-      // spel gtr 4
-      { channel: 9, muted: getRandomBool() },
-      // e-piano
-      { channel: 10, muted: getRandomBool() },
-      // bonanza bassline
-      { channel: 11, muted: getRandomBool() }
-    ];
-  } while (allChannelsMuted(mixer));
-  return mixer;
-}
-
-function allChannelsMuted(mixer) {
-  return mixer.reduce(
-    (allMuted, { muted }) => (!allMuted ? allMuted : muted),
-    true
-  );
-}
-
