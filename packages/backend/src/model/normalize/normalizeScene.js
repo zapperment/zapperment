@@ -1,11 +1,9 @@
 const {
-  normalizePercussion,
-  normalizeBonanza,
-  normalizeMixer
+  normalizeMixer,
+  normalizeNervomat
 } = require("./utils");
 
-module.exports = ({ mixer, percussion, bonanza }) => ({
+module.exports = ({ mixer, nervomat }) => ({
   ...normalizeMixer(mixer),
-  ...normalizePercussion(percussion),
-  ...normalizeBonanza(bonanza)
+  ...normalizeNervomat(nervomat)
 });
