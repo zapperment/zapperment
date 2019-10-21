@@ -15,6 +15,6 @@ module.exports = class {
       this.send(0, channel + 101, muted ? 127 : 0);
     }
     // nervomat
-    this.send(1, 75, scene.nervomat.annoyMe ? 127 : 0);
+    this.send(0, 75, scene.nervomat.annoyMe ? 127 : 0);
   }
 };
