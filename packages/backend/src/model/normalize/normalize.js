@@ -1,6 +1,5 @@
 const { normalizeClaps } = require("./utils");
 const normalizeScene = require("./normalizeScene");
-const { CONFIG_CHANNELS } = require("../constants");
 
 module.exports = rawData => {
   const maxClaps = rawData.reduce(
@@ -9,20 +8,9 @@ module.exports = rawData => {
   );
 
   return rawData
-    .map(loop => {
-      // protect from corrupted data
-      if (
-        !loop.scene.current ||
-        !loop.scene.current.mixer ||
-        loop.scene.current.mixer.length !== CONFIG_CHANNELS
-      ) {
-        return null;
-      }
-
-      return {
-        input: normalizeScene(loop.scene.current),
-        output: [normalizeClaps(loop.stats.claps, maxClaps)]
-      };
-    })
+    .map(loop => ({
+      input: normalizeScene(loop.scene.current),
+      output: [normalizeClaps(loop.stats.claps, maxClaps)]
+    }))
     .filter(Boolean);
 };
