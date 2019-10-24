@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import styles from './Emoji.module.css';
 
+const minSize = 4;
+const maxSize = 8;
+
 export default ({ icon }) => {
   const defaultPosition = `${Math.floor(Math.random() * 100) + 1}vw`;
   const [horizontalPosition] = useState(defaultPosition);
 
-  const defaultSize = `${Math.floor(Math.random() * 3) + 2}vw`;
+  const defaultSize = `${Math.floor(Math.random() * maxSize) + minSize}vw`;
   const [fontSize] = useState(defaultSize);
 
   return (
