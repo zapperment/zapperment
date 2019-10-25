@@ -1,7 +1,7 @@
 .component {
   display: block;
   position: absolute;
-  top: 0;
+  top: -10vh;
   animation: rain linear infinite;
   transform: translate3d(0, 0, 0);
   animation-duration: 4s;
@@ -9,7 +9,7 @@
 
 @keyframes rain {
   from {
-    top: 0;
+    top: -20%;
   }
   to {
     top: 95%;

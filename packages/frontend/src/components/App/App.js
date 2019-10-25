@@ -8,7 +8,6 @@ import Emoji from "../Emoji";
 import Lamp from "../Lamp";
 import Welcome from "../Welcome";
 import styles from "./App.module.css";
-import { getEmoji } from "./utils";
 
 const socket = io(getServerUrl());
 
@@ -35,7 +34,7 @@ class App extends Component {
         emojis.push(
           <Emoji
             key={`${countKey}${Date.now() + Math.random()}`}
-            icon={getEmoji(type)}
+            type={type}
           />
         );
       }
