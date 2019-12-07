@@ -11,40 +11,9 @@ look like, take a look at the
 [tracks](https://github.com/technology-ebay-de/zapperment/tree/master/tracks)
 directory, which contains several examples.
 
-# Basic Structure
+# Table of Contents
 
-The basic structure of a Zapperment track definition looks like this:
-
-    {
-      "meta": { … },
-      "tempo": …,
-      "baryPerLoop": …,
-      "beatsPerBar": …,
-      "channels": [
-        {
-          "meta": { … },
-          "midi": { … },
-          "playing": …,
-          "elements": {
-            "pitch": { … },
-            "volume": …,
-            "pan": { … },
-            "brighness": …,
-            "effects": { … },
-            "timbre": { … },
-            "texture": { … },
-            "rhythm": { … },
-            "mood": { … }
-        }
-      ]
-    }
-
-# Reference
-
-Each of the parts of a Zapperment track definition are explained in this
-reference section.
-
-## Table of Contents
+<details><summary>show</summary>
 
 - [meta](#meta)
   - [title](#metatitle)
@@ -95,10 +64,46 @@ reference section.
       - [sidechain](#channelselementseffectssidechain)
       - [pitchshift](#channelselementseffectspitchshift)
     - [timbre](#channelselementstimbre)
+    - [sound](#channelselementssound)
     - [type](#channelselementstype)
     - [texture](#channelselementstexture)
     - [rhythm](#channelselementsrhythm)
     - [mood](#channelselementsmood)
+
+</details>
+
+# Basic Structure
+
+The basic structure of a Zapperment track definition looks like this:
+
+    {
+      "meta": { … },
+      "tempo": …,
+      "baryPerLoop": …,
+      "beatsPerBar": …,
+      "channels": [
+        {
+          "meta": { … },
+          "midi": { … },
+          "playing": …,
+          "elements": {
+            "pitch": { … },
+            "volume": …,
+            "pan": { … },
+            "brighness": …,
+            "effects": { … },
+            "timbre": { … },
+            "texture": { … },
+            "rhythm": { … },
+            "mood": { … }
+        }
+      ]
+    }
+
+# Reference
+
+Each of the parts of a Zapperment track definition are explained in this
+reference section.
 
 ## meta
 
@@ -894,7 +899,7 @@ piano sound:
 ```json
 {
   "timbre": {
-    "acousticGrandPiano": 127
+    "acousticPiano": 127
   }
 }
 ```
@@ -925,6 +930,13 @@ can be heard:
   }
 }
 ```
+
+The values are not an exact science – think of it as describing to a friend what
+your drum beat sounds like: “It's mostly the kick drum, with the snare hitting
+every other beat, together with a hi-hat that plays throughout.”
+
+The JSON code is the “language” you use to talk to Zapperment to describe your
+music.
 
 Any of the timbres can be defined as controllable. For example, you might create
 a brass ensemble Combinator with three
@@ -980,26 +992,265 @@ playing. There are only three sound types:
   sound coming from a sampler is, of course, actually electronic
 - Use _electric_ for electrically amplified instruments, e.g. electric guitar,
   bass or e-piano
-- Use _electronic_ for synthesizers and synthetic drum and percussion sounds
+- Use _electronic_ for synthesizers and synthetic drum and percussion sounds, as
+  well as sampled natural sounds that are highly processed and not intended to
+  sound like an electric or acoustic instrument
 
 Similar to the [channels.elements.timbre](#channelselementstimbre) element, the
-_type_ is a JSON object with keys that correspond to the keys in the table above
-and values that rate how much this channel sounds corresponds to the type on a
-scale from 0-127.
+_sound_ element is a JSON object with keys that correspond to the keys in the
+table above and values that rate how much this channel's sound type corresponds
+to the type on a scale from 0-127.
 
 - Type: object
 - Required (no default)
 - Controllable: yes
 
-####
+##### 💡 Example
 
-<!-- melody, solo, chords, arpeggio, bass line, hook, riff, lick, fill, hit -->
+Let's say you have a channel that plays the guitar. You've configured the
+channel's Combinator button to switch between an acoustic and an electric guitar
+sound:
+
+![Guitar channel](https://github.com/technology-ebay-de/zapperment/blob/master/assets/wiki-images/guitar-example.png)
+
+You let Zapperment control if the channel plays an electric or acoustic guitar
+by making the _sound_ element controllable, through button 2:
+
+```json
+{
+  "sound": {
+    "acoustic": {
+      "button2": {
+        "min": 127,
+        "max": 0
+      }
+    },
+    "electric": {
+      "button2": {
+        "min": 0,
+        "max": 127
+      }
+    }
+  }
+}
+```
+
+#### channels.elements.type
+
+Use _type_ to describe the type of musical and rhythmic pattern the channel is
+playing. It becomes clearer when you look at the available types below.
+
+| Name       | Key            |
+| ---------- | -------------- |
+| Melody     | `"melody"`     |
+| Solo       | `"solo"`       |
+| Chords     | `"chords"`     |
+| Arpeggio   | `"arpeggio"`   |
+| Bassline   | `"bassline"`   |
+| Hook       | `"hook"`       |
+| Riff       | `"riff"`       |
+| Fill       | `"fill"`       |
+| Hit        | `"hit"`        |
+| Break      | `"break"`      |
+| Beat       | `"beat"`       |
+| Percussion | `"percussion"` |
+
+- Use _melody_ for a channel that is playing a “linear succession of musical
+  tones that the listener perceives as a single entity” (see
+  [Wikipedia](https://en.wikipedia.org/wiki/Melody))
+- Use _solo_ for a channel where a single instrument is playing in a free,
+  improvised way (see [Wikipedia](<https://en.wikipedia.org/wiki/Solo_(music)>))
+- Use _chords_ for a channel where an instrument is playing multiple notes
+  together to form chords, typically a synthesizer pad or a piano (see
+  [Wikipedia](<https://en.wikipedia.org/wiki/Chord_(music)>))
+- Use _arpeggio_ for a channel where an instrument is playing chords that are
+  broken into a sequence of notes, rising or ascending, repeating cyclically
+  (see [Wikipedia](https://en.wikipedia.org/wiki/Arpeggio))
+- Use _bassline_ for a channel where a monophonic instrument is playing notes in
+  a lower register (see [Wikipedia](https://en.wikipedia.org/wiki/Bassline))
+- Use _hook_ for a channel that is playing a short, catchy musical phrase (see
+  [Wikipedia](<https://en.wikipedia.org/wiki/Hook_(music)>))
+- Use _riff_ for a channel that is playing “a brief, relaxed phrase” (see
+  [Wikipedia](https://en.wikipedia.org/wiki/Ostinato#Riff))
+- Use _fill_ for a channel that is playing a short musical, percussive phrase or
+  sound effect at the end of the loop intended to lead over to the next loop
+  iteration (see [Wikipedia](<https://en.wikipedia.org/wiki/Fill_(music)>))
+- Use _hit_ for a channel that is playing a percussive sound, sound effect or
+  musical phrase at the beginning of the loop intended to mark its beginning
+- Use _break_ for a channel that is playing nothing or very little – use this
+  for example if you have a channel that gives Zapperment control over various
+  drum patterns (see [Wikipedia](<https://en.wikipedia.org/wiki/Break_(music)>))
+- Use _beat_ for a channel that is playing a steady drum pattern, typically with
+  a bass drum and a snare drum (see
+  [Wikipedia](https://en.wikipedia.org/wiki/Drum_beat))
+- Use _percussion_ for a channel that is playing a percussion or drum pattern
+  that does not fall into the _beat_ category – this could be something like a
+  tamborine or congas
+
+Similar to the [channels.elements.timbre](#channelselementstimbre) element, the
+_type_ element is a JSON object with keys that correspond to the keys in the
+table above and values that rate how much this channel corresponds to the type
+on a scale from 0-127.
+
+- Type: object
+- Required (no default)
+- Controllable: yes
+
+##### 💡 Basic Example: Synthesizer Pad
+
+For a Zapperment channel that plays a chord progression with a synthesizer pad
+sound, without any controls, the JSON code looks like this:
+
+```json
+{
+  "type": {
+    "chords": 127
+  }
+}
+```
+
+##### 💡 Advanced Example: Controlling Drum Patterns
+
+Create a channel that gives Zapperment control over which pattern the
+[Drum Sequencer](https://www.reasonstudios.com/shop/rack-extension/drum-sequencer/)
+is playing through rotary know 1:
+
+![Zapperment channel with drum pattern control](https://github.com/technology-ebay-de/zapperment/blob/master/assets/wiki-images/drum-example.png)
+
+In the drum sequencer, pattern 1 is playing a basic drum beat with kick, snare
+and hi-hat. In pattern 2, a snare drum fill is added to the beat at the end. In
+pattern 3, a crash cymbal hit is added to the beat at the beginning. Pattern 4
+plays a drum break.
+
+The JSON code to describe this looks like this:
+
+```json
+{
+  "type": {
+    "rotary1": {
+      "0": {
+        "beat": 127
+      },
+      "43": {
+        "beat": 127,
+        "fill": 127
+      },
+      "85": {
+        "beat": 127,
+        "hit": 127
+      },
+      "127": {
+        "break": 127
+      }
+    }
+  }
+}
+```
 
 #### channels.elements.texture
 
+The _texture_ element descibes how melodic and harmonic materials are combined
+in the channel (see
+[Wikipedia](<https://en.wikipedia.org/wiki/Texture_(music)>)). While music
+theory describes a lot more kinds of textures, for the sake of describing our
+music to Zapperment, we'll just use these two basic ones:
+
+| Name       | Key            |
+| ---------- | -------------- |
+| Monophonic | `"monophonic"` |
+| Polyphonic | `"polyphonic"` |
+
+- Use _monophonic_ for channels that play single melodic line, only one note at
+  a time
+- Use _polyphonic_ for channels that play single melodic line, only one note at
+  a time
+
+Similar to the [channels.elements.timbre](#channelselementstimbre) element, the
+_texture_ element is a JSON object with keys that correspond to the keys in the
+table above and values that rate how much this channel corresponds to the
+texture on a scale from 0-127.
+
+- Type: object
+- Required (no default)
+- Controllable: yes
+
 #### channels.elements.rhythm
 
+The _rhythm_ element describes the kind of rhythm this channel is playing.
+
+| Name     | Key          |
+| -------- | ------------ |
+| Groovy   | `"groovy"`   |
+| Shuffled | `"shuffled"` |
+| Straight | `"straight"` |
+
+- Use _groovy_ for channels that play a rhythm where the notes are not exactly
+  aligned to a grid of sixteenth notes, but intentionally a bit “off”, to create
+  a human feel, together with slight velocity variations; this is typically done
+  with Reason's (see
+  [Wikipedia](<https://en.wikipedia.org/wiki/Groove_(music)>))
+  [ReGroove Mixer](https://www.reasonstudios.com/en/reason/recording/regroove),
+  or a musician played a groovy piece of music or drum pattern live, without
+  quantization applied
+- Use _shuffled_ for channels where more or less shuffle is applied to the
+  sixteenth notes from a sequencer or drum machine; this is similar to groove,
+  but more mechanical and less humanized; most sequencers or drum machines have
+  a shuffle setting
+  ([PolyStep Sequencer](https://www.reasonstudios.com/en/reason/players/polystep-sequencer),
+  [Drum Sequencer](https://www.reasonstudios.com/en/reason/players/drum-sequencer),
+  [Matrix](https://www.reasonstudios.com/en/reason/recording/matrix),
+  [ReDrum](https://www.reasonstudios.com/en/reason/instruments/redrum))
+- Use _straight_ for channels where the rhythm is _not_ groovy or shuffled, i.e.
+  notes are strictly quantized
+
+Similar to the [channels.elements.timbre](#channelselementstimbre) element, the
+_rhythm_ element is a JSON object with keys that correspond to the keys in the
+table above and values that rate how much this channel corresponds to the rhythm
+on a scale from 0-127.
+
+- Type: object
+- Required (no default)
+- Controllable: yes
+
 #### channels.elements.mood
+
+The _mood_ element describes the mood, atmosphere, feeling that the sound played
+by a channel creates. This is the most unscientific, subjective element, but
+possibly also the most powerful, if the producers of Zapperment tracks get it
+right.
+
+| Value       | Key             |
+| ----------- | --------------- |
+| Aggressive  | `"Aggressive"`  |
+| Agitated    | `"agitated"`    |
+| Busy        | `"busy"`        |
+| Confusing   | `"confusing"`   |
+| Depressing  | `"depressing"`  |
+| Dramatic    | `"dramatic"`    |
+| Erotic      | `"erotic"`      |
+| Euphoric    | `"euphoric"`    |
+| Happy       | `"happy"`       |
+| Hectic      | `"hectic"`      |
+| Heroic      | `"heroic"`      |
+| Hypnotic    | `"hypnotic"`    |
+| Meditative  | `"meditative"`  |
+| Melancholic | `"melancholic"` |
+| Peaceful    | `"peaceful"`    |
+| Psychedelic | `"psychedelic"` |
+| Relaxed     | `"relaxed"`     |
+| Sad         | `"sad"`         |
+| Scary       | `"scary"`       |
+| Serene      | `"serene"`      |
+| Stressful   | `"stressful"`   |
+
+Similar to the [channels.elements.timbre](#channelselementstimbre) element, the
+_rhythm_ element is a JSON object with keys that correspond to the keys in the
+table above and values that rate how much this channel corresponds to the rhythm
+on a scale from 0-127.
+
+- Type: object
+- Required (no default)
+- Controllable: yes
 
 # Addendum
 
@@ -1041,16 +1292,13 @@ changes and additions.
 
 ### Piano
 
-| Name                     | Key                        |
-| ------------------------ | -------------------------- |
-| Acoustic Grand Piano     | `"acousticGrandPiano"`     |
-| Bright Acoustic Piano    | `"brightAcousticPiano"`    |
-| Rhodes Electric Piano    | `"rhodesElectricPiano"`    |
-| Pianet Electric Piano    | `"pianetElectricPiano"`    |
-| Wurlitzer Electric Piano | `"wurlitzerElectricPiano"` |
-| Digital Electric Piano   | `"digitalElectricPiano"`   |
-| Harpsichord              | `"harpsichord"`            |
-| Clavinet                 | `"clavinet"`               |
+| Name                   | Key                      |
+| ---------------------- | ------------------------ |
+| Acoustic Piano         | `"acousticPiano"`        |
+| Electric Piano         | `"electricPiano"`        |
+| Digital Electric Piano | `"digitalElectricPiano"` |
+| Harpsichord            | `"harpsichord"`          |
+| Clavinet               | `"clavinet"`             |
 
 ### Chromatic Percussion
 
@@ -1067,16 +1315,13 @@ changes and additions.
 
 ### Organ
 
-| Name             | Key                 |
-| ---------------- | ------------------- |
-| Drawbar Organ    | `"drawbarOrgan"`    |
-| Percussive Organ | `"percussiveOrgan"` |
-| Rock Organ       | `"rockOrgan"`       |
-| Church Organ     | `"churchOrgan"`     |
-| Reed Organ       | `"reedOrgan"`       |
-| Accordion        | `"accordion"`       |
-| Harmonica        | `"harmonica"`       |
-| Tango Accordion  | `"tangoAccordion"`  |
+| Name            | Key                |
+| --------------- | ------------------ |
+| Rock Organ      | `"rockOrgan"`      |
+| Church Organ    | `"churchOrgan"`    |
+| Accordion       | `"accordion"`      |
+| Harmonica       | `"harmonica"`      |
+| Tango Accordion | `"tangoAccordion"` |
 
 ### Guitar
 
@@ -1084,11 +1329,9 @@ changes and additions.
 | --------------------- | ----------------------- |
 | Nylon Acoustic Guitar | `"nylonAcousticGuitar"` |
 | Steel Acoustic Guitar | `"steelAcousticGuitar"` |
-| Jazz Electric Guitar  | `"jazzElectricGuitar"`  |
 | Clean Electric Guitar | `"cleanElectricGuitar"` |
 | Muted Electric Guitar | `"mutedElectricGuitar"` |
 | Overdriven Guitar     | `"overdrivenGuitar"`    |
-| Distortion Guitar     | `"distortionGuitar"`    |
 | Guitar Harmonics      | `"guitarHarmonics"`     |
 | Guitar Fret Noise     | `"guitarFretNoise"`     |
 
@@ -1221,7 +1464,6 @@ changes and additions.
 | Name           | Key               |
 | -------------- | ----------------- |
 | Tinkle Bell    | `"tinkleBell"`    |
-| Agogo          | `"agogo"`         |
 | Steel Drums    | `"steelDrums"`    |
 | Woodblock      | `"woodblock"`     |
 | Taiko Drum     | `"taikoDrum"`     |
@@ -1233,6 +1475,7 @@ changes and additions.
 
 | Name                 | Key                    |
 | -------------------- | ---------------------- |
+| Voice Sample         | `"voiceSample"`        |
 | Synth Sound Effect   | `"synthSoundEffect"`   |
 | Natural Sound Effect | `"naturalSoundEffect"` |
 | Noise                | `"noise"`              |
@@ -1258,14 +1501,14 @@ changes and additions.
 | Bongo         | `"bongo"`        |
 | Conga         | `"conga"`        |
 | Timbale       | `"timbale"`      |
-| Agogo         | `"agogo"`        |
+| Agogô         | `"agogo"`        |
 | Cabasa        | `"cabasa"`       |
 | Maracas       | `"maracas"`      |
 | Whistle       | `"whistle"`      |
-| Guiro         | `"guiro"`        |
+| Güiro         | `"guiro"`        |
 | Claves        | `"claves"`       |
 | Wood Block    | `"woodBlock"`    |
-| Cuica         | `"cuica"`        |
+| Cuíca         | `"cuica"`        |
 | Triangle      | `"triangle"`     |
 
 ## Note Names
