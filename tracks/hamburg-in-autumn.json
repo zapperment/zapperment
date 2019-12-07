@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "title": "Hamburg in Autumn",
+    "description": "Moderate tempo chill-out track for concentrating at work",
+    "artists": [
+      {
+        "name": "Patrick Hund",
+        "role": "Producer",
+        "url": "https://www.twitter.com/wiekatz"
+      }
+    ],
+    "link": {
+      "text": "Visit Zapperment!",
+      "url": "http://zapperment.rocks/"
+    },
+    "copyright": "©2019 Patrick Hund",
+    "license": "Creative Commons Attribution 4.0 International"
+  },
+  "tempo": 77,
+  "barsPerLoop": 4,
+  "beatsPerBar": 4,
+  "channels": [
+    {
+      "meta": {
+        "name": "Sentimental",
+        "description": "Melody line, sound adjustable from synthetic to natural strings",
+        "color": "Plum"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 1
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": {
+            "button2": {
+              "on": "A3",
+              "off": "D4"
+            }
+          },
+          "max": "A#4"
+        },
+        "volume": 103,
+        "brightness": 95,
+        "effects": {
+          "distortion": null,
+          "reverb": null,
+          "echo": null,
+          "tremolo": null,
+          "chorus": null,
+          "flanger": null,
+          "vocoder": null,
+          "filter": null,
+          "sidechain": null
+        },
+        "pan": {
+          "left": 63,
+          "right": 63
+        },
+        "timbre": {
+          "piano": 127
+        },
+        "texture": {
+          "homophonic": 127
+        },
+        "rhythm": {
+          "syncopated": 63,
+          "shuffled": 77
+        },
+        "mood": {
+          "relaxed": 127,
+          "melancholic": 63
+        },
+        "type": {
+          "analog": 127,
+          "digital": 127,
+          "sampled": 127,
+          "acoustic": 127,
+          "electric": 127
+        }
+      }
+    }
+  ]
+}
