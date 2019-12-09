@@ -10,7 +10,10 @@ const {
   WORKER_STOPPED
 } = require("../constants");
 
-const { midiPortName } = require("../config");
+// PH_TODO: enable use of all four MIDI ports
+// https://github.com/technology-ebay-de/zapperment/issues/56
+const { midiPortNameA } = require("../config");
+
 const MidiClock = require("./MidiClock");
 const MidiController = require("./MidiController");
 
@@ -38,7 +41,7 @@ if (isMainThread) {
   let running = true;
   let midiClock = null;
   const midiOut = jzz()
-    .openMidiOut(midiPortName)
+    .openMidiOut(midiPortNameA)
     .or("Cannot open MIDI Out port!");
   const midiController = new MidiController(midiOut);
   let clockCounter = 0;

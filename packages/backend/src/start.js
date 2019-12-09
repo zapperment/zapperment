@@ -8,7 +8,11 @@ const { START_PLAYING } = require("./constants");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const { initialTempo, barsPerLoop, port } = require("./config");
 const { LoopManager } = require("./model");
-const { midiPortName } = require("./config");
+
+// PH_TODO: enable use of all four MIDI ports
+// https://github.com/technology-ebay-de/zapperment/issues/56
+const { midiPortNameA } = require("./config");
+
 const jzz = require("jzz");
 
 let midiBeat = null;
@@ -22,7 +26,7 @@ let midiBeat = null;
  * See my post on SO: https://stackoverflow.com/questions/58365748/how-to-prevent-a-node-js-12-worker-thread-from-terminating-immediately
  */
 const midiOut = jzz()
-  .openMidiOut(midiPortName)
+  .openMidiOut(midiPortNameA)
   .or("Cannot open MIDI Out port!");
 
 // make sure no rogue MIDI is playing when Zapperment starts
