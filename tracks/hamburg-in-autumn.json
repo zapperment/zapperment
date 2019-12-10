@@ -46,7 +46,16 @@
           },
           "max": "A#4"
         },
-        "volume": 103,
+        "volume": {
+          "rotary2": {
+            "min": 31,
+            "max": 95
+          }
+        },
+        "pan": {
+          "left": 63,
+          "right": 63
+        },
         "brightness": 95,
         "effects": {
           "distortion": null,
@@ -59,12 +68,8 @@
           "filter": null,
           "sidechain": null
         },
-        "pan": {
-          "left": 63,
-          "right": 63
-        },
         "timbre": {
-          "piano": 127
+          : 127
         },
         "texture": {
           "homophonic": 127
