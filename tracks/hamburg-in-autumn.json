@@ -94,14 +94,14 @@
         "texture": {
           "monophonic": {
             "button2": {
-              "off": true,
-              "on": false
+              "off": 127,
+              "on": 0
             }
           },
           "polyphonic": {
             "button2": {
-              "off": false,
-              "on": true
+              "off": 0,
+              "on": 127
             }
           }
         },
@@ -116,6 +116,172 @@
           "peaceful": 67,
           "sentimental": 120,
           "serene": 59
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Elec. Bass",
+        "description": "Electric bass playing eighth notes arpeggio",
+        "color": "Pineapple"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 2
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D2",
+          "max": "C3"
+        }
+      },
+      "volume": 63,
+      "pan": 64,
+      "brightness": 79,
+      "timbre": {
+        "pickedElectricBass": 127
+      },
+      "sound": {
+        "electric": 127
+      },
+      "type": {
+        "arpeggio": 127
+      },
+      "texture": {
+        "monophonic": 127
+      },
+      "rhythm": {
+        "straight": 127
+      },
+      "mood": {
+        "boring": 55,
+        "melancholic": 82,
+        "peaceful": 88,
+        "serene": 79,
+        "relaxed": 50
+      }
+    },
+    {
+      "meta": {
+        "name": "Dm Piano Riff",
+        "description": "Piano with lots of reverb playing a D minor chord progression",
+        "color": "graphite"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 3
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": {
+            "button2": {
+              "on": "D1",
+              "off": "D2"
+            }
+          },
+          "max": "C3"
+        },
+        "volume": 69,
+        "pan": {
+          "left": 59,
+          "right": 59
+        },
+        "brightness": 79,
+        "effects": {
+          "reverb": 86
+        },
+        "timbre": {
+          "acousticPiano": 127
+        },
+        "sound": {
+          "acoustic": 127
+        },
+        "type": {
+          "chords": 95,
+          "riff": 63
+        },
+        "texture": {
+          "polyphonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "boring": 15,
+          "bright": 31,
+          "cool": 15,
+          "dramatic": 31,
+          "melancholic": 95,
+          "peaceful": 63,
+          "serene": 47,
+          "sentimental": 31
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Bottle Perc",
+        "description": "Percussion loop played by Dr. OctoRex",
+        "color": "Pink"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 4
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "volume": 43,
+        "pan": {
+          "left": 65,
+          "right": 85
+        },
+        "brightness": 111,
+        "effects": {
+          "reverb": 66
+        },
+        "timbre": {
+          "rimshot": 101,
+          "snap": 85,
+          "click": 69,
+          "bongo": 120
+        },
+        "sound": {
+          "acoustic": 109,
+          "electronic": 21
+        },
+        "type": {
+          "percussion": 127
+        },
+        "rhythm": {
+          "groovy": 127
+        },
+        "mood": {
+          "busy": 32,
+          "cheerful": 55,
+          "cool": 64,
+          "exotic": 74,
+          "funky": 63,
+          "happy": 49,
+          "light": 88,
+          "relaxed": 101,
+          "quirky": 23
         }
       }
     }
