@@ -445,9 +445,128 @@
           "funky": 55,
           "gloomy": 24,
           "heavy": 67,
-          "melancholic":53,
+          "melancholic": 53,
           "peaceful": 22,
           "relaxed": 88
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Saw Pad",
+        "description": "Synth pad played by Layers Wave with variable brightness through Sweeper filtering",
+        "color": "Bright Grey"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 7
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D1",
+          "max": "C3"
+        },
+        "volume": 60,
+        "pan": {
+          "left": 47,
+          "right": 60
+        },
+        "brightness": {
+          "rotary1": {
+            "min": 31,
+            "max": 63
+          }
+        },
+        "effects": {
+          "reverb": 44
+        },
+        "timbre": {
+          "warmPad": 95,
+          "polysynthPad": 63
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "chords": 127
+        },
+        "texture": {
+          "polyphonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "boring": 31,
+          "meditative": 56,
+          "peaceful": 77,
+          "relaxed": 31,
+          "serene": 63
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Flutes",
+        "description": "Flutes playing rhythmic chords",
+        "color": "Ochre"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 8
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D3",
+          "max": "C4"
+        },
+        "volume": 50,
+        "pan": {
+          "left": 73,
+          "right": 93
+        },
+        "brightness": 111,
+        "effects": {
+          "reverb": 55,
+          "echo": 41
+        },
+        "timbre": {
+          "flute": 127
+        },
+        "sound": {
+          "acoustic": 127
+        },
+        "type": {
+          "chords": 92,
+          "riff": 44
+        },
+        "texture": {
+          "polyphonic": 127
+        },
+        "rhythm": {
+          "groovy": 77,
+          "straight": 24
+        },
+        "mood": {
+          "agitated": 23,
+          "bright": 75,
+          "busy": 82,
+          "cheesy": 32,
+          "light": 44,
+          "sweet": 31,
+          "melancholic": 55
         }
       }
     }
