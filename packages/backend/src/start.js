@@ -23,7 +23,7 @@ let midiBeat = null;
  * a clean way to achieve this. The dirty way: start.js module sends
  * the MIDI stop message in its SIGTERM/SIGINT handler (see function
  * “stop” below) to stop Reason playing.
- * See my post on SO: https://stackoverflow.com/questions/58365748/how-to-prevent-a-node-js-12-worker-thread-from-terminating-immediately
+ * https://github.com/technology-ebay-de/zapperment/issues/48
  */
 const midiOut = jzz()
   .openMidiOut(midiPortNameA)
