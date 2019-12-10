@@ -53,41 +53,69 @@
           }
         },
         "pan": {
-          "left": 63,
-          "right": 63
+          "left": 67,
+          "right": 83
         },
         "brightness": 95,
         "effects": {
-          "distortion": null,
-          "reverb": null,
-          "echo": null,
-          "tremolo": null,
-          "chorus": null,
-          "flanger": null,
-          "vocoder": null,
-          "filter": null,
-          "sidechain": null
+          "reverb": 79
         },
         "timbre": {
-          : 127
+          "stringEnsemble": {
+            "rotary1": {
+              "max": 127,
+              "min": 0
+            }
+          },
+          "sawtoothLead": {
+            "rotary1": {
+              "max": 0,
+              "min": 127
+            }
+          }
         },
-        "texture": {
-          "homophonic": 127
-        },
-        "rhythm": {
-          "syncopated": 63,
-          "shuffled": 77
-        },
-        "mood": {
-          "relaxed": 127,
-          "melancholic": 63
+        "sound": {
+          "acoustic": {
+            "rotary1": {
+              "max": 127,
+              "min": 0
+            }
+          },
+          "electronic": {
+            "rotary1": {
+              "max": 0,
+              "min": 127
+            }
+          }
         },
         "type": {
-          "analog": 127,
-          "digital": 127,
-          "sampled": 127,
-          "acoustic": 127,
-          "electric": 127
+          "melody": 127
+        },
+        "texture": {
+          "monophonic": {
+            "button2": {
+              "off": true,
+              "on": false
+            }
+          },
+          "polyphonic": {
+            "button2": {
+              "off": false,
+              "on": true
+            }
+          }
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "boring": 34,
+          "cheesy": 22,
+          "melancholic": 82,
+          "melodramatic": 44,
+          "peaceful": 67,
+          "sentimental": 120,
+          "serene": 59
         }
       }
     }
