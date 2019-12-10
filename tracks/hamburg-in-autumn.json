@@ -139,32 +139,33 @@
         "pitch": {
           "min": "D2",
           "max": "C3"
+        },
+        "volume": 55,
+        "pan": 64,
+        "brightness": 79,
+        "timbre": {
+          "pickedElectricBass": 127
+        },
+        "sound": {
+          "electric": 127
+        },
+        "type": {
+          "arpeggio": 127,
+          "bassline": 63
+        },
+        "texture": {
+          "monophonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "boring": 55,
+          "melancholic": 82,
+          "peaceful": 88,
+          "serene": 79,
+          "relaxed": 50
         }
-      },
-      "volume": 63,
-      "pan": 64,
-      "brightness": 79,
-      "timbre": {
-        "pickedElectricBass": 127
-      },
-      "sound": {
-        "electric": 127
-      },
-      "type": {
-        "arpeggio": 127
-      },
-      "texture": {
-        "monophonic": 127
-      },
-      "rhythm": {
-        "straight": 127
-      },
-      "mood": {
-        "boring": 55,
-        "melancholic": 82,
-        "peaceful": 88,
-        "serene": 79,
-        "relaxed": 50
       }
     },
     {
@@ -282,6 +283,171 @@
           "light": 88,
           "relaxed": 101,
           "quirky": 23
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Dirty beat",
+        "description": "Distorted hip-hop beat, with optional phaser effect (“spooky” button). Always playing, with varying patterns",
+        "color": "lilac"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 5
+      },
+      "elements": {
+        "volume": 63,
+        "pan": {
+          "left": 44,
+          "right": 74
+        },
+        "brightness": 88,
+        "effects": {
+          "distortion": 79,
+          "phaser": {
+            "button2": {
+              "off": 0,
+              "on": 127
+            }
+          }
+        },
+        "timbre": {
+          "rotary1": {
+            "0": {
+              "bassDrum": 79,
+              "snareDrum": 63,
+              "closedHiHat": 111,
+              "openHitHat": 15
+            },
+            "43": {
+              "closedHiHat": 111,
+              "openHitHat": 15
+            },
+            "85": {
+              "bassDrum": 79,
+              "snareDrum": 63
+            },
+            "127": {
+              "snareDrum": 63,
+              "closedHiHat": 111,
+              "openHitHat": 15
+            }
+          }
+        },
+        "sound": {
+          "acoustic": 31,
+          "electronic": 95
+        },
+        "type": {
+          "rotary1": {
+            "0": {
+              "beat": 127
+            },
+            "43": {
+              "break": 127
+            },
+            "85": {
+              "break": 127
+            },
+            "127": {
+              "break": 127
+            }
+          }
+        },
+        "rhythm": {
+          "groovy": 63,
+          "shuffled": 95
+        },
+        "mood": {
+          "aggressive": 63,
+          "brutal": 45,
+          "cool": 77,
+          "funky": 66,
+          "heavy": {
+            "rotary1": {
+              "0": 96,
+              "43": 0,
+              "85": 96,
+              "127": 63
+            }
+          }
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Fuzz Bass",
+        "description": "Distorted bass playing a catch bass line hook",
+        "color": "Moss Green"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 6
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "C2",
+          "max": "F2"
+        },
+        "volume": 58,
+        "pan": {
+          "button3": {
+            "on": {
+              "left": 34,
+              "right": 94
+            },
+            "off": {
+              "left": 64,
+              "right": 64
+            }
+          }
+        },
+        "brightness": 45,
+        "effects": {
+          "distortion": 95,
+          "chorus": {
+            "button3": {
+              "on": 101,
+              "off": 0
+            }
+          }
+        },
+        "timbre": {
+          "analogueSynthBass": 63,
+          "digitalSynthBass": 63
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "hook": 63,
+          "bassline": 127
+        },
+        "texture": {
+          "monophonic": 127
+        },
+        "rhythm": {
+          "groovy": 63,
+          "straight": 63
+        },
+        "mood": {
+          "aggressive": 63,
+          "brutal": 31,
+          "cool": 77,
+          "dark": 22,
+          "funky": 55,
+          "gloomy": 24,
+          "heavy": 67,
+          "melancholic":53,
+          "peaceful": 22,
+          "relaxed": 88
         }
       }
     }
