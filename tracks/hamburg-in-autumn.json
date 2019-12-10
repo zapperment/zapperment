@@ -569,6 +569,150 @@
           "melancholic": 55
         }
       }
+    },
+    {
+      "meta": {
+        "name": "Ze Beat",
+        "description": "Four-to-the-floor kick drum combined with spacy delay snare and click percussion",
+        "color": "Peach"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 9
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "volume": 67,
+        "pan": {
+          "left": 31,
+          "right": 111
+        },
+        "brightness": 111,
+        "decay": {
+          "rotary2": {
+            "min": 31,
+            "max": 127
+          }
+        },
+        "effects": {
+          "delay": {
+            "rotary4": {
+              "min": 0,
+              "max": 111
+            }
+          },
+          "slap": {
+            "rotary1": {
+              "min": 0,
+              "max": 127
+            }
+          }
+        },
+        "timbre": {
+          "bassDrum": 127,
+          "snareDrum": 44,
+          "click": 31
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "beat": 127
+        },
+        "rhythm": {
+          "straight": 127,
+          "groovy": 31
+        },
+        "mood": {
+          "aggressive": {
+            "rotary1": {
+              "min": 22,
+              "max": 111
+            }
+          },
+          "brutal": {
+            "rotary1": {
+              "min": 0,
+              "max": 77
+            }
+          },
+          "energizing": 50,
+          "funky": 33,
+          "hypnotic": 66,
+          "psychedelic": {
+            "rotary1": {
+              "min": 0,
+              "max": 127
+            }
+          },
+          "scary": {
+            "rotary1": {
+              "min": 0,
+              "max": 83
+            }
+          }
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "FM Arp",
+        "description": "A bright DX7 style sound playing arpeggiated chords with a rhythmical stereo effect",
+        "color": "Powder Blue"
+      },
+      "midi": {
+        "bus": "A",
+        "channel": 10
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D4",
+          "max": "G5"
+        },
+        "volume": 43,
+        "pan": {
+          "left": 24,
+          "right": 104
+        },
+        "brightness": 95,
+        "effects": {
+          "reverb": 95
+        },
+        "timbre": {
+          "xylophone": 33,
+          "digitalElectricPiano": 23,
+          "chiffLead": 17
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "arpeggio": 127
+        },
+        "texture": {
+          "monophonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "lively": 99,
+          "busy": 88,
+          "cheerful": 77,
+          "hypnotic": 23
+        }
+      }
     }
   ]
 }
