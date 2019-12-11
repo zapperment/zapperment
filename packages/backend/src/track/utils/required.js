@@ -8,9 +8,9 @@ module.exports = definitionNode => (path, key, valueNode) => {
     throw new Error(`Missing required property ${nextPath}`);
   }
   if (Array.isArray(definitionNode)) {
-    array(nextPath, nextValueNode);
-    nextValueNode.forEach(curr => walk(nextPath, definitionNode[0], curr));
+    array(nextPath, key, nextValueNode);
+    nextValueNode.forEach(curr => walk(definitionNode[0], nextPath, key, curr));
     return;
   }
-  walk(nextPath, definitionNode, nextValueNode);
+  walk(definitionNode, nextPath, key, nextValueNode);
 };

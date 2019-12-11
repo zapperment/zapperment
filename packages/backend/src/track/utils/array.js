@@ -1,4 +1,4 @@
-module.exports = (path, valueNode) => {
+module.exports = (path, key, valueNode) => {
   if (!Array.isArray(valueNode)) {
     throw new Error(`Expected an array at ${path}`);
   }

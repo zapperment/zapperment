@@ -8,5 +8,9 @@ module.exports = {
   optional: require("./optional"),
   required: require("./required"),
   string: require("./string"),
-  walk: require("./walk")
+  walk: require("./walk"),
+  controllable: require("./controllable"),
+  isControlled: require("./isControlled"),
+  isControlledByButton: require("./isControlledByButton"),
+  isControlledByRotary: require("./isControlledByRotary")
 };

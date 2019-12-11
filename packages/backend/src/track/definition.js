@@ -4,7 +4,9 @@ const {
   string,
   float,
   integer,
-  oneOf
+  oneOf,
+  controllable,
+  boolean
 } = require("./utils");
 
 module.exports = {
@@ -73,8 +75,8 @@ module.exports = {
       midi: required({
         channel: required(integer(1, 16)),
         bus: optional(oneOf("A", "B", "C", "D"), "A")
-      })
-      // playing: controllable(optional(boolean, true))
+      }),
+      playing: controllable(optional(boolean, true))
     }
   ])
 };

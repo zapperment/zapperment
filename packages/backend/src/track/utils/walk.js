@@ -1,9 +1,9 @@
-module.exports = (path, definitionNode, valueNode) => {
+module.exports = (definitionNode, path, key,valueNode) => {
   if (typeof definitionNode === "function") {
-    definitionNode(path, valueNode);
+    definitionNode(path, key, valueNode);
     return;
   }
-  for (const [key, value] of Object.entries(definitionNode)) {
-    value(path, key, valueNode);
+  for (const [nextKey, value] of Object.entries(definitionNode)) {
+    value(path, nextKey, valueNode);
   }
 };

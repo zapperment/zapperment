@@ -1,4 +1,4 @@
-module.exports = (path, valueNode) => {
+module.exports = (path, key, valueNode) => {
   if (valueNode === null) {
     throw new Error(`Property at ${path} must be a number, received null`);
   }
