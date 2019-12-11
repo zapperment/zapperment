@@ -16,7 +16,7 @@
     "copyright": "©2019 Patrick Hund",
     "license": "Creative Commons Attribution 4.0 International"
   },
-  "tempo": 77,
+  "tempo": 555,
   "barsPerLoop": 4,
   "beatsPerBar": 4,
   "channels": [
@@ -24,7 +24,7 @@
       "meta": {
         "name": "Sentimental",
         "description": "Melody line, sound adjustable from synthetic to natural strings",
-        "color": "Plum"
+        "color": "plum"
       },
       "midi": {
         "bus": "A",
@@ -123,7 +123,7 @@
       "meta": {
         "name": "Elec. Bass",
         "description": "Electric bass playing eighth notes arpeggio",
-        "color": "Pineapple"
+        "color": "pineapple"
       },
       "midi": {
         "bus": "A",
@@ -235,7 +235,7 @@
       "meta": {
         "name": "Bottle Perc",
         "description": "Percussion loop played by Dr. OctoRex",
-        "color": "Pink"
+        "color": "pink"
       },
       "midi": {
         "bus": "A",
@@ -379,7 +379,7 @@
       "meta": {
         "name": "Fuzz Bass",
         "description": "Distorted bass playing a catch bass line hook",
-        "color": "Moss Green"
+        "color": "mossGreen"
       },
       "midi": {
         "bus": "A",
@@ -455,7 +455,7 @@
       "meta": {
         "name": "Saw Pad",
         "description": "Synth pad played by Layers Wave with variable brightness through Sweeper filtering",
-        "color": "Bright Grey"
+        "color": "brightGrey"
       },
       "midi": {
         "bus": "A",
@@ -515,7 +515,7 @@
       "meta": {
         "name": "Flutes",
         "description": "Flutes playing rhythmic chords",
-        "color": "Ochre"
+        "color": "ochre"
       },
       "midi": {
         "bus": "A",
@@ -574,7 +574,7 @@
       "meta": {
         "name": "Ze Beat",
         "description": "Four-to-the-floor kick drum combined with spacy delay snare and click percussion",
-        "color": "Peach"
+        "color": "peach"
       },
       "midi": {
         "bus": "A",
@@ -663,7 +663,7 @@
       "meta": {
         "name": "FM Arp",
         "description": "A bright DX7 style sound playing arpeggiated chords with a rhythmical stereo effect",
-        "color": "Powder Blue"
+        "color": "powderBlue"
       },
       "midi": {
         "bus": "A",
