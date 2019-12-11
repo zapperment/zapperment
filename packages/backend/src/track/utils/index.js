@@ -1,16 +1,24 @@
 module.exports = {
   array: require("./array"),
   boolean: require("./boolean"),
+  controllable: require("./controllable"),
   float: require("./float"),
+  getMidiNote: require('./getMidiNote'),
   integer: require("./integer"),
+  isControlled: require("./isControlled"),
+  isControlledBy: require("./isControlledBy"),
+  isControlledByButton: require("./isControlledByButton"),
+  isControlledByRotary: require("./isControlledByRotary"),
+  note: require("./note"),
   number: require("./number"),
   oneOf: require("./oneOf"),
   optional: require("./optional"),
   required: require("./required"),
   string: require("./string"),
   walk: require("./walk"),
-  controllable: require("./controllable"),
-  isControlled: require("./isControlled"),
-  isControlledByButton: require("./isControlledByButton"),
-  isControlledByRotary: require("./isControlledByRotary")
+  walkControlled: require("./walkControlled"),
+  walkControlledByButton: require("./walkControlledByButton"),
+  walkControlledByMinMaxRotary: require("./walkControlledByMinMaxRotary"),
+  walkControlledByRotary: require("./walkControlledByRotary"),
+  walkControlledBySteppedRotary: require("./walkControlledBySteppedRotary")
 };

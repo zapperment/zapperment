@@ -1,4 +1,4 @@
-module.exports = (definitionNode, path, key,valueNode) => {
+module.exports = (definitionNode, path, key, valueNode) => {
   if (typeof definitionNode === "function") {
     definitionNode(path, key, valueNode);
     return;
