@@ -49,7 +49,7 @@
         "volume": {
           "rotary2": {
             "min": 31,
-            "max": 95
+            "max": 63
           }
         },
         "pan": {
