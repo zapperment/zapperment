@@ -303,6 +303,64 @@ module.exports = {
             beat: controllable(optional(integer(0, 127), 0)),
             percussion: controllable(optional(integer(0, 127), 0))
           })
+        ),
+        texture: controllable(
+          optional({
+            monophonic: controllable(optional(integer(0, 127), 0)),
+            polyphonic: controllable(optional(integer(0, 127), 0))
+          })
+        ),
+        rhythm: controllable(
+          required({
+            groovy: controllable(optional(integer(0, 127), 0)),
+            shuffled: controllable(optional(integer(0, 127), 0)),
+            straight: controllable(optional(integer(0, 127), 0))
+          })
+        ),
+        mood: controllable(
+          required({
+            aggressive: controllable(optional(integer(0, 127), 0)),
+            agitated: controllable(optional(integer(0, 127), 0)),
+            boring: controllable(optional(integer(0, 127), 0)),
+            bright: controllable(optional(integer(0, 127), 0)),
+            brutal: controllable(optional(integer(0, 127), 0)),
+            busy: controllable(optional(integer(0, 127), 0)),
+            cheesy: controllable(optional(integer(0, 127), 0)),
+            cheerful: controllable(optional(integer(0, 127), 0)),
+            confusing: controllable(optional(integer(0, 127), 0)),
+            cool: controllable(optional(integer(0, 127), 0)),
+            cute: controllable(optional(integer(0, 127), 0)),
+            dark: controllable(optional(integer(0, 127), 0)),
+            depressing: controllable(optional(integer(0, 127), 0)),
+            dramatic: controllable(optional(integer(0, 127), 0)),
+            energizing: controllable(optional(integer(0, 127), 0)),
+            erotic: controllable(optional(integer(0, 127), 0)),
+            euphoric: controllable(optional(integer(0, 127), 0)),
+            exciting: controllable(optional(integer(0, 127), 0)),
+            exotic: controllable(optional(integer(0, 127), 0)),
+            funky: controllable(optional(integer(0, 127), 0)),
+            funny: controllable(optional(integer(0, 127), 0)),
+            gloomy: controllable(optional(integer(0, 127), 0)),
+            happy: controllable(optional(integer(0, 127), 0)),
+            heavy: controllable(optional(integer(0, 127), 0)),
+            hypnotic: controllable(optional(integer(0, 127), 0)),
+            light: controllable(optional(integer(0, 127), 0)),
+            lively: controllable(optional(integer(0, 127), 0)),
+            meditative: controllable(optional(integer(0, 127), 0)),
+            melancholic: controllable(optional(integer(0, 127), 0)),
+            melodramatic: controllable(optional(integer(0, 127), 0)),
+            mysterious: controllable(optional(integer(0, 127), 0)),
+            peaceful: controllable(optional(integer(0, 127), 0)),
+            psychedelic: controllable(optional(integer(0, 127), 0)),
+            quirky: controllable(optional(integer(0, 127), 0)),
+            relaxed: controllable(optional(integer(0, 127), 0)),
+            sad: controllable(optional(integer(0, 127), 0)),
+            scary: controllable(optional(integer(0, 127), 0)),
+            sentimental: controllable(optional(integer(0, 127), 0)),
+            serene: controllable(optional(integer(0, 127), 0)),
+            stressful: controllable(optional(integer(0, 127), 0)),
+            sweet: controllable(optional(integer(0, 127), 0))
+          })
         )
       })
     }
