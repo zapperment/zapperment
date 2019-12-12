@@ -9,6 +9,8 @@ module.exports = {
   isControlledBy: require("./isControlledBy"),
   isControlledByButton: require("./isControlledByButton"),
   isControlledByRotary: require("./isControlledByRotary"),
+  isNote: require("./isNote"),
+  isObject: require('./isObject'),
   note: require("./note"),
   number: require("./number"),
   oneOf: require("./oneOf"),
