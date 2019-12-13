@@ -78,7 +78,7 @@ module.exports = {
         bus: optional(oneOf("A", "B", "C", "D"), "A")
       }),
       playing: controllable(optional(boolean, true)),
-      elements: optional({
+      elements: required({
         pitch: controllable(
           optional({
             min: controllable(optional(note, "C-2")),
@@ -89,12 +89,12 @@ module.exports = {
         pan: controllable(
           optional(
             {
-              min: controllable(optional(integer(0, 127), 64)),
-              max: controllable(optional(integer(0, 127), 64))
+              left: controllable(optional(integer(0, 127), 64)),
+              right: controllable(optional(integer(0, 127), 64))
             },
             {
-              min: 64,
-              max: 64
+              left: 64,
+              right: 64
             }
           )
         ),
@@ -147,7 +147,7 @@ module.exports = {
             clavinet: controllable(optional(integer(0, 127), 0)),
             celesta: controllable(optional(integer(0, 127), 0)),
             glockenspiel: controllable(optional(integer(0, 127), 0)),
-            "music Box": controllable(optional(integer(0, 127), 0)),
+            musicBox: controllable(optional(integer(0, 127), 0)),
             vibraphone: controllable(optional(integer(0, 127), 0)),
             marimba: controllable(optional(integer(0, 127), 0)),
             xylophone: controllable(optional(integer(0, 127), 0)),
