@@ -1,2 +1,1 @@
-module.exports = (value, min, max) =>
-  Math.round(((max - min) * value) / 127 + min);
+module.exports = (value, a, b) => Math.round(((b - a) * value) / 127 + a);
