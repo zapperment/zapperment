@@ -45,7 +45,8 @@ if (isMainThread) {
     .or("Cannot open MIDI Out port!");
   const midiController = new MidiController(midiOut);
   let clockCounter = 0;
-  sceneBuilder.init();
+  await sceneBuilder.init();
+  loop();
 
   parentPort.on("message", message => {
     switch (message) {
@@ -70,7 +71,7 @@ if (isMainThread) {
       return;
     }
     if (midiClock && midiClock.hasTicked()) {
-      if ((clockCounter + 1) % clocksPerLoop === 0) {
+      if ((clockCounter + 10) % clocksPerLoop === 0) {
         loop();
       }
       if (clockCounter % clocksPerBar === 0) {
@@ -100,9 +101,15 @@ if (isMainThread) {
   }
 
   function loop() {
-    const scene = sceneBuilder.buildNewScene();
-    midiController.changeScene(scene);
-    console.info(`NEW SCENE:\n${JSON.stringify(scene, null, 4)}`);
+    const { scene, midiCommands } = sceneBuilder.buildNewScene();
+    midiController.changeScene(midiCommands);
+    console.info(
+      `NEW SCENE:\n${scene.channels
+        .map(
+          ({ meta: { name }, midi: { channel } }) => `ch=${channel} – ${name}`
+        )
+        .join("\n")}`
+    );
     parentPort.postMessage({ type: NEW_LOOP, data: scene });
   }
 })();

@@ -18,21 +18,24 @@ module.exports = class {
       this.trainedNet = trainNetwork(docs);
     }
     this.track = loadTrack(track);
-    console.log("track loaded", this.track);
+    const {
+      meta: { title, copyright }
+    } = this.track;
+    console.log(`Track loaded: “${title}”${copyright ? ` – ${copyright}` : ""}`);
   }
 
   buildRandomScene() {
     if (!this.track) {
-      throw new Error("You need to load a track before building a scene");
+      throw new Error("You need to call init before building a scene");
     }
     return buildRandomScene(this.track);
   }
 
-  // buildNewScene() {
-  //   return this.trainedNet
-  //     ? buildNewScene(this.trainedNet)
-  //     : buildRandomScene();
-  // }
+  buildNewScene() {
+    return this.trainedNet
+      ? buildNewScene(this.trainedNet)
+      : this.buildRandomScene();
+  }
 
   // static buildRandomScene() {
   //   return buildRandomScene();

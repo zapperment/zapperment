@@ -1,20 +1,31 @@
 const jzz = require("jzz");
 
+const controllerNames = {
+  71: "rotary1",
+  72: "rotary2",
+  73: "rotary3",
+  74: "rotary4",
+  75: "button1",
+  76: "button2",
+  77: "button3",
+  78: "button4"
+};
+
 module.exports = class {
   constructor(midiOut) {
     this.midiOut = midiOut;
   }
 
   send(channel, controller, value) {
-    this.midiOut.send(jzz.MIDI.control(channel, controller, value));
+    console.log(
+      `ch=${channel} – ctl=${controller} (${controllerNames[controller]}) – val=${value}`
+    );
+    this.midiOut.send(jzz.MIDI.control(channel - 1, controller, value));
   }
 
-  changeScene(scene) {
-    // mixer
-    for (const { channel, muted } of scene.mixer) {
-      this.send(0, channel + 101, muted ? 127 : 0);
+  changeScene(midiCommands) {
+    for (const { channel, controller, value } of midiCommands) {
+      this.send(channel, controller, value);
     }
-    // nervomat
-    this.send(0, 75, scene.nervomat.annoyMe ? 127 : 0);
   }
 };
