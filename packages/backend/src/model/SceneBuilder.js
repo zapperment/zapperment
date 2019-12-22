@@ -1,12 +1,15 @@
 const { trainNetwork } = require("./train");
-const { buildNewScene, buildRandomScene } = require("./build");
-const { denormalizeScene } = require("./denormalize");
-const { normalize } = require("./normalize");
+const { loadTrack, buildRandomScene } = require("../track");
+const { track } = require("../config");
+// const { buildNewScene, buildRandomScene } = require("./build");
+// const { denormalizeScene } = require("./denormalize");
+// const { normalize } = require("./normalize");
 
 module.exports = class {
   constructor({ storage }) {
     this.storage = storage;
     this.trainedNet = null;
+    this.track = null;
   }
 
   async init() {
@@ -14,23 +17,32 @@ module.exports = class {
     if (docs.length) {
       this.trainedNet = trainNetwork(docs);
     }
+    this.track = loadTrack(track);
+    console.log("track loaded", this.track);
   }
 
-  buildNewScene() {
-    return this.trainedNet
-      ? buildNewScene(this.trainedNet)
-      : buildRandomScene();
+  buildRandomScene() {
+    if (!this.track) {
+      throw new Error("You need to load a track before building a scene");
+    }
+    return buildRandomScene(this.track);
   }
 
-  static buildRandomScene() {
-    return buildRandomScene();
-  }
+  // buildNewScene() {
+  //   return this.trainedNet
+  //     ? buildNewScene(this.trainedNet)
+  //     : buildRandomScene();
+  // }
 
-  static denormalizeScene(normalizedScene) {
-    return denormalizeScene(normalizedScene);
-  }
+  // static buildRandomScene() {
+  //   return buildRandomScene();
+  // }
 
-  static normalize(rawData) {
-    return normalize(rawData);
-  }
+  // static denormalizeScene(normalizedScene) {
+  //   return denormalizeScene(normalizedScene);
+  // }
+
+  // static normalize(rawData) {
+  //   return normalize(rawData);
+  // }
 };

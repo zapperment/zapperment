@@ -1,7 +1,7 @@
-const processChannel = require('./processChannel');
+const { processChannel } = require("./utils");
 
 /**
- * Given a track object created from a track definition file with defaults 
+ * Given a track object created from a track definition file with defaults
  * set and values converted to MIDI numbers, this function goes through the
  * track definition object tree and replaces parts that are controlled
  * by actual values, set by random according to the controller configuration.
@@ -18,13 +18,15 @@ module.exports = convertedTrackWithDefaults => {
   };
   const trackMidiCommands = [];
 
-  trackScene.channels = trackScene.channels.map(channel => {
-    const { midiCommands, scene } = processChannel(channel);
-    trackMidiCommands.push(...midiCommands);
-    return scene;
-  }).filter(scene => scene.playing === 127);
+  trackScene.channels = trackScene.channels
+    .map(channel => {
+      const { midiCommands, scene } = processChannel(channel);
+      trackMidiCommands.push(...midiCommands);
+      return scene;
+    })
+    .filter(scene => scene.playing === 127);
   return {
-      scene: trackScene,
-      midiCommands: trackMidiCommands
-  }
+    scene: trackScene,
+    midiCommands: trackMidiCommands
+  };
 };

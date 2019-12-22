@@ -6,7 +6,7 @@ const configProps = [
   },
   {
     name: "midiPortNameB",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_N",
+    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_B",
     type: "string"
   },
   {
@@ -18,16 +18,6 @@ const configProps = [
     name: "midiPortNameD",
     envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_D",
     type: "string"
-  },
-  {
-    name: "initialTempo",
-    envVar: "ZAPPERMENT_BACKEND_INITIAL_TEMPO",
-    type: "float"
-  },
-  {
-    name: "barsPerLoop",
-    envVar: "ZAPPERMENT_BACKEND_BARS_PER_LOOP",
-    type: "integer"
   },
   { name: "port", envVar: "ZAPPERMENT_BACKEND_PORT", type: "integer" },
   {
@@ -44,6 +34,11 @@ const configProps = [
     name: "maxAttempts",
     envVar: "ZAPPERMENT_BACKEND_MAX_ATTEMPTS",
     type: "integer"
+  },
+  {
+    name: "track",
+    envVar: "ZAPPERMENT_BACKEND_TRACK",
+    type: "string"
   }
 ];
 

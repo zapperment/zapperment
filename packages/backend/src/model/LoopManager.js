@@ -27,6 +27,7 @@ module.exports = class {
 
   #storage = null;
   #loop = null;
+  #sceneBuilder = null;
 
   /* ----- CONSTRUCTOR ----- */
 

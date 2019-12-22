@@ -26,4 +26,5 @@ const walk = (value, conversion) => {
   return nextValue;
 };
 
-module.exports = trackWithDefaults => walk(trackWithDefaults, conversion.none);
+module.exports = trackWithDefaults =>
+  walk(JSON.parse(JSON.stringify(trackWithDefaults)), conversion.none);

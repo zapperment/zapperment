@@ -1,7 +1,7 @@
-const createMidiValueArray = require("./utils/createMidiValueArray");
-const interpolateMidiValue = require("./utils/interpolateMidiValue");
-const isControlled = require("./utils/isControlled");
-const getRandomEntry = require("./utils/getRandomEntry");
+const createMidiValueArray = require("./createMidiValueArray");
+const interpolateMidiValue = require("./interpolateMidiValue");
+const isControlled = require("./isControlled");
+const getRandomEntry = require("./getRandomEntry");
 
 const controllersNumbers = {
   rotary1: 71,

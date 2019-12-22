@@ -6,8 +6,9 @@ const path = require("path");
 const { Worker } = require("worker_threads");
 const { START_PLAYING } = require("./constants");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
-const { initialTempo, barsPerLoop, port } = require("./config");
+const { port, track } = require("./config");
 const { LoopManager } = require("./model");
+const { loadTrack } = require("./track");
 
 // PH_TODO: enable use of all four MIDI ports
 // https://github.com/technology-ebay-de/zapperment/issues/56
@@ -42,6 +43,7 @@ async function stop() {
 }
 
 module.exports = async () => {
+  const { barsPerLoop, tempo } = loadTrack(track);
   const app = express();
   const server = http.Server(app);
   const storage = new Storage();
@@ -60,7 +62,7 @@ module.exports = async () => {
   const socket = new Socket({ loopManager, server });
 
   midiBeat = new Worker(path.join(__dirname, "./midi/midiBeatWorker.js"), {
-    workerData: { tempo: initialTempo, barsPerLoop }
+    workerData: { tempo, barsPerLoop }
   });
 
   midiBeat.on("message", message => {
