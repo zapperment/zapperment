@@ -1,4 +1,5 @@
-const { getMidiNote, isNote, isObject } = require("./utils");
+const { getMidiNote, isNote } = require("./utils");
+const { isObject } = require("../utils");
 
 const conversion = {
   none: v => v,

@@ -4,8 +4,8 @@
   "description": "Zapperment backend (Express server)",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon src/index.js",
-    "test": "jest"
+    "start": "node_modules/.bin/nodemon src/index.js",
+    "test": "node_modules/.bin/jest"
   },
   "author": "Patrick Hund",
   "license": "MIT",

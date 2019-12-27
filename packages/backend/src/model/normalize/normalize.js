@@ -1,16 +1,47 @@
-const { normalizeClaps } = require("./utils");
-const normalizeScene = require("./normalizeScene");
-
-module.exports = rawData => {
-  const maxClaps = rawData.reduce(
-    (acc, loop) => Math.max(acc, loop.stats.claps),
+const { getNestedMaximum } = require("./utils");
+module.exports = data => {
+  const maxClaps = getNestedMaximum(data, 'stats.claps');
+  const maxBoos = getNestedMaximum(data, 'stats.boos');
+  const maxChannels = data.reduce(
+    (acc, { scene: { channels } }) => Math.max(acc, channels.length),
     0
   );
-
-  return rawData
-    .map(loop => ({
-      input: normalizeScene(loop.scene.current),
-      output: [normalizeClaps(loop.stats.claps, maxClaps)]
-    }))
-    .filter(Boolean);
+  const maxTotalVolume = getNestedMaximum(data, 'scene.channels.elements.volume');
+  maxClaps; //?
+  maxBoos; //?
+  maxChannels; //?
+  maxTotalVolume; //?
+  const normalizedData = {};
 };
+
+const data = [
+  {
+    scene: {
+      channels: [
+        {
+          elements: {
+            volume: 31
+          }
+        },
+        {
+          elements: { volume: 50 }
+        }
+      ]
+    },
+    stats: { claps: 5, boos: 0 }
+  },
+  {
+    scene: {
+      channels: [
+        {
+          elements: {
+            volume: 10
+          }
+        }
+      ]
+    },
+    stats: { claps: 10, boos: 5 }
+  }
+];
+
+module.exports(data);

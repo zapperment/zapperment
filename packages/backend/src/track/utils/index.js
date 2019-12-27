@@ -16,8 +16,6 @@ module.exports = {
   isControlledByButton: require("./isControlledByButton"),
   isControlledByRotary: require("./isControlledByRotary"),
   isNote: require("./isNote"),
-  isNumber: require("./isNumber"),
-  isObject: require("./isObject"),
   note: require("./note"),
   number: require("./number"),
   oneOf: require("./oneOf"),

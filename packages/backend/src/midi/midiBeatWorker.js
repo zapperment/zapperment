@@ -21,6 +21,7 @@ const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
 const clocksPerBar = clocksPerBeat * 4;
 const clocksPerLoop = clocksPerBar * barsPerLoop;
+const sceneChangeTicksInAdvance = 10;
 
 if (isMainThread) {
   throw new Error(
@@ -71,7 +72,7 @@ if (isMainThread) {
       return;
     }
     if (midiClock && midiClock.hasTicked()) {
-      if ((clockCounter + 10) % clocksPerLoop === 0) {
+      if ((clockCounter + sceneChangeTicksInAdvance) % clocksPerLoop === 0) {
         loop();
       }
       if (clockCounter % clocksPerBar === 0) {

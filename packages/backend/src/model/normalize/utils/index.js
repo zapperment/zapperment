@@ -1,15 +1,9 @@
-const normalizeBonanza = require("./normalizeBonanza");
-const normalizeClaps = require("./normalizeClaps");
-const normalizeMixer = require("./normalizeMixer");
-const normalizeNumber = require("./normalizeNumber");
-const normalizePercussion = require("./normalizePercussion");
-const normalizeNervomat = require("./normalizeNervomat");
-
 module.exports = {
-  normalizeBonanza,
-  normalizeClaps,
-  normalizeMixer,
-  normalizeNumber,
-  normalizePercussion,
-  normalizeNervomat
+  getNestedAverage: require("./getNestedAverage"),
+  getNestedMaximum: require("./getNestedMaximum"),
+  getNestedMinimum: require("./getNestedMinimum"),
+  getNestedRange: require("./getNestedRange"),
+  getNestedStandardDeviation: require("./getNestedStandardDeviation"),
+  getNestedSum: require("./getNestedSum"),
+  getNestedVariance: require("./getNestedVariance")
 };

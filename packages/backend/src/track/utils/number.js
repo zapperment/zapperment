@@ -1,4 +1,4 @@
-const isNumber = require("./isNumber");
+const { isNumber } = require("../../utils");
 
 module.exports = (path, key, valueNode) => {
   if (valueNode === null) {
