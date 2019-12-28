@@ -1,6 +1,6 @@
-const reduceNestedSum = require("./reduceNestedSum");
+const createAnalyzers = require("./createAnalyzers");
 
-module.exports = reduceNestedSum(
+module.exports = createAnalyzers(
   (acc, curr, i, arr) => {
     if (i < arr.length - 1) {
       return {
