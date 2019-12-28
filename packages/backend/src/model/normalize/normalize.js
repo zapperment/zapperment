@@ -1,27 +1,26 @@
-const {
-  average,
-  minimum,
-  maximum,
-  range,
-  sum,
-  variance
-} = require("./utils");
+const { average, minimum, maximum, range, sum, variance } = require("./utils");
 
 module.exports = data => {
-  // let sumChannels2 = 0;
+  // let maxVolume2 = 0;
   // for (const {
   //   scene: { channels }
   // } of data) {
-  //   sumChannels2 += channels.length;
+  //   for (const {
+  //     elements: { volume }
+  //   } of channels) {
+  //     if (volume > maxVolume2) {
+  //       maxVolume2 = volume;
+  //     }
+  //   }
   // }
-  const varClaps = variance.sum(data, "stats.claps");
-  const sumClaps = sum.sum(data, "stats.claps");
-  const rangeClaps = range.sum(data, "stats.claps"); //?
-  const avgClaps = average.sum(data, "stats.claps");
-  const minClaps = minimum.sum(data, "stats.claps"); //?
-  const maxClaps = maximum.sum(data, "stats.claps");
-  const minBoos = minimum.sum(data, "stats.boos"); //?
-  const maxBoos = maximum.sum(data, "stats.boos");
+  const varClaps = variance.value(data, "stats.claps");
+  const sumClaps = sum.value(data, "stats.claps");
+  const rangeClaps = range.value(data, "stats.claps"); //?
+  const avgClaps = average.value(data, "stats.claps");
+  const minClaps = minimum.value(data, "stats.claps"); //?
+  const maxClaps = maximum.value(data, "stats.claps");
+  const minBoos = minimum.value(data, "stats.boos"); //?
+  const maxBoos = maximum.value(data, "stats.boos");
   const sumChannels = sum.count(data, "scene.channels"); //?
   const avgChannels = average.count(data, "scene.channels"); //?
   const minChannels = minimum.count(data, "scene.channels");
@@ -43,9 +42,14 @@ module.exports = data => {
     data,
     "scene.channels.elements.pitch"
   );
-  const maxTotalVolume = maximum.sum(data, "scene.channels.elements.volume");
-  const maxAverageVolume = average.sum(data, "scene.channels.elements.volume");
+  const maxVolume = maximum.value(data, "scene.channels.elements.volume");
+  const maxTotalVolume = maximum.total(data, "scene.channels.elements.volume");
+  const averageTotalVolume = average.total(
+    data,
+    "scene.channels.elements.volume"
+  );
 
+  assert(maxVolume === 69);
   assert(varClaps === 74.06759982638883);
   assert(sumClaps === 1031);
   assert(avgClaps === 10.739583333333334);
@@ -54,11 +58,11 @@ module.exports = data => {
   assert(minChannels === 3);
   assert(maxChannels === 10);
   assert(minPitchedChannels === 1);
+  assert(averageTotalVolume === 313.7708333333333);
   assert(maxPitchedChannels === 7);
   assert(minPercussiveChannels === 1);
   assert(maxPercussiveChannels === 3);
   assert(maxTotalVolume === 555);
-  assert(maxAverageVolume === 313.7708333333333);
 };
 
 //==================================================
