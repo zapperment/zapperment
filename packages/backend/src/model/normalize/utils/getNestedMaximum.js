@@ -1,4 +1,4 @@
-const reduceNested = require("./reduceNested");
+const reduceNestedSum = require("./reduceNestedSum");
 
 /**
  * Retrieves the a maximum value of a property inside an array of objects.
@@ -16,4 +16,4 @@ const reduceNested = require("./reduceNested");
  * @param {string} [path] The path to retrieve the value from the objects in the
  *                        array
  */
-module.exports = reduceNested((acc, curr) => Math.max(acc, curr));
+module.exports = reduceNestedSum((acc, curr) => Math.max(acc, curr));

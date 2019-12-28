@@ -1,9 +1,9 @@
-const reduceNested = require("./reduceNested");
+const reduceNestedSum = require("./reduceNestedSum");
 const getNestedAverage = require("./getNestedAverage");
 
 module.exports = (data, path) => {
   const avg = getNestedAverage(data, path);
-  return reduceNested(
+  return reduceNestedSum(
     (acc, curr, i, arr) =>
       i < arr.length - 1
         ? acc + Math.pow(curr - avg, 2)

@@ -1,6 +1,6 @@
-const { isObject, isNumber } = require("../../../utils");
+const { isObject } = require("../../../utils");
 
-module.exports = (reducer, initialValue = 0, defaultValue = 0) => (
+module.exports = process => (reducer, initialValue = 0, defaultValue = 0) => (
   data,
   path
 ) => {
@@ -16,18 +16,7 @@ module.exports = (reducer, initialValue = 0, defaultValue = 0) => (
       return values.reduce((acc, curr) => acc + curr, 0);
     }
     if (remainingSegments.length === 1) {
-      const finalValue = currentNode[remainingSegments[0]];
-      if (isNumber(finalValue)) {
-        return currentNode[remainingSegments[0]];
-      }
-      if (Array.isArray(finalValue)) {
-        const values = finalValue.filter(v => typeof v === "number");
-        if (values.length === 0) {
-          return null;
-        }
-        return values.reduce((acc, curr) => acc + curr, 0);
-      }
-      return null;
+      return process(currentNode[remainingSegments[0]]);
     }
     const currentSegment = remainingSegments[0];
     if (isObject(currentNode)) {
@@ -42,10 +31,10 @@ module.exports = (reducer, initialValue = 0, defaultValue = 0) => (
   const values = data
     .map(curr => walk(segments, curr))
     .filter(value => typeof value === "number");
-  return (values.length === 0
+  return values.length === 0
     ? defaultValue
     : values.reduce(
-        (acc, curr, i, arr) => reducer(acc, curr, i, arr),
-        initialValue
-      ));
+      (acc, curr, i, arr) => reducer(acc, curr, i, arr),
+      initialValue
+    );
 };

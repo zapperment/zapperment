@@ -1,3 +1,3 @@
-const reduceNested = require("./reduceNested");
+const reduceNestedSum = require("./reduceNestedSum");
 
-module.exports = reduceNested((acc, curr) => acc + curr);
+module.exports = reduceNestedSum((acc, curr) => acc + curr);

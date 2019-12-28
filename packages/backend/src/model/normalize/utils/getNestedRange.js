@@ -1,6 +1,6 @@
-const reduceNested = require("./reduceNested");
+const reduceNestedSum = require("./reduceNestedSum");
 
-module.exports = reduceNested(
+module.exports = reduceNestedSum(
   (acc, curr, i, arr) => {
     if (i < arr.length - 1) {
       return {
