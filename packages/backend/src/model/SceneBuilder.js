@@ -60,8 +60,8 @@ module.exports = class {
 
     console.log(
       `NEW SCENE PREDICTION:\n${prettyClaps} clap${
-        prettyClaps === 1 ? "" : "s"
-      }, ${prettyBoos} boo${prettyBoos === 1 ? "" : "s"} (${attempts} attempt${
+        prettyClaps === "1" ? "" : "s"
+      }, ${prettyBoos} boo${prettyBoos === "1" ? "" : "s"} (${attempts} attempt${
         attempts === 1 ? "" : "s"
       })`
     );
