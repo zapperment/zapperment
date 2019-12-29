@@ -4,40 +4,51 @@ const { track, sceneQuality, maxAttempts } = require("../config");
 const { Normalizer } = require("./normalize");
 
 module.exports = class {
+  /* ----- PRIVATE FIELDS ----- */
+
+  #storage = null;
+  #trainedNet = null;
+  #track = null;
+  #normalizer = null;
+
+  /* ----- CONSTRUCTOR ----- */
+
   constructor({ storage }) {
-    this.storage = storage;
-    this.trainedNet = null;
-    this.track = null;
-    this.normalizer = null;
+    this.#storage = storage;
+    this.#trainedNet = null;
+    this.#track = null;
+    this.#normalizer = null;
   }
 
+  /* ----- PUBLIC METHODS ----- */
+
   async init() {
-    this.track = loadTrack(track);
+    this.#track = loadTrack(track);
     const {
       meta: { title, copyright }
-    } = this.track;
+    } = this.#track;
     console.log(
       `Track loaded: “${title}”${copyright ? ` – ${copyright}` : ""}`
     );
-    const docs = await this.storage.loadLoops();
+    const docs = await this.#storage.loadLoops();
     if (docs.length) {
-      this.normalizer = new Normalizer(docs);
-      this.trainedNet = trainNetwork(this.normalizer.createTrainingData());
+      this.#normalizer = new Normalizer(docs);
+      this.#trainedNet = trainNetwork(this.#normalizer.createTrainingData());
     }
   }
 
   buildRandomScene() {
-    if (!this.track) {
+    if (!this.#track) {
       throw new Error("You need to call init before building a scene");
     }
-    return buildRandomScene(this.track);
+    return buildRandomScene(this.#track);
   }
 
   buildNewScene() {
-    if (!this.track) {
+    if (!this.#track) {
       throw new Error("You need to call init before building a scene");
     }
-    if (!this.trainedNet) {
+    if (!this.#trainedNet) {
       return this.buildRandomScene();
     }
 
@@ -47,14 +58,14 @@ module.exports = class {
     let attempts = 0;
 
     do {
-      ({ scene, midiCommands } = buildRandomScene(this.track));
-      output = this.trainedNet(this.normalizer.normalizeScene(scene));
+      ({ scene, midiCommands } = buildRandomScene(this.#track));
+      output = this.#trainedNet(this.#normalizer.normalizeScene(scene));
     } while (
       ++attempts < maxAttempts &&
       output.claps - output.boos < sceneQuality
     );
 
-    const { claps, boos } = this.normalizer.denormalizeStats(output);
+    const { claps, boos } = this.#normalizer.denormalizeStats(output);
     const prettyClaps = claps.toFixed(0);
     const prettyBoos = boos.toFixed(0);
 
