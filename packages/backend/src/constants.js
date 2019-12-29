@@ -3,5 +3,15 @@ module.exports = {
   WORKER_STOPPED: "worker stopped",
   START_WORKER: "start worker",
   START_PLAYING: "start playing",
-  STOP_PLAYING: "stop playing"
+  STOP_PLAYING: "stop playing",
+  MIN_CHANNELS: 0,
+  MAX_CHANNELS: 64,
+  MIN_FEEDBACK: 0,
+  MAX_FEEDBACK: 10000,
+  MIN_TEMPO: 1,
+  MAX_TEMPO: 999,
+  MIN_BARS_PER_LOOP: 1,
+  MAX_BARS_PER_LOOP: 999,
+  MIN_BEATS_PER_BAR: 1,
+  MAX_BEATS_PER_BAR: 16,
 };

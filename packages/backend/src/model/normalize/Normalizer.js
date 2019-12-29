@@ -389,13 +389,12 @@ module.exports = class {
     return this.#data.map(item => {
       const normalizedItem = { input: {}, output: {} };
       Object.entries(this.#properties).forEach(
-        ([name, { type, path, analyzer, min, max }]) => {
-          normalizedItem[type][name] = normalizeValue(
+        ([name, { type, path, analyzer, min, max }]) =>
+          (normalizedItem[type][name] = normalizeValue(
             analyzer(getNestedProperty(item, path)),
             min,
             max
-          );
-        }
+          ))
       );
       return normalizedItem;
     });
@@ -405,13 +404,14 @@ module.exports = class {
     const normalizedScene = {};
     Object.entries(this.#properties)
       .filter(([, { type }]) => type === "input")
-      .forEach(([name, { path, analyzer, min, max }]) => {
-        normalizedScene[name] = normalizeValue(
-          analyzer(getNestedProperty({ scene }, path)),
-          min,
-          max
-        );
-      });
+      .forEach(
+        ([name, { path, analyzer, min, max }]) =>
+          (normalizedScene[name] = normalizeValue(
+            analyzer(getNestedProperty({ scene }, path)),
+            min,
+            max
+          ))
+      );
     return normalizedScene;
   }
 

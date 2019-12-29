@@ -9,18 +9,15 @@
 module.exports = (val, min, max) => {
   if (min > max) {
     throw new Error(
-      `Illegal argument for normalize function: “min” must be lower than or equal to “max” – received min=${min} / max=${max}`
+      `Illegal argument for normalize function: “min” must be lower than or equal to “max” – received min=${min} / max=${max}
+${global.debugInfo}`
     );
   }
   if (val < min) {
-    throw new Error(
-      `Illegal argument for normalize function: “val” must be greater than or equal to “min” – received val=${val} / min=${min}`
-    );
+    return 0;
   }
   if (val > max) {
-    throw new Error(
-      `Illegal argument for normalize function: “val” must be lower than or equal to “max” – received val=${val} / max=${max}`
-    );
+    return 1;
   }
   if (min === max) {
     return 0;

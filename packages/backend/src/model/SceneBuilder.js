@@ -50,16 +50,20 @@ module.exports = class {
       ({ scene, midiCommands } = buildRandomScene(this.track));
       output = this.trainedNet(this.normalizer.normalizeScene(scene));
     } while (
-      output.claps - output.boos < sceneQuality &&
-      ++attempts < maxAttempts
+      ++attempts < maxAttempts &&
+      output.claps - output.boos < sceneQuality
     );
 
     const { claps, boos } = this.normalizer.denormalizeStats(output);
+    const prettyClaps = claps.toFixed(0);
+    const prettyBoos = boos.toFixed(0);
 
     console.log(
-      `NEW SCENE PREDICTION:\n${claps.toFixed(0)} claps, ${boos.toFixed(
-        0
-      )} boos (${attempts} attempts)`
+      `NEW SCENE PREDICTION:\n${prettyClaps} clap${
+        prettyClaps === 1 ? "" : "s"
+      }, ${prettyBoos} boo${prettyBoos === 1 ? "" : "s"} (${attempts} attempt${
+        attempts === 1 ? "" : "s"
+      })`
     );
     return { scene, midiCommands };
   }
