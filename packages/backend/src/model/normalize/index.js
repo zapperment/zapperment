@@ -1,1 +1,1 @@
-module.exports = { normalize: require("./normalize") };
+module.exports = { Normalizer: require("./Normalizer") };
