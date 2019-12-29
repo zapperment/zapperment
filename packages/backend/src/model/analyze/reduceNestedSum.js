@@ -1,5 +1,5 @@
 const reduceNested = require("./reduceNested");
-const { isNumber } = require("../../../utils");
+const { isNumber } = require("../../utils");
 
 module.exports = reduceNested(value => {
   if (isNumber(value)) {

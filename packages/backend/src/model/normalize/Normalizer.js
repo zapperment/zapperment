@@ -1,4 +1,4 @@
-const { average, minimum, maximum, sum } = require("./analyze");
+const { average, minimum, maximum, sum } = require("../analyze");
 const {
   normalizeValue,
   getNestedProperty,

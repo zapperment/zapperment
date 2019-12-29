@@ -1,4 +1,4 @@
-const { isObject } = require("../../../utils");
+const { isObject } = require("../../utils");
 
 module.exports = process => ({
   reducer,
