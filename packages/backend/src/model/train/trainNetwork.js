@@ -1,10 +1,10 @@
 const brain = require("brain.js");
-const { normalize } = require("../normalize");
 
-module.exports = data => {
-  const net = new brain.NeuralNetwork({ hiddenLayers: [5, 5] });
-  const normalizedData = normalize(data);
+module.exports = normalizedData => {
+  console.log(`Training neural network with ${normalizedData.length} loops`);
+  const start = Date.now();
+  const net = new brain.NeuralNetwork();
   net.train(normalizedData);
-  console.log(`NEURAL NETWORK TRAINED WITH ${normalizedData.length} LOOPS`);
+  console.log(`Done in ${Date.now() - start} ms`);
   return net.toFunction();
 };

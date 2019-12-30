@@ -1,16 +1,19 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { Storage } = require("../storage");
-const { SceneBuilder } = require("../model");
 const jzz = require("jzz");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
   START_PLAYING,
   STOP_PLAYING,
   STOP_WORKER,
-  WORKER_STOPPED
+  WORKER_STOPPED,
+  NEW_SCENE
 } = require("../constants");
 
-const { midiPortName } = require("../config");
+// PH_TODO: enable use of all four MIDI ports
+// https://github.com/technology-ebay-de/zapperment/issues/56
+const { midiPortNameA } = require("../config");
+
 const MidiClock = require("./MidiClock");
 const MidiController = require("./MidiController");
 
@@ -18,6 +21,7 @@ const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
 const clocksPerBar = clocksPerBeat * 4;
 const clocksPerLoop = clocksPerBar * barsPerLoop;
+const sceneChangeTicksInAdvance = 1;
 
 if (isMainThread) {
   throw new Error(
@@ -26,6 +30,8 @@ if (isMainThread) {
 }
 
 (async () => {
+  let scene = null;
+  let midiCommands = null;
   const storage = new Storage();
   try {
     await storage.init();
@@ -34,18 +40,16 @@ if (isMainThread) {
     console.error(err);
     process.exit(1);
   }
-  const sceneBuilder = new SceneBuilder({ storage });
   let running = true;
   let midiClock = null;
   const midiOut = jzz()
-    .openMidiOut(midiPortName)
+    .openMidiOut(midiPortNameA)
     .or("Cannot open MIDI Out port!");
   const midiController = new MidiController(midiOut);
   let clockCounter = 0;
-  sceneBuilder.init();
 
-  parentPort.on("message", message => {
-    switch (message) {
+  parentPort.on("message", ({ type, data }) => {
+    switch (type) {
       case START_PLAYING:
         midiOut.send(jzz.MIDI.start());
         midiClock = new MidiClock(tempo);
@@ -57,6 +61,9 @@ if (isMainThread) {
       case STOP_WORKER:
         running = false;
         break;
+      case NEW_SCENE:
+        ({ scene, midiCommands } = data);
+        break;
       default:
     }
   });
@@ -67,7 +74,7 @@ if (isMainThread) {
       return;
     }
     if (midiClock && midiClock.hasTicked()) {
-      if ((clockCounter + 1) % clocksPerLoop === 0) {
+      if ((clockCounter + sceneChangeTicksInAdvance) % clocksPerLoop === 0) {
         loop();
       }
       if (clockCounter % clocksPerBar === 0) {
@@ -97,9 +104,14 @@ if (isMainThread) {
   }
 
   function loop() {
-    const scene = sceneBuilder.buildNewScene();
-    midiController.changeScene(scene);
-    console.info(`NEW SCENE:\n${JSON.stringify(scene, null, 4)}`);
+    midiController.changeScene(midiCommands);
+    console.info(
+      `NEW SCENE:\n${scene.channels
+        .map(
+          ({ meta: { name }, midi: { channel } }) => `ch=${channel} – ${name}`
+        )
+        .join("\n")}`
+    );
     parentPort.postMessage({ type: NEW_LOOP, data: scene });
   }
 })();

@@ -3,3 +3,5 @@ node_modules
 *.iml
 .idea
 packages/**/.env
+deleteMe**
+delete-me**

@@ -1,0 +1,1 @@
+module.exports = (value, a, b) => Math.round(((b - a) * value) / 127 + a);

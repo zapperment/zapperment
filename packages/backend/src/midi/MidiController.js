@@ -1,27 +1,31 @@
 const jzz = require("jzz");
 
+const controllerNames = {
+  71: "rotary1",
+  72: "rotary2",
+  73: "rotary3",
+  74: "rotary4",
+  75: "button1",
+  76: "button2",
+  77: "button3",
+  78: "button4"
+};
+
 module.exports = class {
   constructor(midiOut) {
     this.midiOut = midiOut;
   }
 
   send(channel, controller, value) {
-    this.midiOut.send(jzz.MIDI.control(channel, controller, value));
+    console.log(
+      `ch=${channel} – ctl=${controller} (${controllerNames[controller]}) – val=${value}`
+    );
+    this.midiOut.send(jzz.MIDI.control(channel - 1, controller, value));
   }
 
-  changeScene(scene) {
-    // mixer
-    for (const { channel, muted } of scene.mixer) {
-      this.send(0, channel + 101, muted ? 127 : 0);
+  changeScene(midiCommands) {
+    for (const { channel, controller, value } of midiCommands) {
+      this.send(channel, controller, value);
     }
-    // percussion
-    this.send(1, scene.percussion.pattern + 102, 127);
-    // bonanza bassline
-    this.send(2, 102, scene.bonanza.pulsarLevel);
-    this.send(2, 103, scene.bonanza.filter);
-    this.send(2, 104, scene.bonanza.filterEnv);
-    this.send(2, 105, scene.bonanza.lowCut ? 127 : 0);
-    this.send(2, 106, scene.bonanza.rateOneEighth ? 127 : 0);
-    this.send(2, 107, scene.bonanza.sawSolo ? 127 : 0);
   }
 };
