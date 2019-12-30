@@ -15,27 +15,27 @@ module.exports = class {
 
   constructor(data) {
     this.#properties = {
-      tempo: {
-        type: "input",
-        path: "scene.tempo",
-        analyzer: v => v,
-        min: minimum.value(data, "scene.tempo"),
-        max: maximum.value(data, "scene.tempo")
-      },
-      barsPerLoop: {
-        type: "input",
-        path: "scene.barsPerLoop",
-        analyzer: v => v,
-        min: minimum.value(data, "scene.barsPerLoop"),
-        max: maximum.value(data, "scene.barsPerLoop")
-      },
-      beatsPerBar: {
-        type: "input",
-        path: "scene.beatsPerBar",
-        analyzer: v => v,
-        min: minimum.value(data, "scene.beatsPerBar"),
-        max: maximum.value(data, "scene.beatsPerBar")
-      },
+      // tempo: {
+      //   type: "input",
+      //   path: "scene.tempo",
+      //   analyzer: v => v,
+      //   min: minimum.value(data, "scene.tempo"),
+      //   max: maximum.value(data, "scene.tempo")
+      // },
+      // barsPerLoop: {
+      //   type: "input",
+      //   path: "scene.barsPerLoop",
+      //   analyzer: v => v,
+      //   min: minimum.value(data, "scene.barsPerLoop"),
+      //   max: maximum.value(data, "scene.barsPerLoop")
+      // },
+      // beatsPerBar: {
+      //   type: "input",
+      //   path: "scene.beatsPerBar",
+      //   analyzer: v => v,
+      //   min: minimum.value(data, "scene.beatsPerBar"),
+      //   max: maximum.value(data, "scene.beatsPerBar")
+      // },
       pitchMin: {
         type: "input",
         path: "scene.channels",

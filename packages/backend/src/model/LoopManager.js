@@ -39,6 +39,10 @@ module.exports = class {
 
   /* ----- PUBLIC METHODS ----- */
 
+  init(scene) {
+    this.#loop.scene = scene;
+  }
+
   processBoo() {
     this.#processFeedback(feedbackTypeBoos);
   }

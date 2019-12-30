@@ -95,6 +95,7 @@ module.exports = async () => {
       case NEW_SCENE:
         midiBeat.postMessage({ type: NEW_SCENE, data });
         if (!isPlaying) {
+          loopManager.init(data.scene);
           midiBeat.postMessage({ type: START_PLAYING });
           isPlaying = true;
         }
