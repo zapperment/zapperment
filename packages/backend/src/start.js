@@ -4,7 +4,7 @@ const express = require("express");
 const { Socket } = require("./socket");
 const path = require("path");
 const { Worker } = require("worker_threads");
-const { START_PLAYING } = require("./constants");
+const { START_PLAYING, BUILD_SCENE, NEW_SCENE } = require("./constants");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const { port, track } = require("./config");
 const { LoopManager } = require("./model");
@@ -15,8 +15,6 @@ const { loadTrack } = require("./track");
 const { midiPortNameA } = require("./config");
 
 const jzz = require("jzz");
-
-let midiBeat = null;
 
 /* [PH 13 Oct 19]
  * This is a hack – it would be nice if the MIDI Beat Worker could
@@ -61,18 +59,25 @@ module.exports = async () => {
   const loopManager = new LoopManager({ storage });
   const socket = new Socket({ loopManager, server });
 
-  midiBeat = new Worker(path.join(__dirname, "./midi/midiBeatWorker.js"), {
-    workerData: { tempo, barsPerLoop }
-  });
+  const midiBeat = new Worker(
+    path.join(__dirname, "./midi/midiBeatWorker.js"),
+    {
+      workerData: { tempo, barsPerLoop }
+    }
+  );
+  const sceneBuilder = new Worker(
+    path.join(__dirname, "./model/sceneBuilderWorker.js")
+  );
 
-  midiBeat.on("message", message => {
-    switch (message.type) {
+  midiBeat.on("message", ({ type, data }) => {
+    switch (type) {
       case BEAT:
         socket.emitBeat();
         break;
       case NEW_LOOP:
-        loopManager.updateScene(message.data);
+        loopManager.updateScene(data);
         socket.emitStatsReset();
+        sceneBuilder.postMessage(BUILD_SCENE);
         break;
       default:
     }
@@ -83,6 +88,28 @@ module.exports = async () => {
     console.info(`Beat worker exited with code ${code}`)
   );
 
-  midiBeat.postMessage(START_PLAYING);
+  let isPlaying = false;
+
+  sceneBuilder.on("message", ({ type, data }) => {
+    switch (type) {
+      case NEW_SCENE:
+        midiBeat.postMessage({ type: NEW_SCENE, data });
+        if (!isPlaying) {
+          midiBeat.postMessage({ type: START_PLAYING });
+          isPlaying = true;
+        }
+        break;
+      default:
+    }
+  });
+
+  sceneBuilder.on("error", err =>
+    console.error("Scene builder worker reported error", err)
+  );
+  sceneBuilder.on("exit", code =>
+    console.info(`Scene builder worker exited with code ${code}`)
+  );
+
+  sceneBuilder.postMessage(BUILD_SCENE);
   server.listen(port);
 };

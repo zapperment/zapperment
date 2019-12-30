@@ -1,13 +1,13 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { Storage } = require("../storage");
-const { SceneBuilder } = require("../model");
 const jzz = require("jzz");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
   START_PLAYING,
   STOP_PLAYING,
   STOP_WORKER,
-  WORKER_STOPPED
+  WORKER_STOPPED,
+  NEW_SCENE
 } = require("../constants");
 
 // PH_TODO: enable use of all four MIDI ports
@@ -21,7 +21,7 @@ const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;
 const clocksPerBar = clocksPerBeat * 4;
 const clocksPerLoop = clocksPerBar * barsPerLoop;
-const sceneChangeTicksInAdvance = 10;
+const sceneChangeTicksInAdvance = 1;
 
 if (isMainThread) {
   throw new Error(
@@ -30,6 +30,8 @@ if (isMainThread) {
 }
 
 (async () => {
+  let scene = null;
+  let midiCommands = null;
   const storage = new Storage();
   try {
     await storage.init();
@@ -38,7 +40,6 @@ if (isMainThread) {
     console.error(err);
     process.exit(1);
   }
-  const sceneBuilder = new SceneBuilder({ storage });
   let running = true;
   let midiClock = null;
   const midiOut = jzz()
@@ -46,11 +47,9 @@ if (isMainThread) {
     .or("Cannot open MIDI Out port!");
   const midiController = new MidiController(midiOut);
   let clockCounter = 0;
-  await sceneBuilder.init();
-  loop();
 
-  parentPort.on("message", message => {
-    switch (message) {
+  parentPort.on("message", ({ type, data }) => {
+    switch (type) {
       case START_PLAYING:
         midiOut.send(jzz.MIDI.start());
         midiClock = new MidiClock(tempo);
@@ -61,6 +60,9 @@ if (isMainThread) {
         break;
       case STOP_WORKER:
         running = false;
+        break;
+      case NEW_SCENE:
+        ({ scene, midiCommands } = data);
         break;
       default:
     }
@@ -102,7 +104,6 @@ if (isMainThread) {
   }
 
   function loop() {
-    const { scene, midiCommands } = sceneBuilder.buildNewScene();
     midiController.changeScene(midiCommands);
     console.info(
       `NEW SCENE:\n${scene.channels
