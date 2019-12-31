@@ -1,6 +1,6 @@
 {
   "name": "zapperment",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Smooth background music for coding, remixed with machine learning",
   "main": "index.js",
   "private": true,
