@@ -84,9 +84,10 @@ module.exports = async () => {
   });
 
   midiBeat.on("error", err => console.error("Beat worker reported error", err));
-  midiBeat.on("exit", code =>
-    console.info(`Beat worker exited with code ${code}`)
-  );
+  midiBeat.on("exit", code => {
+    console.info(`Beat worker exited with code ${code}`);
+    process.exit(code);
+  });
 
   let isPlaying = false;
 
@@ -107,9 +108,10 @@ module.exports = async () => {
   sceneBuilder.on("error", err =>
     console.error("Scene builder worker reported error", err)
   );
-  sceneBuilder.on("exit", code =>
-    console.info(`Scene builder worker exited with code ${code}`)
-  );
+  sceneBuilder.on("exit", code => {
+    console.info(`Scene builder worker exited with code ${code}`);
+    process.exit(1);
+  });
 
   sceneBuilder.postMessage(BUILD_SCENE);
   server.listen(port);

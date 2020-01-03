@@ -1,15 +1,17 @@
 const array = require("./array");
 const walk = require("./walk");
 
-module.exports = definitionNode => (path, key, valueNode) => {
+module.exports = definitionNode => (path, key, valueNode, errorInfo) => {
   const nextPath = path.length ? `${path}.${key}` : key;
   const nextValueNode = valueNode[key];
   if (nextValueNode === undefined) {
     throw new Error(`Missing required property ${nextPath}`);
   }
   if (Array.isArray(definitionNode)) {
-    array(nextPath, key, nextValueNode);
-    nextValueNode.forEach(curr => walk(definitionNode[0], nextPath, key, curr));
+    array(nextPath, key, nextValueNode, errorInfo);
+    nextValueNode.forEach(curr =>
+      walk(definitionNode[0], nextPath, key, curr, errorInfo)
+    );
     return;
   }
   if (typeof definitionNode === "object") {
@@ -22,5 +24,8 @@ module.exports = definitionNode => (path, key, valueNode) => {
       );
     }
   }
-  walk(definitionNode, nextPath, key, nextValueNode);
+  if (key === "name") {
+    errorInfo.channel = { name: nextValueNode };
+  }
+  walk(definitionNode, nextPath, key, nextValueNode, errorInfo);
 };

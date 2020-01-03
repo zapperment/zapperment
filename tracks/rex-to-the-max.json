@@ -1,0 +1,318 @@
+{
+  "meta": {
+    "title": "Rex to the Max"
+  },
+  "tempo": 174,
+  "channels": [
+    {
+      "meta": {
+        "name": "D'n'B Beat",
+        "color": "pineapple"
+      },
+      "midi": {
+        "channel": 1
+      },
+      "playing": {
+        "rotary1": {
+          "0": false,
+          "26": true,
+          "51": true,
+          "77": true,
+          "102": true
+        }
+      },
+      "elements": {
+        "effects": {
+          "rotary1": {
+            "0": {},
+            "26": {
+              "echo": 31
+            },
+            "51": {},
+            "77": {},
+            "102": {}
+          }
+        },
+        "timbre": {
+          "rotary1": {
+            "0": {},
+            "26": {
+              "bassDrum": 95,
+              "snareDrum": 95,
+              "reverseCymbal": 20,
+              "woodBlock": 50,
+              "closedHiHat": 24,
+              "rimshot": 24
+            },
+            "51": {
+              "click": 95,
+              "closedHiHat": 24
+            },
+            "77": {
+              "bassDrum": 95,
+              "snareDrum": 95
+            },
+            "102": {
+              "reverseCymbal": 20,
+              "click": 95,
+              "closedHiHat": 24,
+              "melodicTom": 55
+            }
+          }
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "rotary1": {
+            "0": {},
+            "26": {
+              "beat": 127
+            },
+            "51": {
+              "break": 127
+            },
+            "77": {
+              "beat": 127
+            },
+            "102": {
+              "break": 127
+            }
+          }
+        },
+        "rhythm": {
+          "groovy": 95,
+          "straight": 31
+        },
+        "mood": {
+          "aggressive": 66,
+          "agitated": 101,
+          "brutal": 44,
+          "energizing": 77,
+          "funky": 37,
+          "heavy": 50,
+          "quirky": 21
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Bassline",
+        "color": "lightOlive"
+      },
+      "midi": {
+        "channel": 2
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D#2",
+          "max": "F3"
+        },
+        "brightness": 63,
+        "effects": {
+          "reverb": 63
+        },
+        "timbre": {
+          "analogueSynthBass": 127
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "bassline": 127
+        },
+        "texture": {
+          "monophonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "cool": 78,
+          "gloomy": 62,
+          "relaxed": 31,
+          "scary": 22
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Synth Guitar",
+        "color": "red"
+      },
+      "midi": {
+        "channel": 3
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D#3",
+          "max": "G#4"
+        },
+        "volume": 60,
+        "effects": {
+          "reverb": 99
+        },
+        "timbre": {
+          "cleanElectricGuitar": 88,
+          "nylonAcousticGuitar": 45
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "chords": 78,
+          "riff": 54
+        },
+        "texture": {
+          "polyphonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "cool": 67,
+          "light": 88,
+          "melancholic": 73,
+          "peaceful": 52,
+          "serene": 83
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Ambient Pad",
+        "color": "lightBlue"
+      },
+      "midi": {
+        "channel": 4
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D#3",
+          "max": "D#4"
+        },
+        "volume": 55,
+        "effects": {
+          "distortion": 72,
+          "reverb": {
+            "button2": {
+              "on": 0,
+              "off": 127
+            }
+          },
+          "gater": {
+            "button2": {
+              "on": 127,
+              "off": 0
+            }
+          }
+        },
+        "timbre": {
+          "metallicPad": 104,
+          "sweepPad": 73
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "chords": 127
+        },
+        "texture": {
+          "polyphonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "button2": {
+            "on": {
+              "agitated": 101,
+              "busy": 89,
+              "funky": 80,
+              "lively": 56
+            },
+            "off": {
+              "boring": 99,
+              "bright": 101,
+              "light": 80,
+              "serene": 70
+            }
+          }
+
+        }
+      }
+    },
+    {
+      "meta": {
+        "name": "Moog Arp",
+        "color": "darkBlue"
+      },
+      "midi": {
+        "channel": 5
+      },
+      "playing": {
+        "button1": {
+          "on": true,
+          "off": false
+        }
+      },
+      "elements": {
+        "pitch": {
+          "min": "D#3",
+          "max": "F4"
+        },
+        "volume": 60,
+        "pan": {
+          "left": 31,
+          "right": 95
+        },
+        "effects": {
+          "reverb": 31
+        },
+        "timbre": {
+          "sawtoothLead": 63,
+          "synthBrass": 95
+        },
+        "sound": {
+          "electronic": 127
+        },
+        "type": {
+          "arpeggio": 127
+        },
+        "texture": {
+          "monophonic": 127
+        },
+        "rhythm": {
+          "straight": 127
+        },
+        "mood": {
+          "busy": 63,
+          "cool:": 31,
+          "dramatic": 63,
+          "energizing": 31,
+          "hypnotic": 72,
+          "meditative": 44,
+          "relaxed": 22
+        }
+      }
+    }
+  ]
+}

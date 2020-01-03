@@ -1,4 +1,4 @@
-const { processChannel } = require("./utils");
+const { processChannel, initErrorInfo, printErrorInfo } = require("./utils");
 
 /**
  * Given a track object created from a track definition file with defaults
@@ -13,18 +13,24 @@ const { processChannel } = require("./utils");
  *                   commands to Reason to set the track scene
  */
 module.exports = convertedTrackWithDefaults => {
+  const errorInfo = initErrorInfo(convertedTrackWithDefaults);
   const trackScene = {
     ...convertedTrackWithDefaults
   };
   const trackMidiCommands = [];
 
-  trackScene.channels = trackScene.channels
-    .map(channel => {
-      const { midiCommands, scene } = processChannel(channel);
-      trackMidiCommands.push(...midiCommands);
-      return scene;
-    })
-    .filter(scene => scene.playing === 127);
+  try {
+    trackScene.channels = trackScene.channels
+      .map(channel => {
+        const { midiCommands, scene } = processChannel(channel, errorInfo);
+        trackMidiCommands.push(...midiCommands);
+        return scene;
+      })
+      .filter(scene => scene.playing === 127);
+  } catch (error) {
+    printErrorInfo(error, errorInfo);
+    process.exit(1);
+  }
   return {
     scene: trackScene,
     midiCommands: trackMidiCommands

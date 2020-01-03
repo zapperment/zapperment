@@ -1,7 +1,7 @@
 const number = require("./number");
 
-module.exports = (min, max) => (path, key, valueNode) => {
-  number(path, key, valueNode);
+module.exports = (min, max) => (path, key, valueNode, errorInfo) => {
+  number(path, key, valueNode, errorInfo);
   if (valueNode !== parseInt(valueNode, 10)) {
     throw new Error(
       `Property at ${path} must be integer value, received ${valueNode}`
