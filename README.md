@@ -10,12 +10,10 @@ This project is very much work in progress!
 
 ## How to install
 
-See [Running Zapperment on a Mac](https://github.com/technology-ebay-de/zapperment/wiki/Running-Zapperment-on-a-Mac-(versions-0.0.10-and-newer))
+See [Running Zapperment on a Mac](https://github.com/zapperment/zapperment/wiki/Running-Zapperment-on-a-Mac-(versions-0.0.10-and-newer))
 
 ## License
 
 [MIT licensed](LICENSE)
 
-Copyright © 2019 mobile.de GmbH
-
-[![eBay Tech Logo](assets/ebay-tech-logo.png "eBay Tech Logo")](https://ebaytech.berlin)
+Copyright © 2020 Patrick Hund
