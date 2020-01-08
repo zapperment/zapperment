@@ -300,7 +300,8 @@ module.exports = class {
         "cuica",
         "triangle",
         "snap",
-        "click"
+        "click",
+        "breakbeat"
       ],
       sound: ["acoustic", "electric", "electronic"],
       type: [
@@ -320,7 +321,7 @@ module.exports = class {
         "percussion"
       ],
       texture: ["monophonic", "polyphonic"],
-      rhythm: ["groovy", "shuffled", "straight"],
+      rhythm: ["groovy", "shuffled", "syncopated", "straight"],
       mood: [
         "aggressive",
         "agitated",
