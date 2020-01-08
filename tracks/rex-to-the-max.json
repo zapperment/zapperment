@@ -3,6 +3,7 @@
     "title": "Rex to the Max"
   },
   "tempo": 174,
+  "barsPerLoop": 8,
   "channels": [
     {
       "meta": {
@@ -295,7 +296,19 @@
           "electronic": 127
         },
         "type": {
-          "arpeggio": 127
+          "rotary1": {
+            "0": {
+              "rampUp": 127,
+              "arpeggio": 127
+            },
+            "63": {
+              "arpeggio": 127
+            },
+            "127": {
+              "rampDown": 127,
+              "arpeggio": 127
+            }
+          }
         },
         "texture": {
           "monophonic": 127
