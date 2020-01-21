@@ -10,7 +10,7 @@ export default ({ socket }) => {
       <div>
         <div>
           <div className={styles.introText}>
-            <h1>Hi, I'm Zapperment!</h1>
+            <h1>Hi, I'm Peppy!</h1>
             <p>
               I'll play smooth background music for you to use for focusing and
               concentrating at work. If you like what you hear, give me some
