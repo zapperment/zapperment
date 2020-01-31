@@ -1,6 +1,6 @@
 const walk = require("./walk");
 
-module.exports = (definitionNode, path, key, valueNode) => {
+module.exports = (definitionNode, path, key, valueNode, errorInfo) => {
   for (const k of Object.keys(valueNode[key])) {
     if (k !== "min" && k !== "max") {
       throw new Error(
@@ -8,14 +8,11 @@ module.exports = (definitionNode, path, key, valueNode) => {
       );
     }
   }
-  if (
-    valueNode[key].min === undefined ||
-    valueNode[key].max === undefined
-  ) {
+  if (valueNode[key].min === undefined || valueNode[key].max === undefined) {
     throw new Error(
       `Illegal control definition at ${path}: you need to define both min and max`
     );
   }
-  walk(definitionNode, path, "min", valueNode[key]);
-  walk(definitionNode, path, "max", valueNode[key]);
+  walk(definitionNode, path, "min", valueNode[key], errorInfo);
+  walk(definitionNode, path, "max", valueNode[key], errorInfo);
 };

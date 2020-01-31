@@ -3,5 +3,8 @@ node_modules
 *.iml
 .idea
 packages/**/.env
+packages/**/.env.hux
 deleteMe**
 delete-me**
+tracks/*.json
+tracks/*.reason

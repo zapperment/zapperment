@@ -276,7 +276,8 @@ module.exports = {
             cuica: controllable(optional(integer(0, 127), 0)),
             triangle: controllable(optional(integer(0, 127), 0)),
             snap: controllable(optional(integer(0, 127), 0)),
-            click: controllable(optional(integer(0, 127), 0))
+            click: controllable(optional(integer(0, 127), 0)),
+            breakbeat: controllable(optional(integer(0, 127), 0))
           })
         ),
         sound: controllable(
@@ -314,6 +315,7 @@ module.exports = {
           required({
             groovy: controllable(optional(integer(0, 127), 0)),
             shuffled: controllable(optional(integer(0, 127), 0)),
+            syncopated: controllable(optional(integer(0, 127), 0)),
             straight: controllable(optional(integer(0, 127), 0))
           })
         ),

@@ -4,7 +4,8 @@ const walk = require("./walk");
 module.exports = (definitionNode, defaultValue = null) => (
   path,
   key,
-  valueNode
+  valueNode,
+  errorInfo
 ) => {
   const nextPath = path.length ? `${path}.${key}` : key;
   const nextValueNode = valueNode[key];
@@ -13,8 +14,10 @@ module.exports = (definitionNode, defaultValue = null) => (
     return;
   }
   if (Array.isArray(definitionNode)) {
-    array(nextPath, key, nextValueNode);
-    nextValueNode.forEach(curr => walk(definitionNode[0], nextPath, key, curr));
+    array(nextPath, key, nextValueNode, errorInfo);
+    nextValueNode.forEach(curr =>
+      walk(definitionNode[0], nextPath, key, curr, errorInfo)
+    );
     return;
   }
   if (typeof definitionNode === "object") {
@@ -28,5 +31,5 @@ module.exports = (definitionNode, defaultValue = null) => (
     }
   }
 
-  walk(definitionNode, nextPath, key, nextValueNode);
+  walk(definitionNode, nextPath, key, nextValueNode, errorInfo);
 };

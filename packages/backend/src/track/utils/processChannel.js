@@ -31,17 +31,19 @@ const nodeIsIgnored = (nodeName, nodeValue) =>
  *                   objects that can be used to dispatch MIDI controller
  *                   commands to Reason to set the channel scene
  */
-module.exports = channel => {
+module.exports = (channel, errorInfo) => {
+  errorInfo.channel = { name: channel.meta.name };
   const controllers = {};
   const midiCommands = [];
   let scene = JSON.parse(JSON.stringify(channel));
 
-  const walk = (parent, nodeName, nodeValue) => {
+  const walk = (parent, nodeName, nodeValue, errorInfo) => {
     if (nodeIsIgnored(nodeName, nodeValue)) {
       return;
     }
     if (isControlled(nodeValue)) {
       const setter = value => (parent[nodeName] = value);
+      errorInfo.channel.property = nodeName;
       for (const [controllerName, controllerOptions] of Object.entries(
         nodeValue
       )) {
@@ -139,11 +141,11 @@ module.exports = channel => {
       return;
     }
     for (const [key, value] of Object.entries(nodeValue)) {
-      walk(nodeValue, key, value);
+      walk(nodeValue, key, value, errorInfo);
     }
   };
 
-  walk(null, null, scene);
+  walk(null, null, scene, errorInfo);
 
   for (const [controllerName, valueToSetterMap] of Object.entries(
     controllers
