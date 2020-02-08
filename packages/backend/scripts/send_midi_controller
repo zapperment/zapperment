@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+const jzz = require("jzz");
+const { argv } = require("yargs");
+const { initIntParameter, initStrParameter, getMidiOut } = require("./utils");
+const {
+  DEFAULT_PORT,
+  DEFAULT_CHANNEL,
+  DEFAULT_CONTROLLER,
+  DEFAULT_VALUE
+} = require("./constants");
+
+const port = initStrParameter({ name: "port", def: DEFAULT_PORT, argv });
+
+const channel = initIntParameter({
+  name: "channel",
+  min: 0,
+  max: 15,
+  def: DEFAULT_CHANNEL,
+  argv
+});
+
+const controller = initIntParameter({
+  name: "controller",
+  min: 0,
+  max: 127,
+  def: DEFAULT_CONTROLLER,
+  argv
+});
+
+const value = initIntParameter({
+  name: "value",
+  min: 0,
+  max: 127,
+  def: DEFAULT_VALUE,
+  argv
+});
+
+console.info("Sending MIDI controller…");
+console.info(`Port:       ${port}`);
+console.info(`Channel:    ${channel}`);
+console.info(`Controller: ${controller}`);
+console.info(`Value:      ${value}`);
+
+const midiOut = getMidiOut(port);
+
+midiOut.send(jzz.MIDI.control(channel, controller, value));

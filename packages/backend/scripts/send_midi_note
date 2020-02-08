@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+const jzz = require("jzz");
+const { argv } = require("yargs");
+const { initIntParameter, initStrParameter, getMidiOut } = require("./utils");
+const {
+  DEFAULT_PORT,
+  DEFAULT_CHANNEL,
+  DEFAULT_NOTE,
+  DEFAULT_VELOCITY
+} = require("./constants");
+
+const port = initStrParameter({ name: "port", def: DEFAULT_PORT, argv });
+
+const channel = initIntParameter({
+  name: "channel",
+  min: 0,
+  max: 15,
+  def: DEFAULT_CHANNEL,
+  argv
+});
+
+const note = initIntParameter({
+  name: "note",
+  min: 0,
+  max: 127,
+  def: DEFAULT_NOTE,
+  argv
+});
+
+const velocity = initIntParameter({
+  name: "velocity",
+  min: 0,
+  max: 127,
+  def: DEFAULT_VELOCITY,
+  argv
+});
+
+console.info("Sending MIDI note…");
+console.info(`Port:     ${port}`);
+console.info(`Channel:  ${channel}`);
+console.info(`Note:     ${note}`);
+console.info(`Velocity: ${velocity}`);
+
+const midiOut = getMidiOut(port);
+
+midiOut.send(jzz.MIDI.noteOn(channel, note, velocity));
+setTimeout(() => midiOut.send(jzz.MIDI.noteOff(channel, note, velocity)), 100);
