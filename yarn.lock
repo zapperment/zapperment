@@ -2148,7 +2148,7 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.0.0.tgz#23c0df14f6a88077f5f986c0d167ec03c3d5537c"
   integrity sha512-Phlt0plgpIIBOGTT/ehfFnbNlfsDEiqmzE2KRXoX1bLIlir4X/MR+zSyBEkL05ffWgnRSf/DXv+WrUAVr93/ow==
 
-bindings@^1.5.0:
+bindings@^1.5.0, bindings@~1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
@@ -5727,11 +5727,6 @@ istanbul-reports@^2.2.6:
   dependencies:
     html-escaper "^2.0.0"
 
-jazz-midi@^1.6.9:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/jazz-midi/-/jazz-midi-1.7.2.tgz#5cf4c259127a8337d4dd31bb81cdcc14d3dd2b3c"
-  integrity sha512-pBTGVBsyp7UgZnELes21nHkSyHp5r4AKdpR7B3LPhikT1QQ17o4zHISDKk3Xsoi9iIJRp/8rMzOMmxPVADQXnA==
-
 jest-changed-files@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-24.9.0.tgz#08d8c15eb79a7fa3fc98269bc14b451ee82f8039"
@@ -6297,13 +6292,6 @@ jsx-ast-utils@^2.2.1, jsx-ast-utils@^2.2.3:
     array-includes "^3.0.3"
     object.assign "^4.1.0"
 
-jzz@^0.7.1:
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/jzz/-/jzz-0.7.9.tgz#98dfc64c57ac6cf7f17e7b35a09c3ede93a44808"
-  integrity sha512-XFWGOQLdS8m9ipJA6qru4u7QB7Nx1LoYmNSAXMrFF9phAspRaLgw5u35lqPMPq920RBM1NOCdSFaCW+EpkA8Pw==
-  dependencies:
-    jazz-midi "^1.6.9"
-
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -6704,6 +6692,14 @@ micromatch@^3.1.10, micromatch@^3.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.2"
 
+midi@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/midi/-/midi-1.0.0.tgz#3949c5b055fb30d84adcc8e0975572f8373873e0"
+  integrity sha512-BL2xedtLEy2ExJujuvQQNs5Gz1aXv7/wpq3KKZ7FmmTvVfR3eC+OgiwtC+4+9IinsXfQnTNSOBrG2PAjMHi0ZQ==
+  dependencies:
+    bindings "~1.5.0"
+    nan "^2.3.3"
+
 miller-rabin@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/miller-rabin/-/miller-rabin-4.0.1.tgz#f080351c865b0dc562a8462966daa53543c78a4d"
@@ -6901,7 +6897,7 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nan@^2.12.1:
+nan@^2.12.1, nan@^2.3.3:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==

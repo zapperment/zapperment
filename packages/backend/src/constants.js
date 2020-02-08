@@ -5,5 +5,6 @@ module.exports = {
   START_PLAYING: "start playing",
   STOP_PLAYING: "stop playing",
   BUILD_SCENE: "build scene",
-  NEW_SCENE: "new scene"
+  NEW_SCENE: "new scene",
+  EXIT: "exit"
 };

@@ -1,19 +1,20 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { Storage } = require("../storage");
-const jzz = require("jzz");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
   START_PLAYING,
   STOP_PLAYING,
   STOP_WORKER,
   WORKER_STOPPED,
-  NEW_SCENE
+  NEW_SCENE,
+  EXIT
 } = require("../constants");
 
 // PH_TODO: enable use of all four MIDI ports
 // https://github.com/technology-ebay-de/zapperment/issues/56
-const { midiPortNameA } = require("../config");
+const { midiPortNameA: midiPortName } = require("../config");
 
+const MidiInterface = require("./MidiInterface");
 const MidiClock = require("./MidiClock");
 const MidiController = require("./MidiController");
 
@@ -42,20 +43,18 @@ if (isMainThread) {
   }
   let running = true;
   let midiClock = null;
-  const midiOut = jzz()
-    .openMidiOut(midiPortNameA)
-    .or("Cannot open MIDI Out port!");
-  const midiController = new MidiController(midiOut);
+  const midiInterface = new MidiInterface({ midiPortName });
+  const midiController = new MidiController({ midiInterface });
   let clockCounter = 0;
 
   parentPort.on("message", ({ type, data }) => {
     switch (type) {
       case START_PLAYING:
-        midiOut.send(jzz.MIDI.start());
+        midiInterface.sendStart();
         midiClock = new MidiClock(tempo);
         break;
       case STOP_PLAYING:
-        midiOut.send(jzz.MIDI.stop());
+        midiInterface.sendStop();
         midiClock = null;
         break;
       case STOP_WORKER:
@@ -64,6 +63,10 @@ if (isMainThread) {
       case NEW_SCENE:
         ({ scene, midiCommands } = data);
         break;
+      case EXIT:
+        midiInterface.sendStop();
+        midiClock = null;
+        process.exit(0);
       default:
     }
   });
@@ -91,7 +94,7 @@ if (isMainThread) {
   setTimeout(run, 100);
 
   function clock() {
-    midiOut.send(jzz.MIDI.clock());
+    midiInterface.sendClock();
   }
 
   function beat() {
