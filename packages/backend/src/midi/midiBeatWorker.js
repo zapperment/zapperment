@@ -10,9 +10,7 @@ const {
   EXIT
 } = require("../constants");
 
-// PH_TODO: enable use of all four MIDI ports
-// https://github.com/technology-ebay-de/zapperment/issues/56
-const { midiPortNameA: midiPortName } = require("../config");
+const { midiPortName } = require("../config");
 
 const MidiInterface = require("./MidiInterface");
 const MidiClock = require("./MidiClock");

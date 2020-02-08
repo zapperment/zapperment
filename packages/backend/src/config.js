@@ -1,22 +1,7 @@
 const configProps = [
   {
-    name: "midiPortNameA",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_A",
-    type: "string"
-  },
-  {
-    name: "midiPortNameB",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_B",
-    type: "string"
-  },
-  {
-    name: "midiPortNameC",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_C",
-    type: "string"
-  },
-  {
-    name: "midiPortNameD",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_D",
+    name: "midiPortName",
+    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME",
     type: "string"
   },
   { name: "port", envVar: "ZAPPERMENT_BACKEND_PORT", type: "integer" },
