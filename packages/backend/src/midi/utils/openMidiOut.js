@@ -7,11 +7,14 @@ module.exports = midiPortName => {
     throw new Error("No MIDI output ports available");
   }
   for (let i = 0; i < numberOfPorts; i++) {
-    if (output.getPortName(i) !== midiPortName) {
+    // in Windows, the midi port name gets a number appended
+    // at the end, in macOS and Linux, it doesn't, that's
+    // why we use "startsWith" here
+    if (!output.getPortName(i).startsWith(midiPortName)) {
       continue;
     }
     output.openPort(i);
     return output;
   }
-  throw new Error(`MIDI output port ${midiPortName} not found`);
+  throw new Error(`MIDI output port ${midiPortName} not found!`);
 };
