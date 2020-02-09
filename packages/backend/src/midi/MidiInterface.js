@@ -24,15 +24,15 @@ module.exports = class {
   }
 
   sendControl(channel, controller, value) {
-    this.#midiOut.sendMessage([0xb0 + channel, controller, value]);
+    this.#midiOut.sendMessage([0xb0 + channel - 1, controller, value]);
   }
 
   sendNoteOn(channel, note, velocity) {
-    this.#midiOut.sendMessage([0x90 + channel, note, velocity]);
+    this.#midiOut.sendMessage([0x90 + channel - 1, note, velocity]);
   }
 
   sendNoteOff(channel, note, velocity) {
-    this.#midiOut.sendMessage([0x80 + channel, note, velocity]);
+    this.#midiOut.sendMessage([0x80 + channel - 1, note, velocity]);
   }
 
   #fatalError = error => {

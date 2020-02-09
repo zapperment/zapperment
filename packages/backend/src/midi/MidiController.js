@@ -20,7 +20,7 @@ module.exports = class {
     console.log(
       `ch=${channel} – ctl=${controller} (${controllerNames[controller]}) – val=${value}`
     );
-    this.#midiInterface.sendControl(channel - 1, controller, value);
+    this.#midiInterface.sendControl(channel, controller, value);
   };
 
   changeScene(midiCommands) {

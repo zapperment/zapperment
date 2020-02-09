@@ -47,4 +47,4 @@ console.info(`Controller: ${controller}`);
 console.info(`Value:      ${value}`);
 
 const midiInterface = new MidiInterface({ midiPortName });
-midiInterface.sendControl(channel - 1, controller, value);
+midiInterface.sendControl(channel, controller, value);
