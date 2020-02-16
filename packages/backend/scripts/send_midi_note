@@ -2,7 +2,7 @@
 
 const { MidiInterface } = require("../src/midi");
 const { argv } = require("yargs");
-const { initIntParameter, initStrParameter, getMidiOut } = require("./utils");
+const { initIntParameter, initStrParameter } = require("./utils");
 const {
   DEFAULT_PORT,
   DEFAULT_CHANNEL,
