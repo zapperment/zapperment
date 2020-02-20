@@ -1,0 +1,14 @@
+{
+  "name": "@zapperment/ableton-live",
+  "version": "0.2.2",
+  "description": "MIDI remote script for controlling Ableton Live with Zapperment",
+  "main": "src/__init__.py",
+  "scripts": {
+    "clean": "./scripts/clean",
+    "compile": "./scripts/compile",
+    "deploy": "./scripts/deploy",
+    "install-live": "./scripts/clean && ./scripts/compile && ./scripts/deploy"
+  },
+  "author": "Patrick Hund",
+  "license": "MIT"
+}
