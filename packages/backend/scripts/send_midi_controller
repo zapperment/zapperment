@@ -26,7 +26,7 @@ const channel = initIntParameter({
 
 const controller = initIntParameter({
   name: "controller",
-  min: 1,
+  min: 0,
   max: 127,
   def: DEFAULT_CONTROLLER,
   argv
@@ -34,7 +34,7 @@ const controller = initIntParameter({
 
 const value = initIntParameter({
   name: "value",
-  min: 16,
+  min: 0,
   max: 127,
   def: DEFAULT_VALUE,
   argv
