@@ -7,7 +7,8 @@
     "clean": "./scripts/clean",
     "compile": "./scripts/compile",
     "deploy": "./scripts/deploy",
-    "install-live": "./scripts/clean && ./scripts/compile && ./scripts/deploy"
+    "install-live": "./scripts/clean && ./scripts/compile && ./scripts/deploy",
+    "watch": "./scripts/watch"
   },
   "author": "Patrick Hund",
   "license": "MIT"
