@@ -9,6 +9,7 @@ fi
 
 if [[ ! -d "${MIDI_REMOTE_SCRIPTS_DIR}" ]]; then
   echo "Error: MIDI remote scripts dir '${MIDI_REMOTE_SCRIPTS_DIR}' does not exist"
+  echo "Please set your environment variable MIDI_REMOTE_SCRIPTS_DIR correctly"
   exit 2
 fi
 

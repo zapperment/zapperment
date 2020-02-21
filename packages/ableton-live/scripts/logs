@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -z "${ABLETON_LIVE_LOG_FILE}" ]]; then
+  echo "Error: environment variable ABLETON_LIVE_LOG_FILE is not set"
+  exit 1
+fi
+
+if [[ ! -e "${ABLETON_LIVE_LOG_FILE}" ]]; then
+  echo "Error: Ableton Live log file '${ABLETON_LIVE_LOG_FILE}' does not exist"
+  echo "Please set your environment variable ABLETON_LIVE_LOG_FILE correctly"
+  exit 2
+fi
+
+less "${ABLETON_LIVE_LOG_FILE}"
+

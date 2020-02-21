@@ -4,12 +4,18 @@
   "description": "MIDI remote script for controlling Ableton Live with Zapperment",
   "main": "src/__init__.py",
   "scripts": {
-    "clean": "./scripts/clean",
-    "compile": "./scripts/compile",
-    "deploy": "./scripts/deploy",
-    "install-live": "./scripts/clean && ./scripts/compile && ./scripts/deploy",
-    "watch": "./scripts/watch"
+    "clean": "scripty",
+    "compile": "scripty",
+    "deploy": "scripty",
+    "install-live": "scripty",
+    "logs": "scripty"
+  },
+  "scripty": {
+    "silent": true
   },
   "author": "Patrick Hund",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "scripty": "^1.9.1"
+  }
 }
