@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { MidiInterface } = require("../src/midi");
+const { MidiInterface } = require("@zapperment/midi");
 const { argv } = require("yargs");
 const { initIntParameter, initStrParameter } = require("./utils");
 const {
@@ -12,7 +12,7 @@ const {
 
 const midiPortName = initStrParameter({
   name: "port",
-  def: DEFAULT_PORT,
+  def: process.env.ZAPPERMENT_MIDI_PORT || DEFAULT_PORT,
   argv
 });
 
@@ -24,8 +24,8 @@ const channel = initIntParameter({
   argv
 });
 
-const controller = initIntParameter({
-  name: "controller",
+const control = initIntParameter({
+  name: "control",
   min: 0,
   max: 127,
   def: DEFAULT_CONTROLLER,
@@ -40,11 +40,11 @@ const value = initIntParameter({
   argv
 });
 
-console.info("Sending MIDI controller…");
+console.info("Sending MIDI control change…");
 console.info(`Port:       ${midiPortName}`);
 console.info(`Channel:    ${channel}`);
-console.info(`Controller: ${controller}`);
+console.info(`Control:    ${control}`);
 console.info(`Value:      ${value}`);
 
 const midiInterface = new MidiInterface({ midiPortName });
-midiInterface.sendControl(channel, controller, value);
+midiInterface.sendControl(channel, control, value);

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { MidiInterface } = require("../src/midi");
+const { MidiInterface } = require("@zapperment/midi");
 const { argv } = require("yargs");
 const {
   initIntParameter,
@@ -16,7 +16,7 @@ const {
 
 const midiPortName = initStrParameter({
   name: "port",
-  def: DEFAULT_PORT,
+  def: process.env.ZAPPERMENT_MIDI_PORT || DEFAULT_PORT,
   argv
 });
 
@@ -44,19 +44,11 @@ const velocity = initIntParameter({
   argv
 });
 
-const addNoteOff = initBoolParameter({
-  name: "add-note-off",
-  argv
-});
-
-console.info("Sending MIDI note…");
+console.info("Sending MIDI note off…");
 console.info(`Port:     ${midiPortName}`);
 console.info(`Channel:  ${channel}`);
 console.info(`Note:     ${note}`);
 console.info(`Velocity: ${velocity}`);
 
 const midiInterface = new MidiInterface({ midiPortName });
-midiInterface.sendNoteOn(channel, note, velocity);
-if (addNoteOff) {
-  setTimeout(() => midiInterface.sendNoteOff(channel, note, velocity), 100);
-}
+midiInterface.sendNoteOff(channel, note, velocity);
