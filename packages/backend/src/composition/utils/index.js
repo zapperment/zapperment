@@ -8,7 +8,7 @@ module.exports = {
   getRandomBool: require("./getRandomBool"),
   getRandomEntry: require("./getRandomEntry"),
   getRandomInt: require("./getRandomInt"),
-  getTrackPath: require("./getTrackPath"),
+  getCompositionPath: require("./getCompositionPath"),
   initErrorInfo: require('./initErrorInfo'),
   integer: require("./integer"),
   interpolateMidiValue: require("./interpolateMidiValue"),

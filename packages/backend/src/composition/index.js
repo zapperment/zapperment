@@ -1,4 +1,4 @@
 module.exports = {
-  loadTrack: require("./loadTrack"),
+  loadComposition: require("./loadComposition"),
   buildRandomScene: require("./buildRandomScene")
 };

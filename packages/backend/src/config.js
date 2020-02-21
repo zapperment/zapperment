@@ -21,8 +21,8 @@ const configProps = [
     type: "integer"
   },
   {
-    name: "track",
-    envVar: "ZAPPERMENT_BACKEND_TRACK",
+    name: "composition",
+    envVar: "ZAPPERMENT_BACKEND_COMPOSITION",
     type: "string"
   }
 ];

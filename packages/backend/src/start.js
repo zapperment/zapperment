@@ -12,13 +12,13 @@ const {
   EXIT
 } = require("./constants");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
-const { port, track } = require("./config");
+const { port, composition } = require("./config");
 const { LoopManager } = require("./model");
-const { loadTrack } = require("./track");
+const { loadComposition } = require("./composition");
 
 module.exports = async () => {
   let threadsRunning = 0;
-  const { barsPerLoop, tempo } = loadTrack(track);
+  const { barsPerLoop, tempo } = loadComposition(composition);
   const app = express();
   const server = http.Server(app);
   const storage = new Storage();
