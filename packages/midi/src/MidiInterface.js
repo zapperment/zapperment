@@ -23,7 +23,7 @@ module.exports = class {
     this.#midiOut.sendMessage([0xf8]);
   }
 
-  sendControl(channel, controller, value) {
+  sendControlChange(channel, controller, value) {
     this.#midiOut.sendMessage([0xb0 + channel - 1, controller, value]);
   }
 

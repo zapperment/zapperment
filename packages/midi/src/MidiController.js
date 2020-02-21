@@ -5,7 +5,15 @@ module.exports = class {
     this.#midiInterface = midiInterface;
   }
 
-  send(channel, controller, value) {
-    this.#midiInterface.sendControl(channel, controller, value);
-  };
+  sendControlChange(...args) {
+    this.#midiInterface.sendControlChange(...args);
+  }
+
+  sendNoteOn(...args) {
+    this.#midiInterface.sendNoteOn(...args);
+  }
+
+  sendNoteOff(...args) {
+    this.#midiInterface.sendNoteOff(...args);
+  }
 };
