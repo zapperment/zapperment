@@ -19,8 +19,8 @@ module.exports = class extends MidiController {
     super.send(channel, controllerNumbers[controller], value);
   };
 
-  changeScene(midiCommands) {
-    for (const { channel, controller, value } of midiCommands) {
+  changeScene(commands) {
+    for (const { channel, controller, value } of commands) {
       this.send(channel, controller, value);
     }
   }

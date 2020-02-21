@@ -5,7 +5,8 @@
   "scripts": {
     "send_midi_cc": "scripty",
     "send_midi_note": "scripty",
-    "send_midi_note_off": "scripty"
+    "send_midi_note_off": "scripty",
+    "send_reason_scene": "scripty"
   },
   "scripty": {
     "silent": true
