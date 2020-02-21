@@ -32,7 +32,7 @@ if (isMainThread) {
 
 (async () => {
   let scene = null;
-  let midiCommands = null;
+  let commands = null;
   const storage = new Storage();
   try {
     await storage.init();
@@ -61,7 +61,7 @@ if (isMainThread) {
         running = false;
         break;
       case NEW_SCENE:
-        ({ scene, midiCommands } = data);
+        ({ scene, commands } = data);
         break;
       case EXIT:
         midiInterface.sendStop();
@@ -107,7 +107,7 @@ if (isMainThread) {
   }
 
   function loop() {
-    midiController.changeScene(midiCommands);
+    midiController.changeScene(commands);
     console.info(
       `NEW SCENE:\n${scene.channels
         .map(

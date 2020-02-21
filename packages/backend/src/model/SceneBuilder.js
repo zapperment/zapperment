@@ -53,12 +53,12 @@ module.exports = class {
     }
 
     let scene;
-    let midiCommands;
+    let commands;
     let output;
     let attempts = 0;
 
     do {
-      ({ scene, midiCommands } = buildRandomScene(this.#track));
+      ({ scene, commands } = buildRandomScene(this.#track));
       output = this.#trainedNet(this.#normalizer.normalizeScene(scene));
     } while (
       ++attempts < maxAttempts &&
@@ -76,6 +76,6 @@ module.exports = class {
         attempts === 1 ? "" : "s"
       })`
     );
-    return { scene, midiCommands };
+    return { scene, commands };
   }
 };

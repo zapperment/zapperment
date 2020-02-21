@@ -1,22 +1,22 @@
 const MidiController = require('./MidiController');
 
-const controllerNames = {
-  71: "rotary1",
-  72: "rotary2",
-  73: "rotary3",
-  74: "rotary4",
-  75: "button1",
-  76: "button2",
-  77: "button3",
-  78: "button4"
+const controllerNumbers = {
+  "rotary1": 71,
+  "rotary2": 72,
+  "rotary3": 73,
+  "rotary4": 74,
+  "button1": 75,
+  "button2": 76,
+  "button3": 77,
+  "button4": 78
 };
 
 module.exports = class extends MidiController {
   send = (channel, controller, value) => {
     console.log(
-      `ch=${channel} – ctl=${controller} (${controllerNames[controller]}) – val=${value}`
+      `ch=${channel} – controller=${controller} (${controllerNumbers[controller]}) – val=${value}`
     );
-    super.send(channel, controller, value);
+    super.send(channel, controllerNumbers[controller], value);
   };
 
   changeScene(midiCommands) {

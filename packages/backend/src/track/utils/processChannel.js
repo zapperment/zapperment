@@ -27,14 +27,14 @@ const nodeIsIgnored = (nodeName, nodeValue) =>
  *
  * @returns {object} Object containing two properties: (1) scene – the
  *                   channel's scene, i.e. the final values for all channel
- *                   elements; (2) midiCommands – array of MIDI command
+ *                   elements; (2) commands – array of MIDI command
  *                   objects that can be used to dispatch MIDI controller
  *                   commands to Reason to set the channel scene
  */
 module.exports = (channel, errorInfo) => {
   errorInfo.channel = { name: channel.meta.name };
   const controllers = {};
-  const midiCommands = [];
+  const commands = [];
   let scene = JSON.parse(JSON.stringify(channel));
 
   const walk = (parent, nodeName, nodeValue, errorInfo) => {
@@ -161,12 +161,12 @@ module.exports = (channel, errorInfo) => {
       midiControllerValue = midiControllerValueString === "on" ? 127 : 0;
     }
     setters.forEach(setter => setter());
-    midiCommands.push({
+    commands.push({
       ...channel.midi,
-      controller: controllersNumbers[controllerName],
+      controller: controllerName,
       value: midiControllerValue
     });
   }
 
-  return { midiCommands, scene };
+  return { commands, scene };
 };
