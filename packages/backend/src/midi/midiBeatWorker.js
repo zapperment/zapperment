@@ -15,7 +15,7 @@ const { midiPortName } = require("../config");
 const {
   MidiInterface,
   MidiClock,
-  MidiController
+  ReasonController
 } = require("@zapperment/midi");
 
 const { tempo, barsPerLoop } = workerData;
@@ -44,7 +44,7 @@ if (isMainThread) {
   let running = true;
   let midiClock = null;
   const midiInterface = new MidiInterface({ midiPortName });
-  const midiController = new MidiController({ midiInterface });
+  const midiController = new ReasonController({ midiInterface });
   let clockCounter = 0;
 
   parentPort.on("message", ({ type, data }) => {
