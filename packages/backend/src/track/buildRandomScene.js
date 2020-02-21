@@ -8,7 +8,7 @@ const { processChannel, initErrorInfo, printErrorInfo } = require("./utils");
  *
  * @returns {object} Object containing two properties: (1) scene – the
  *                   track's scene, i.e. the final values for all elements
- *                   in all channels; (2) commands – array of MIDI command
+ *                   in all tracks; (2) commands – array of MIDI command
  *                   objects that can be used to dispatch MIDI controller
  *                   commands to Reason to set the track scene
  */
@@ -20,9 +20,9 @@ module.exports = convertedTrackWithDefaults => {
   const trackCommands = [];
 
   try {
-    trackScene.channels = trackScene.channels
-      .map(channel => {
-        const { commands, scene } = processChannel(channel, errorInfo);
+    trackScene.tracks = trackScene.tracks
+      .map(track => {
+        const { commands, scene } = processChannel(track, errorInfo);
         trackCommands.push(...commands);
         return scene;
       })

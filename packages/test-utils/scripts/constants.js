@@ -6,13 +6,13 @@ module.exports = {
   DEFAULT_NOTE: 60,
   DEFAULT_VELOCITY: 127,
   DEFAULT_REASON_SCENE: [
-    { channel: 1, controller: "button1", value: 127 },
-    { channel: 2, controller: "button1", value: 0 },
-    { channel: 3, controller: "button1", value: 127 },
-    { channel: 3, controller: "rotary3", value: 24 },
-    { channel: 4, controller: "button1", value: 127 },
-    { channel: 4, controller: "button3", value: 127 },
-    { channel: 5, controller: "button1", value: 0 },
-    { channel: 6, controller: "button1", value: 127 }
+    { track: 1, controller: "button1", value: 127 },
+    { track: 2, controller: "button1", value: 0 },
+    { track: 3, controller: "button1", value: 127 },
+    { track: 3, controller: "rotary3", value: 24 },
+    { track: 4, controller: "button1", value: 127 },
+    { track: 4, controller: "button3", value: 127 },
+    { track: 5, controller: "button1", value: 0 },
+    { track: 6, controller: "button1", value: 127 }
   ]
 };

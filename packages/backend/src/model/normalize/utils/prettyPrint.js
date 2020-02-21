@@ -2,13 +2,13 @@ const fmt = v => String(v).padStart(3);
 
 module.exports = data =>
   data.reduce(
-    (acc, { scene: { channels }, stats: { claps, boos } }, i, arr) =>
+    (acc, { scene: { tracks }, stats: { claps, boos } }, i, arr) =>
       `${acc}${"=".repeat(80)}
 Item #${i}
 
 | CHANNEL    | VOL | PITCH     | PAN       | BRG | DEC | EFFECTS               |
 |            |     | MIN | MAX | LFT | RGT |     |     | DST | REV | ECO | SLP |
-${channels.reduce(
+${tracks.reduce(
   (
     acc2,
     {

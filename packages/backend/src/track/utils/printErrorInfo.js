@@ -1,11 +1,11 @@
 const printChannelName = errorInfo =>
-  errorInfo.channel && errorInfo.channel.name
-    ? `\nChannel: ${errorInfo.channel.name}`
+  errorInfo.track && errorInfo.track.name
+    ? `\nChannel: ${errorInfo.track.name}`
     : "";
 
 const printChannelProperty = errorInfo =>
-  errorInfo.channel && errorInfo.channel.property
-    ? `\nProperty: ${errorInfo.channel.property}`
+  errorInfo.track && errorInfo.track.property
+    ? `\nProperty: ${errorInfo.track.property}`
     : "";
 
 module.exports = (error, errorInfo) =>

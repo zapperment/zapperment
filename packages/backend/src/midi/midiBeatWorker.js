@@ -109,9 +109,9 @@ if (isMainThread) {
   function loop() {
     midiController.changeScene(commands);
     console.info(
-      `NEW SCENE:\n${scene.channels
+      `NEW SCENE:\n${scene.tracks
         .map(
-          ({ meta: { name }, midi: { channel } }) => `ch=${channel} – ${name}`
+          ({ meta: { name }, trackNumber }) => `track=${trackNumber} – ${name}`
         )
         .join("\n")}`
     );

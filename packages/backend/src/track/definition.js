@@ -31,7 +31,8 @@ module.exports = {
   tempo: required(float(1, 999)),
   barsPerLoop: optional(integer(1, 999), 4),
   beatsPerBar: optional(integer(1, 16), 4),
-  channels: required([
+  daw: required(oneOf("Reason", "Ableton Live")),
+  tracks: required([
     {
       meta: required({
         name: required(string),
@@ -73,10 +74,7 @@ module.exports = {
           )
         )
       }),
-      midi: required({
-        channel: required(integer(1, 16)),
-        bus: optional(oneOf("A", "B", "C", "D"), "A")
-      }),
+      trackNumber: required(integer(1, 16)),
       playing: controllable(optional(boolean, true)),
       elements: required({
         pitch: controllable(

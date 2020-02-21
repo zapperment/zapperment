@@ -25,7 +25,7 @@ module.exports = definitionNode => (path, key, valueNode, errorInfo) => {
     }
   }
   if (key === "name") {
-    errorInfo.channel = { name: nextValueNode };
+    errorInfo.track = { name: nextValueNode };
   }
   walk(definitionNode, nextPath, key, nextValueNode, errorInfo);
 };

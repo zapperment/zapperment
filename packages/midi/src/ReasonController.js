@@ -12,16 +12,16 @@ const controllerNumbers = {
 };
 
 module.exports = class extends MidiController {
-  #send = (channel, controller, value) => {
+  #send = (track, controller, value) => {
     console.log(
-      `ch=${channel} – controller=${controller} (${controllerNumbers[controller]}) – val=${value}`
+      `track=${track} – controller=${controller} (${controllerNumbers[controller]}) – val=${value}`
     );
-    super.sendControlChange(channel, controllerNumbers[controller], value);
+    super.sendControlChange(track, controllerNumbers[controller], value);
   };
 
   changeScene(commands) {
-    for (const { channel, controller, value } of commands) {
-      this.#send(channel, controller, value);
+    for (const { track, controller, value } of commands) {
+      this.#send(track, controller, value);
     }
   }
 };

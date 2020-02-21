@@ -71,7 +71,7 @@ Sends a series of MIDI messages to set a scene in Reason.
 Example:
 
 ```
-yarn send_reason_scene --scene='[{"channel":4,"controller":"button2","value":0}]' --port "IAC Driver Bus 1"
+yarn send_reason_scene --scene='[{"track":4,"controller":"button2","value":0}]' --port "IAC Driver Bus 1"
 ```
 
 ## Setting a Default MIDI Port

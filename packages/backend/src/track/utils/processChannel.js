@@ -15,27 +15,27 @@ const controllersNumbers = {
 };
 
 const nodeIsIgnored = (nodeName, nodeValue) =>
-  ["midi", "meta"].includes(nodeName) ||
+  ["trackNumber", "meta"].includes(nodeName) ||
   typeof nodeValue === "number" ||
   nodeValue === null;
 
 /**
- * Given a channel from a track definition file with defaults set and
+ * Given a track from a track definition file with defaults set and
  * values converted to MIDI numbers, this function goes through the
  * track definition object tree and replaces parts that are controlled
  * by actual values, set by random according to the controller configuration.
  *
  * @returns {object} Object containing two properties: (1) scene – the
- *                   channel's scene, i.e. the final values for all channel
+ *                   track's scene, i.e. the final values for all channel
  *                   elements; (2) commands – array of MIDI command
  *                   objects that can be used to dispatch MIDI controller
- *                   commands to Reason to set the channel scene
+ *                   commands to Reason to set the track scene
  */
-module.exports = (channel, errorInfo) => {
-  errorInfo.channel = { name: channel.meta.name };
+module.exports = (track, errorInfo) => {
+  errorInfo.track = { name: track.meta.name };
   const controllers = {};
   const commands = [];
-  let scene = JSON.parse(JSON.stringify(channel));
+  let scene = JSON.parse(JSON.stringify(track));
 
   const walk = (parent, nodeName, nodeValue, errorInfo) => {
     if (nodeIsIgnored(nodeName, nodeValue)) {
@@ -43,7 +43,7 @@ module.exports = (channel, errorInfo) => {
     }
     if (isControlled(nodeValue)) {
       const setter = value => (parent[nodeName] = value);
-      errorInfo.channel.property = nodeName;
+      errorInfo.track.property = nodeName;
       for (const [controllerName, controllerOptions] of Object.entries(
         nodeValue
       )) {
@@ -162,7 +162,7 @@ module.exports = (channel, errorInfo) => {
     }
     setters.forEach(setter => setter());
     commands.push({
-      ...channel.midi,
+      track: track.trackNumber,
       controller: controllerName,
       value: midiControllerValue
     });
