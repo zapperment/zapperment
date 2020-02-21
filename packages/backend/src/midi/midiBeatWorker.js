@@ -12,9 +12,11 @@ const {
 
 const { midiPortName } = require("../config");
 
-const MidiInterface = require("./MidiInterface");
-const MidiClock = require("./MidiClock");
-const MidiController = require("./MidiController");
+const {
+  MidiInterface,
+  MidiClock,
+  MidiController
+} = require("@zapperment/midi");
 
 const { tempo, barsPerLoop } = workerData;
 const clocksPerBeat = 24;

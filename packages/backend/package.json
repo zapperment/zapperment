@@ -10,12 +10,12 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
+    "@zapperment/midi": "^0.2.2",
     "@zapperment/shared": "^0.2.2",
     "brain.js": "^1.6.1",
     "check-prop-types": "^1.1.2",
     "dotenv": "^8.1.0",
     "express": "^4.16.4",
-    "midi": "^1.0.0",
     "mongodb": "^3.2.3",
     "nodemon": "^1.18.10",
     "prettier": "^1.16.4",
