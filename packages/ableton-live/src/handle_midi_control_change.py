@@ -36,3 +36,22 @@ def handle_midi_control_change(self, midi_bytes):
         return
     if not device.is_active:
         self.log_dev('Ignoring MIDI control change, device on track ' + str(track + 1) + ' is not active')
+        return
+    if not device.has_macro_mappings:
+        self.log_dev(
+            'Ignoring MIDI control change, device on track ' + str(track + 1) + ' has no macro mappings')
+        return
+    target_macro = controller + 1 if controller <= 8 else controller - 63
+    target_parameter_name = 'Macro ' + str(target_macro)
+    for parameter in device.parameters:
+        if parameter.original_name == target_parameter_name:
+            if not parameter.is_enabled:
+                self.log_dev(
+                    'Ignoring MIDI control change, macro "' + parameter.name + '" of device on track ' + str(
+                        track + 1) + ' is disabled')
+                return
+            value = midi_bytes[2]
+            self.log_dev(
+                'Setting value of macro "' + parameter.name + '" of track ' + str(track + 1) + ' to ' + str(
+                    value))
+            parameter.value = value

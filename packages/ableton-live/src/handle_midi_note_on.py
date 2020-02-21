@@ -18,5 +18,5 @@ def handle_midi_note_on(self, midi_bytes):
     if len(clips) <= clip:
         self.log_dev('Ignoring MIDI note on, track ' + str(track + 1) + ' does not have a clip ' + str(clip + 1))
         return
-    self.log_dev('Firing clip!')
+    self.log_dev('Firing clip ' + str(clip + 1) + ' of track ' + str(track + 1))
     clips[clip].fire()

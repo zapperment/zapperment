@@ -16,5 +16,5 @@ def handle_midi_note_off(self, midi_bytes):
     if len(tracks) <= track:
         self.log_dev('Ignoring MIDI note off, track ' + str(track + 1) + ' does not exist')
         return
-    self.log_dev('Stopping clip!')
+    self.log_dev('Stopping track ' + str(track + 1))
     tracks[track].stop_all_clips()

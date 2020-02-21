@@ -40,7 +40,6 @@ class Zapperment(ControlSurface):
         self.c_instance.log_message("Zapperment - " + msg)
 
     def build_midi_map(self, midi_map_handle):
-        self.log_dev('Building MIDI map')
         script_handle = self.c_instance.handle()
         for channel in range(15):
             for note_or_control in range(128):
@@ -50,16 +49,11 @@ class Zapperment(ControlSurface):
     def receive_midi(self, midi_bytes):
         self.log_dev('Received MIDI ' + str(midi_bytes))
         (midi_event_type, midi_channel) = get_midi_event_type_and_channel(midi_bytes)
-        track = get_track_from_midi_channel(midi_bytes)
-        self.log_dev('Type:              ' + midi_event_type)
-        self.log_dev('Channel:           ' + str(midi_channel + 1))
-        self.log_dev(('Controller:        '
-                  if midi_event_type == midi_event_type_control else 'Note:              ')
-                 + str(midi_bytes[1]))
-        self.log_dev('Track:             ' + str(track + 1))
-        if midi_event_type != midi_event_type_control:
-            clip = get_clip_from_midi_note(midi_bytes)
-            self.log_dev('Clip:              ' + str(clip + 1))
+        self.log_dev('Type: ' + midi_event_type)
+        self.log_dev('Channel: ' + str(midi_channel + 1))
+        self.log_dev(('Controller: '
+                      if midi_event_type == midi_event_type_control else 'Note: ')
+                     + str(midi_bytes[1]))
         handle_midi_note_on(self, midi_bytes)
         handle_midi_note_off(self, midi_bytes)
         handle_midi_control_change(self, midi_bytes)
