@@ -1,29 +1,30 @@
 const { processChannel, initErrorInfo, printErrorInfo } = require("./utils");
 
 /**
- * Given a track object created from a track definition file with defaults
+ * Given a composition object created from a composition definition file with defaults
  * set and values converted to MIDI numbers, this function goes through the
- * track definition object tree and replaces parts that are controlled
+ * composition definition object tree and replaces parts that are controlled
  * by actual values, set by random according to the controller configuration.
  *
  * @returns {object} Object containing two properties: (1) scene – the
- *                   track's scene, i.e. the final values for all elements
- *                   in all tracks; (2) commands – array of MIDI command
- *                   objects that can be used to dispatch MIDI controller
- *                   commands to Reason to set the track scene
+ *                   composition's scene, i.e. the final values for all elements
+ *                   in all tracks; (2) commands – an object containing data
+ *                   that can be used to dispatch MIDI control change
+ *                   messages to Reason to set the composition scene
  */
-module.exports = convertedTrackWithDefaults => {
-  const errorInfo = initErrorInfo(convertedTrackWithDefaults);
-  const trackScene = {
-    ...convertedTrackWithDefaults
+module.exports = convertedCompositionWithDefaults => {
+  const errorInfo = initErrorInfo(convertedCompositionWithDefaults);
+  const compositionScene = {
+    ...convertedCompositionWithDefaults
   };
-  const trackCommands = [];
+
+  const compositionCommands = {};
 
   try {
-    trackScene.tracks = trackScene.tracks
+    compositionScene.tracks = compositionScene.tracks
       .map(track => {
         const { commands, scene } = processChannel(track, errorInfo);
-        trackCommands.push(...commands);
+        compositionCommands[`track${track.trackNumber}`] = commands;
         return scene;
       })
       .filter(scene => scene.playing === 127);
@@ -32,7 +33,7 @@ module.exports = convertedTrackWithDefaults => {
     process.exit(1);
   }
   return {
-    scene: trackScene,
-    commands: trackCommands
+    scene: compositionScene,
+    commands: compositionCommands
   };
 };

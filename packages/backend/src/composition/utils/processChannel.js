@@ -20,21 +20,21 @@ const nodeIsIgnored = (nodeName, nodeValue) =>
   nodeValue === null;
 
 /**
- * Given a track from a track definition file with defaults set and
+ * Given a track from a composition definition file with defaults set and
  * values converted to MIDI numbers, this function goes through the
  * track definition object tree and replaces parts that are controlled
  * by actual values, set by random according to the controller configuration.
  *
  * @returns {object} Object containing two properties: (1) scene – the
  *                   track's scene, i.e. the final values for all channel
- *                   elements; (2) commands – array of MIDI command
- *                   objects that can be used to dispatch MIDI controller
- *                   commands to Reason to set the track scene
+ *                   elements; (2) commands – objects that can be used to
+ *                   dispatch MIDI controller commands to Reason to set the
+ *                   track scene
  */
 module.exports = (track, errorInfo) => {
   errorInfo.track = { name: track.meta.name };
   const controllers = {};
-  const commands = [];
+  const commands = {};
   let scene = JSON.parse(JSON.stringify(track));
 
   const walk = (parent, nodeName, nodeValue, errorInfo) => {
@@ -161,11 +161,7 @@ module.exports = (track, errorInfo) => {
       midiControllerValue = midiControllerValueString === "on" ? 127 : 0;
     }
     setters.forEach(setter => setter());
-    commands.push({
-      track: track.trackNumber,
-      controller: controllerName,
-      value: midiControllerValue
-    });
+    commands[controllerName] = midiControllerValue;
   }
 
   return { commands, scene };
