@@ -23,24 +23,11 @@ const prettyControlNames = {
 };
 
 module.exports = class extends MidiController {
-  #send = (trackId, controlId, value) => {
-    let track;
-    try {
-      [, track] = trackId.match(/^track([1-9][0-6]*)$/);
-    } catch {
-      throw new Error(`Invalid track identifier: ${trackId}`);
-    }
+  send(trackId, controlId, value) {
+    const track = this.parseTrackId(trackId);
     console.log(
-      `Track ${track}: ${prettyControlNames[controlId]} (MIDI control ${controlNumbers[controlId]}) set to ${value}`
+      `Track ${track}: ${prettyControlNames[controlId]} set to ${value} (MIDI channel ${track} / control ${controlNumbers[controlId]})`
     );
-    super.sendControlChange(parseInt(track, 10), controlNumbers[controlId], value);
-  };
-
-  changeScene(commands) {
-    for (const [trackId, controls] of Object.entries(commands)) {
-      for (const [controlId, value] of Object.entries(controls)) {
-        this.#send(trackId, controlId, value);
-      }
-    }
+    super.sendControlChange(track, controlNumbers[controlId], value);
   }
 };

@@ -74,6 +74,21 @@ Example:
 yarn send_reason_scene --scene='{"track4":{"rotary2":20}}' --port "IAC Driver Bus 1"
 ```
 
+### `send_ableton_live_scene`
+
+Sends a series of MIDI messages to set a scene in Ableton Live.
+
+| parameter | description                                  | default value                  |
+| --------- | -------------------------------------------- | ------------------------------ |
+| port      | Name of the MIDI port to send the message on | `Zapperment`                   |
+| scene     | Scene in JSON format                         | (a typical Ableton Live scene) |
+
+Example:
+
+```
+yarn send_ableton_live_scene --scene='{"track2":{"clip":1,"macro2":33},"track24":{"clip":0}}' --port "IAC Driver Bus 1"
+```
+
 ## Setting a Default MIDI Port
 
 The test utility scripts have `port` parameters to specify which MIDI interface

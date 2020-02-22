@@ -26,5 +26,22 @@ module.exports = {
     track6: {
       button1: 127
     }
+  },
+  DEFAULT_ABLETON_LIVE_SCENE: {
+    track1: {
+      clip: 1
+    },
+    track2: {
+      clip: 0
+    },
+    track3: {
+      clip: 2,
+      macro1: 120
+    },
+    track4: {
+      clip: 3,
+      macro1: 0,
+      macro4: 127
+    }
   }
 };
