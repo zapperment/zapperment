@@ -5,7 +5,7 @@
  * @param {object} [errorInfo] Information about what part of the track definition is
  *                             currently being processed, used to give hints to track
  *                             definition authors when errors occur
- * @throws {Error} If provided [valueNode] is not an array, of if it is an empty array
+ * @throws {Error} If provided [valueNode] is not an array, or if it is an empty array
  */
 module.exports = (path, key, valueNode, errorInfo) => {
   if (!Array.isArray(valueNode)) {

@@ -1,18 +1,8 @@
+const getControlNameAndOptions = require("./getControlNameAndOptions");
 const createMidiValueArray = require("./createMidiValueArray");
 const interpolateMidiValue = require("./interpolateMidiValue");
 const isControlled = require("./isControlled");
 const getRandomEntry = require("./getRandomEntry");
-
-const controllersNumbers = {
-  rotary1: 71,
-  rotary2: 72,
-  rotary3: 73,
-  rotary4: 74,
-  button1: 75,
-  button2: 76,
-  button3: 77,
-  button4: 78
-};
 
 const nodeIsIgnored = (nodeName, nodeValue) =>
   ["trackNumber", "meta"].includes(nodeName) ||
@@ -42,100 +32,94 @@ module.exports = (track, errorInfo) => {
       return;
     }
     if (isControlled(nodeValue)) {
-      const setter = value => (parent[nodeName] = value);
+      const setter = value => {
+        return (parent[nodeName] = value);
+      };
       errorInfo.track.property = nodeName;
-      for (const [controllerName, controllerOptions] of Object.entries(
-        nodeValue
-      )) {
-        if (controllerName.startsWith("rotary")) {
-          const { min, max } = controllerOptions;
-          if (min !== undefined || max !== undefined) {
-            if (
-              Object.keys(controllerOptions).length !== 2 ||
-              min === undefined ||
-              max === undefined
-            ) {
-              throw new Error(
-                "Expected all ranged rotary controllers to have options “min” and “max” (and nothing else)"
-              );
-            }
-            if (typeof min !== "number" || typeof max !== "number") {
-              throw new Error(
-                "Expected all ranged rotary controllers to have number values for “min” and “max”"
-              );
-            }
-            if (!controllers[controllerName]) {
-              controllers[controllerName] = createMidiValueArray().reduce(
-                (acc, curr) => ({
-                  ...acc,
-                  [curr]: [() => setter(interpolateMidiValue(curr, min, max))]
-                }),
-                {}
-              );
-            } else {
-              createMidiValueArray().forEach(curr => {
-                controllers[controllerName][curr].push(() =>
-                  setter(interpolateMidiValue(curr, min, max))
-                );
-              });
-            }
-          } else {
-            if (!controllers[controllerName]) {
-              controllers[controllerName] = Object.entries(
-                controllerOptions
-              ).reduce(
-                (acc, [key, value]) => ({
-                  ...acc,
-                  [key]: [() => setter(value)]
-                }),
-                {}
-              );
-            } else {
-              const nodeKeys = Object.keys(controllerOptions);
-              if (
-                Object.keys(controllers[controllerName]).length !==
-                nodeKeys.length
-              ) {
-                throw new Error(
-                  "Expected all stepped rotary controllers to have same number of options"
-                );
-              }
-              nodeKeys.forEach(key => {
-                const setters = controllers[controllerName][key];
-                if (!setters) {
-                  throw new Error(
-                    "Expected all stepped rotary controllers to have same options for the same MIDI values"
-                  );
-                }
-                setters.push(() => setter(nodeValue[controllerName][key]));
-              });
-            }
-          }
-        }
-        if (controllerName.startsWith("button")) {
+      const [controlName, controlOptions] = getControlNameAndOptions(nodeValue);
+      if (controlName.startsWith("rotary")) {
+        const { min, max } = controlOptions;
+        if (min !== undefined || max !== undefined) {
           if (
-            Object.keys(controllerOptions).length !== 2 ||
-            controllerOptions.on === undefined ||
-            controllerOptions.off === undefined
+            Object.keys(controlOptions).length !== 2 ||
+            min === undefined ||
+            max === undefined
           ) {
             throw new Error(
-              "Expected all button controllers to have options “on” and “off” (and nothing else)"
+              "Expected all ranged rotary controllers to have options “min” and “max” (and nothing else)"
             );
           }
-          if (!controllers[controllerName]) {
-            controllers[controllerName] = Object.entries(
-              controllerOptions
-            ).reduce(
-              (acc, [key, value]) => ({ ...acc, [key]: [() => setter(value)] }),
+          if (typeof min !== "number" || typeof max !== "number") {
+            throw new Error(
+              "Expected all ranged rotary controllers to have number values for “min” and “max”"
+            );
+          }
+          if (!controllers[controlName]) {
+            controllers[controlName] = createMidiValueArray().reduce(
+              (acc, curr) => ({
+                ...acc,
+                [curr]: [() => setter(interpolateMidiValue(curr, min, max))]
+              }),
               {}
             );
           } else {
-            const nodeKeys = Object.keys(controllerOptions);
-            nodeKeys.forEach(key => {
-              const setters = controllers[controllerName][key];
-              setters.push(() => setter(nodeValue[controllerName][key]));
+            createMidiValueArray().forEach(curr => {
+              controllers[controlName][curr].push(() =>
+                setter(interpolateMidiValue(curr, min, max))
+              );
             });
           }
+        } else {
+          if (!controllers[controlName]) {
+            controllers[controlName] = Object.entries(controlOptions).reduce(
+              (acc, [key, value]) => ({
+                ...acc,
+                [key]: [() => setter(value)]
+              }),
+              {}
+            );
+          } else {
+            const nodeKeys = Object.keys(controlOptions);
+            if (
+              Object.keys(controllers[controlName]).length !== nodeKeys.length
+            ) {
+              throw new Error(
+                "Expected all stepped rotary controllers to have same number of options"
+              );
+            }
+            nodeKeys.forEach(key => {
+              const setters = controllers[controlName][key];
+              if (!setters) {
+                throw new Error(
+                  "Expected all stepped rotary controllers to have same options for the same MIDI values"
+                );
+              }
+              setters.push(() => setter(nodeValue[key]));
+            });
+          }
+        }
+      }
+      if (controlName.startsWith("button")) {
+        if (
+          Object.keys(controlOptions).length !== 2 ||
+          controlOptions.on === undefined ||
+          controlOptions.off === undefined
+        ) {
+          throw new Error(
+            "Expected all button controllers to have options “on” and “off” (and nothing else)"
+          );
+        }
+        if (!controllers[controlName]) {
+          controllers[controlName] = Object.entries(controlOptions).reduce(
+            (acc, [key, value]) => ({ ...acc, [key]: [() => setter(value)] }),
+            {}
+          );
+        } else {
+          const nodeKeys = Object.keys(controlOptions);
+          nodeKeys.forEach(key => {
+            const setters = controllers[controlName][key];
+            setters.push(() => setter(nodeValue[key]));
+          });
         }
       }
       return;

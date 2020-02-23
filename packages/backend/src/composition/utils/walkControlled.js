@@ -1,17 +1,42 @@
+const getControlNameAndOptions = require("./getControlNameAndOptions");
 const walkControlledByButton = require("./walkControlledByButton");
-const walkControlledByRotary = require("./walkControlledByRotary");
+const walkControlledByClip = require("./walkControlledByClip");
+const walkControlledByRotaryOrMacro = require("./walkControlledByRotaryOrMacro");
 
 module.exports = (definitionNode, path, key, valueNode, errorInfo) => {
-  for (const controlName of Object.keys(valueNode)) {
-    const nextPath = `${path}.${key}.${controlName}`;
-    if (controlName.startsWith("button")) {
-      walkControlledByButton(definitionNode, nextPath, controlName, valueNode, errorInfo);
-    } else if (controlName.startsWith("rotary")) {
-      walkControlledByRotary(definitionNode, nextPath, controlName, valueNode, errorInfo);
-    } else {
-      throw new Error(
-        `Illegal control type at ${path}.${key}: expected button or rotary, received ${controlName}`
-      );
-    }
+  const [controlName, controlOptions] = getControlNameAndOptions(valueNode);
+  const nextValueNode = { [controlName]: controlOptions };
+  const nextPath = `${path}.${key}.${controlName}`;
+  if (controlName.startsWith("button")) {
+    walkControlledByButton(
+      definitionNode,
+      nextPath,
+      controlName,
+      nextValueNode,
+      errorInfo
+    );
+  } else if (
+    controlName.startsWith("rotary") ||
+    controlName.startsWith("macro")
+  ) {
+    walkControlledByRotaryOrMacro(
+      definitionNode,
+      nextPath,
+      controlName,
+      nextValueNode,
+      errorInfo
+    );
+  } else if (controlName === "clip") {
+    walkControlledByClip(
+      definitionNode,
+      nextPath,
+      controlName,
+      nextValueNode,
+      errorInfo
+    );
+  } else {
+    throw new Error(
+      `Illegal control type at ${path}.${key}: expected button or rotary, received ${controlName}`
+    );
   }
 };

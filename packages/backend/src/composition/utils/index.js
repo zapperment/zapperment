@@ -4,6 +4,7 @@ module.exports = {
   controllable: require("./controllable"),
   createMidiValueArray: require("./createMidiValueArray"),
   float: require("./float"),
+  getControlNameAndOptions: require("./getControlNameAndOptions"),
   getMidiNote: require("./getMidiNote"),
   getRandomBool: require("./getRandomBool"),
   getRandomEntry: require("./getRandomEntry"),
@@ -15,6 +16,8 @@ module.exports = {
   isControlled: require("./isControlled"),
   isControlledBy: require("./isControlledBy"),
   isControlledByButton: require("./isControlledByButton"),
+  isControlledByClip: require("./isControlledByClip"),
+  isControlledByMacro: require("./isControlledByMacro"),
   isControlledByRotary: require("./isControlledByRotary"),
   isNote: require("./isNote"),
   note: require("./note"),
@@ -28,7 +31,8 @@ module.exports = {
   walk: require("./walk"),
   walkControlled: require("./walkControlled"),
   walkControlledByButton: require("./walkControlledByButton"),
-  walkControlledByMinMaxRotary: require("./walkControlledByMinMaxRotary"),
-  walkControlledByRotary: require("./walkControlledByRotary"),
-  walkControlledBySteppedRotary: require("./walkControlledBySteppedRotary")
+  walkControlledByClip: require("./walkControlledByClip"),
+  walkControlledByMinMaxRotaryOrMacro: require("./walkControlledByMinMaxRotaryOrMacro"),
+  walkControlledByRotaryOrMacro: require("./walkControlledByRotaryOrMacro"),
+  walkControlledBySteppedRotaryOrMacro: require("./walkControlledBySteppedRotaryOrMacro")
 };
