@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/test-utils",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Various command line scripts for testing Zapperment",
   "scripts": {
     "send_midi_cc": "scripty",
@@ -15,6 +15,7 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
+    "@zapperment/midi": "^0.2.3",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
