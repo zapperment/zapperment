@@ -37,7 +37,8 @@ module.exports = (track, errorInfo) => {
       };
       errorInfo.track.property = nodeName;
       const [controlName, controlOptions] = getControlNameAndOptions(nodeValue);
-      if (controlName.startsWith("rotary")) {
+      if (controlName.startsWith("rotary") || controlName.startsWith("macro")) {
+        const [, controlType] = controlName.match(/^([a-z]+).+$/);
         const { min, max } = controlOptions;
         if (min !== undefined || max !== undefined) {
           if (
@@ -46,12 +47,12 @@ module.exports = (track, errorInfo) => {
             max === undefined
           ) {
             throw new Error(
-              "Expected all ranged rotary controllers to have options “min” and “max” (and nothing else)"
+              `Expected all ranged ${controlType} controllers to have options “min” and “max” (and nothing else)`
             );
           }
           if (typeof min !== "number" || typeof max !== "number") {
             throw new Error(
-              "Expected all ranged rotary controllers to have number values for “min” and “max”"
+              `Expected all ranged ${controlType} controllers to have number values for “min” and “max”`
             );
           }
           if (!controllers[controlName]) {
@@ -84,19 +85,48 @@ module.exports = (track, errorInfo) => {
               Object.keys(controllers[controlName]).length !== nodeKeys.length
             ) {
               throw new Error(
-                "Expected all stepped rotary controllers to have same number of options"
+                `Expected all stepped ${controlType} controllers to have same number of options`
               );
             }
             nodeKeys.forEach(key => {
               const setters = controllers[controlName][key];
               if (!setters) {
                 throw new Error(
-                  "Expected all stepped rotary controllers to have same options for the same MIDI values"
+                  `Expected all stepped ${controlType} controllers to have same options for the same MIDI values`
                 );
               }
               setters.push(() => setter(nodeValue[key]));
             });
           }
+        }
+      }
+      if (controlName === "slice") {
+        if (!controllers[controlName]) {
+          controllers[controlName] = Object.entries(controlOptions).reduce(
+            (acc, [key, value]) => ({
+              ...acc,
+              [key]: [() => setter(value)]
+            }),
+            {}
+          );
+        } else {
+          const nodeKeys = Object.keys(controlOptions);
+          if (
+            Object.keys(controllers[controlName]).length !== nodeKeys.length
+          ) {
+            throw new Error(
+              "Expected all slice controllers to have same number of options"
+            );
+          }
+          nodeKeys.forEach(key => {
+            const setters = controllers[controlName][key];
+            if (!setters) {
+              throw new Error(
+                "Expected all slice controllers to have same options for the same MIDI values"
+              );
+            }
+            setters.push(() => setter(nodeValue[key]));
+          });
         }
       }
       if (controlName.startsWith("button")) {

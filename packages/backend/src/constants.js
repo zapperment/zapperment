@@ -6,5 +6,7 @@ module.exports = {
   STOP_PLAYING: "stop playing",
   BUILD_SCENE: "build scene",
   NEW_SCENE: "new scene",
-  EXIT: "exit"
+  EXIT: "exit",
+  DAW_REASON: "Reason",
+  DAW_ABLETON_LIVE: "Ableton Live"
 };

@@ -7,7 +7,8 @@ const {
   STOP_WORKER,
   WORKER_STOPPED,
   NEW_SCENE,
-  EXIT
+  EXIT,
+  DAW_REASON
 } = require("../constants");
 
 const { midiPortName } = require("../config");
@@ -15,10 +16,11 @@ const { midiPortName } = require("../config");
 const {
   MidiInterface,
   MidiClock,
-  ReasonController
+  ReasonController,
+  AbletonLiveController
 } = require("@zapperment/midi");
 
-const { tempo, barsPerLoop } = workerData;
+const { tempo, barsPerLoop, daw } = workerData;
 const clocksPerBeat = 24;
 const clocksPerBar = clocksPerBeat * 4;
 const clocksPerLoop = clocksPerBar * barsPerLoop;
@@ -44,7 +46,10 @@ if (isMainThread) {
   let running = true;
   let midiClock = null;
   const midiInterface = new MidiInterface({ midiPortName });
-  const midiController = new ReasonController({ midiInterface });
+  const midiController =
+    daw === DAW_REASON
+      ? new ReasonController({ midiInterface })
+      : new AbletonLiveController({ midiInterface });
   let clockCounter = 0;
 
   parentPort.on("message", ({ type, data }) => {
@@ -67,6 +72,7 @@ if (isMainThread) {
         midiInterface.sendStop();
         midiClock = null;
         process.exit(0);
+        break;
       default:
     }
   });

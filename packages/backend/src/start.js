@@ -4,13 +4,7 @@ const express = require("express");
 const { Socket } = require("./socket");
 const path = require("path");
 const { Worker } = require("worker_threads");
-const {
-  START_PLAYING,
-  BUILD_SCENE,
-  NEW_SCENE,
-  STOP_PLAYING,
-  EXIT
-} = require("./constants");
+const { START_PLAYING, BUILD_SCENE, NEW_SCENE, EXIT } = require("./constants");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const { port, composition } = require("./config");
 const { LoopManager } = require("./model");
@@ -18,7 +12,7 @@ const { loadComposition } = require("./composition");
 
 module.exports = async () => {
   let threadsRunning = 0;
-  const { barsPerLoop, tempo } = loadComposition(composition);
+  const { barsPerLoop, tempo, daw } = loadComposition(composition);
   const app = express();
   const server = http.Server(app);
   const storage = new Storage();
@@ -39,7 +33,7 @@ module.exports = async () => {
   const midiBeat = new Worker(
     path.join(__dirname, "./midi/midiBeatWorker.js"),
     {
-      workerData: { tempo, barsPerLoop }
+      workerData: { barsPerLoop, tempo, daw }
     }
   );
   threadsRunning++;
