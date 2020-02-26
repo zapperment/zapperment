@@ -100,7 +100,7 @@ module.exports = (track, errorInfo) => {
           }
         }
       }
-      if (controlName === "slice") {
+      if (controlName === "clip") {
         if (!controllers[controlName]) {
           controllers[controlName] = Object.entries(controlOptions).reduce(
             (acc, [key, value]) => ({
@@ -168,11 +168,10 @@ module.exports = (track, errorInfo) => {
       valueToSetterMap
     );
     let midiControllerValue;
-    if (controllerName.startsWith("rotary")) {
-      midiControllerValue = parseInt(midiControllerValueString, 10);
-    }
     if (controllerName.startsWith("button")) {
       midiControllerValue = midiControllerValueString === "on" ? 127 : 0;
+    } else {
+      midiControllerValue = parseInt(midiControllerValueString, 10);
     }
     setters.forEach(setter => setter());
     commands[controllerName] = midiControllerValue;

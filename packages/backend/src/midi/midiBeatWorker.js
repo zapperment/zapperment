@@ -24,7 +24,10 @@ const { tempo, barsPerLoop, daw } = workerData;
 const clocksPerBeat = 24;
 const clocksPerBar = clocksPerBeat * 4;
 const clocksPerLoop = clocksPerBar * barsPerLoop;
-const sceneChangeTicksInAdvance = 1;
+
+/* For Reason, sending the scene change at just the right time is critical,
+ * in Ableton Live, it doesn't matter */
+const sceneChangeClocksInAdvance = daw === DAW_REASON ? 1 : clocksPerBar;
 
 if (isMainThread) {
   throw new Error(
@@ -83,7 +86,7 @@ if (isMainThread) {
       return;
     }
     if (midiClock && midiClock.hasTicked()) {
-      if ((clockCounter + sceneChangeTicksInAdvance) % clocksPerLoop === 0) {
+      if ((clockCounter + sceneChangeClocksInAdvance) % clocksPerLoop === 0) {
         loop();
       }
       if (clockCounter % clocksPerBar === 0) {
