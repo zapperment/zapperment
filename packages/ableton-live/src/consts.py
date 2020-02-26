@@ -9,5 +9,4 @@ midi_event_type_note_off = 'note off'
 midi_event_type_control = 'control'
 
 # In dev mode, logging is more verbose
-is_dev_mode = False
-
+is_dev_mode = True

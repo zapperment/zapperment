@@ -24,13 +24,23 @@ const configProps = [
     name: "composition",
     envVar: "ZAPPERMENT_BACKEND_COMPOSITION",
     type: "string"
+  },
+  {
+    name: "reasonSetSceneInAdvance",
+    envVar: "ZAPPERMENT_BACKEND_REASON_SET_SCENE_IN_ADVANCE",
+    type: "string"
+  },
+  {
+    name: "abletonLiveSetSceneInAdvance",
+    envVar: "ZAPPERMENT_BACKEND_ABLETON_LIVE_SET_SCENE_IN_ADVANCE",
+    type: "string"
   }
 ];
 
 const converters = {
   string: s => s,
   integer: s => parseInt(s, 10),
-  float: s => parseFloat(s)
+  float: s => parseFloat(s),
 };
 
 module.exports = configProps.reduce((config, { envVar, type, name }) => {

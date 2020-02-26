@@ -8,10 +8,15 @@ const {
   WORKER_STOPPED,
   NEW_SCENE,
   EXIT,
-  DAW_REASON
+  DAW_REASON,
+  TICKS_PER_BEAT
 } = require("../constants");
 
-const { midiPortName } = require("../config");
+const {
+  midiPortName,
+  abletonLiveSetSceneInAdvance,
+  reasonSetSceneInAdvance
+} = require("../config");
 
 const {
   MidiInterface,
@@ -20,14 +25,46 @@ const {
   AbletonLiveController
 } = require("@zapperment/midi");
 
-const { tempo, barsPerLoop, daw } = workerData;
-const clocksPerBeat = 24;
-const clocksPerBar = clocksPerBeat * 4;
-const clocksPerLoop = clocksPerBar * barsPerLoop;
+const { tempo, barsPerLoop, beatsPerBar, daw } = workerData;
+const ticksPerBar = TICKS_PER_BEAT * beatsPerBar;
+const ticksPerLoop = ticksPerBar * barsPerLoop;
+
+function parseMusicalTime(s) {
+  const [vals, unit] = s.split(" ");
+  if (vals === undefined || unit === undefined) {
+    throw new Error(
+      `Invalid value “${s}” in .env config for SET_SCENE_IN_ADVANCE`
+    );
+  }
+  const val = parseInt(vals, 10);
+  if (isNaN(val)) {
+    throw new Error(
+      `Invalid value “${s}” in .env config for SET_SCENE_IN_ADVANCE`
+    );
+  }
+  switch (unit) {
+    case "tick":
+    case "ticks":
+      return val;
+    case "beat":
+    case "beats":
+      return val * TICKS_PER_BEAT;
+    case "bar":
+    case "bars":
+      return val * ticksPerBar;
+    default:
+      throw new Error(
+        `Invalid unit “${unit}” in .env config for SET_SCENE_IN_ADVANCE`
+      );
+  }
+}
 
 /* For Reason, sending the scene change at just the right time is critical,
  * in Ableton Live, it doesn't matter */
-const sceneChangeClocksInAdvance = daw === DAW_REASON ? 1 : clocksPerBar;
+const sceneChangeClocksInAdvance =
+  daw === DAW_REASON
+    ? parseMusicalTime(reasonSetSceneInAdvance)
+    : parseMusicalTime(abletonLiveSetSceneInAdvance);
 
 if (isMainThread) {
   throw new Error(
@@ -86,13 +123,13 @@ if (isMainThread) {
       return;
     }
     if (midiClock && midiClock.hasTicked()) {
-      if ((clockCounter + sceneChangeClocksInAdvance) % clocksPerLoop === 0) {
+      if ((clockCounter + sceneChangeClocksInAdvance) % ticksPerLoop === 0) {
         loop();
       }
-      if (clockCounter % clocksPerBar === 0) {
+      if (clockCounter % ticksPerBar === 0) {
         bar();
       }
-      if (clockCounter % clocksPerBeat === 0) {
+      if (clockCounter % TICKS_PER_BEAT === 0) {
         beat();
       }
       clock();

@@ -18,7 +18,7 @@ def handle_midi_note_off(self, midi_bytes):
         return
     is_stopped = True
     for clip_slot in tracks[track].clip_slots:
-        if clip_slot.is_triggered or clip_slot.is_playing:
+        if clip_slot.has_clip and (clip_slot.is_triggered or clip_slot.is_playing):
             is_stopped = False
             break
     if is_stopped:

@@ -12,7 +12,7 @@ const { loadComposition } = require("./composition");
 
 module.exports = async () => {
   let threadsRunning = 0;
-  const { barsPerLoop, tempo, daw } = loadComposition(composition);
+  const { barsPerLoop, beatsPerBar, tempo, daw } = loadComposition(composition);
   const app = express();
   const server = http.Server(app);
   const storage = new Storage();
@@ -33,7 +33,7 @@ module.exports = async () => {
   const midiBeat = new Worker(
     path.join(__dirname, "./midi/midiBeatWorker.js"),
     {
-      workerData: { barsPerLoop, tempo, daw }
+      workerData: { barsPerLoop, beatsPerBar, tempo, daw }
     }
   );
   threadsRunning++;

@@ -8,5 +8,6 @@ module.exports = {
   NEW_SCENE: "new scene",
   EXIT: "exit",
   DAW_REASON: "Reason",
-  DAW_ABLETON_LIVE: "Ableton Live"
+  DAW_ABLETON_LIVE: "Ableton Live",
+  TICKS_PER_BEAT: 24
 };
