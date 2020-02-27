@@ -1,4 +1,5 @@
 module.exports = {
   isNumber: require("./isNumber"),
-  isObject: require("./isObject")
+  isObject: require("./isObject"),
+  startWorker: require("./startWorker")
 };

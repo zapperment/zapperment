@@ -1,22 +1,7 @@
 const configProps = [
   {
-    name: "midiPortNameA",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_A",
-    type: "string"
-  },
-  {
-    name: "midiPortNameB",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_B",
-    type: "string"
-  },
-  {
-    name: "midiPortNameC",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_C",
-    type: "string"
-  },
-  {
-    name: "midiPortNameD",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME_D",
+    name: "midiPortName",
+    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME",
     type: "string"
   },
   { name: "port", envVar: "ZAPPERMENT_BACKEND_PORT", type: "integer" },
@@ -36,8 +21,18 @@ const configProps = [
     type: "integer"
   },
   {
-    name: "track",
-    envVar: "ZAPPERMENT_BACKEND_TRACK",
+    name: "composition",
+    envVar: "ZAPPERMENT_BACKEND_COMPOSITION",
+    type: "string"
+  },
+  {
+    name: "reasonSetSceneInAdvance",
+    envVar: "ZAPPERMENT_BACKEND_REASON_SET_SCENE_IN_ADVANCE",
+    type: "string"
+  },
+  {
+    name: "abletonLiveSetSceneInAdvance",
+    envVar: "ZAPPERMENT_BACKEND_ABLETON_LIVE_SET_SCENE_IN_ADVANCE",
     type: "string"
   }
 ];
@@ -45,7 +40,7 @@ const configProps = [
 const converters = {
   string: s => s,
   integer: s => parseInt(s, 10),
-  float: s => parseFloat(s)
+  float: s => parseFloat(s),
 };
 
 module.exports = configProps.reduce((config, { envVar, type, name }) => {

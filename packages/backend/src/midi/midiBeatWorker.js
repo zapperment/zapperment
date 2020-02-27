@@ -1,27 +1,70 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { Storage } = require("../storage");
-const jzz = require("jzz");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
   START_PLAYING,
   STOP_PLAYING,
   STOP_WORKER,
   WORKER_STOPPED,
-  NEW_SCENE
+  NEW_SCENE,
+  EXIT,
+  DAW_REASON,
+  TICKS_PER_BEAT
 } = require("../constants");
 
-// PH_TODO: enable use of all four MIDI ports
-// https://github.com/technology-ebay-de/zapperment/issues/56
-const { midiPortNameA } = require("../config");
+const {
+  midiPortName,
+  abletonLiveSetSceneInAdvance,
+  reasonSetSceneInAdvance
+} = require("../config");
 
-const MidiClock = require("./MidiClock");
-const MidiController = require("./MidiController");
+const {
+  MidiInterface,
+  MidiClock,
+  ReasonController,
+  AbletonLiveController
+} = require("@zapperment/midi");
 
-const { tempo, barsPerLoop } = workerData;
-const clocksPerBeat = 24;
-const clocksPerBar = clocksPerBeat * 4;
-const clocksPerLoop = clocksPerBar * barsPerLoop;
-const sceneChangeTicksInAdvance = 1;
+const { tempo, barsPerLoop, beatsPerBar, daw } = workerData;
+const ticksPerBar = TICKS_PER_BEAT * beatsPerBar;
+const ticksPerLoop = ticksPerBar * barsPerLoop;
+
+function parseMusicalTime(s) {
+  const [vals, unit] = s.split(" ");
+  if (vals === undefined || unit === undefined) {
+    throw new Error(
+      `Invalid value “${s}” in .env config for SET_SCENE_IN_ADVANCE`
+    );
+  }
+  const val = parseInt(vals, 10);
+  if (isNaN(val)) {
+    throw new Error(
+      `Invalid value “${s}” in .env config for SET_SCENE_IN_ADVANCE`
+    );
+  }
+  switch (unit) {
+    case "tick":
+    case "ticks":
+      return val;
+    case "beat":
+    case "beats":
+      return val * TICKS_PER_BEAT;
+    case "bar":
+    case "bars":
+      return val * ticksPerBar;
+    default:
+      throw new Error(
+        `Invalid unit “${unit}” in .env config for SET_SCENE_IN_ADVANCE`
+      );
+  }
+}
+
+/* For Reason, sending the scene change at just the right time is critical,
+ * in Ableton Live, it doesn't matter */
+const sceneChangeClocksInAdvance =
+  daw === DAW_REASON
+    ? parseMusicalTime(reasonSetSceneInAdvance)
+    : parseMusicalTime(abletonLiveSetSceneInAdvance);
 
 if (isMainThread) {
   throw new Error(
@@ -31,7 +74,7 @@ if (isMainThread) {
 
 (async () => {
   let scene = null;
-  let midiCommands = null;
+  let commands = null;
   const storage = new Storage();
   try {
     await storage.init();
@@ -42,27 +85,36 @@ if (isMainThread) {
   }
   let running = true;
   let midiClock = null;
-  const midiOut = jzz()
-    .openMidiOut(midiPortNameA)
-    .or("Cannot open MIDI Out port!");
-  const midiController = new MidiController(midiOut);
+  const midiInterface = new MidiInterface({ midiPortName });
+  const midiController =
+    daw === DAW_REASON
+      ? new ReasonController({ midiInterface })
+      : new AbletonLiveController({ midiInterface });
   let clockCounter = 0;
 
   parentPort.on("message", ({ type, data }) => {
     switch (type) {
       case START_PLAYING:
-        midiOut.send(jzz.MIDI.start());
+        midiInterface.sendStart();
         midiClock = new MidiClock(tempo);
         break;
       case STOP_PLAYING:
-        midiOut.send(jzz.MIDI.stop());
+        midiInterface.sendStop();
         midiClock = null;
         break;
       case STOP_WORKER:
         running = false;
         break;
       case NEW_SCENE:
-        ({ scene, midiCommands } = data);
+        ({ scene, commands } = data);
+        if (!midiClock) {
+          sendScene();
+        }
+        break;
+      case EXIT:
+        midiInterface.sendStop();
+        midiClock = null;
+        process.exit(0);
         break;
       default:
     }
@@ -74,13 +126,13 @@ if (isMainThread) {
       return;
     }
     if (midiClock && midiClock.hasTicked()) {
-      if ((clockCounter + sceneChangeTicksInAdvance) % clocksPerLoop === 0) {
+      if ((clockCounter + sceneChangeClocksInAdvance) % ticksPerLoop === 0) {
         loop();
       }
-      if (clockCounter % clocksPerBar === 0) {
+      if (clockCounter % ticksPerBar === 0) {
         bar();
       }
-      if (clockCounter % clocksPerBeat === 0) {
+      if (clockCounter % TICKS_PER_BEAT === 0) {
         beat();
       }
       clock();
@@ -91,7 +143,7 @@ if (isMainThread) {
   setTimeout(run, 100);
 
   function clock() {
-    midiOut.send(jzz.MIDI.clock());
+    midiInterface.sendClock();
   }
 
   function beat() {
@@ -104,14 +156,18 @@ if (isMainThread) {
   }
 
   function loop() {
-    midiController.changeScene(midiCommands);
+    sendScene();
+    parentPort.postMessage({ type: NEW_LOOP, data: scene });
+  }
+
+  function sendScene() {
+    midiController.changeScene(commands);
     console.info(
-      `NEW SCENE:\n${scene.channels
+      `NEW SCENE:\n${scene.tracks
         .map(
-          ({ meta: { name }, midi: { channel } }) => `ch=${channel} – ${name}`
+          ({ meta: { name }, trackNumber }) => `track=${trackNumber} – ${name}`
         )
         .join("\n")}`
     );
-    parentPort.postMessage({ type: NEW_LOOP, data: scene });
   }
 })();

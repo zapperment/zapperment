@@ -6,5 +6,5 @@ packages/**/.env
 packages/**/.env.hux
 deleteMe**
 delete-me**
-tracks/*.json
-tracks/*.reason
+compositions/*.json
+compositions/*.reason

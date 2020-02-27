@@ -1,0 +1,17 @@
+#!/bin/bash
+
+BASEDIR=$(dirname "$0")
+
+if [[ -z "${MIDI_REMOTE_SCRIPTS_DIR}" ]]; then
+  echo "Error: environment variable MIDI_REMOTE_SCRIPTS_DIR is not set"
+  exit 1
+fi
+
+if [[ ! -d "${MIDI_REMOTE_SCRIPTS_DIR}" ]]; then
+  echo "Error: MIDI remote scripts dir '${MIDI_REMOTE_SCRIPTS_DIR}' does not exist"
+  echo "Please set your environment variable MIDI_REMOTE_SCRIPTS_DIR correctly"
+  exit 2
+fi
+
+echo "Copying:"
+cp -vR ${BASEDIR}/../dist/Zapperment "${MIDI_REMOTE_SCRIPTS_DIR}/"

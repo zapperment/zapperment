@@ -1,6 +1,6 @@
 const { trainNetwork } = require("./train");
-const { loadTrack, buildRandomScene } = require("../track");
-const { track, sceneQuality, maxAttempts } = require("../config");
+const { loadComposition, buildRandomScene } = require("../composition");
+const { composition, sceneQuality, maxAttempts } = require("../config");
 const { Normalizer } = require("./normalize");
 
 module.exports = class {
@@ -8,7 +8,7 @@ module.exports = class {
 
   #storage = null;
   #trainedNet = null;
-  #track = null;
+  #composition = null;
   #normalizer = null;
 
   /* ----- CONSTRUCTOR ----- */
@@ -16,19 +16,19 @@ module.exports = class {
   constructor({ storage }) {
     this.#storage = storage;
     this.#trainedNet = null;
-    this.#track = null;
+    this.#composition = null;
     this.#normalizer = null;
   }
 
   /* ----- PUBLIC METHODS ----- */
 
   async init() {
-    this.#track = loadTrack(track);
+    this.#composition = loadComposition(composition);
     const {
       meta: { title, copyright }
-    } = this.#track;
+    } = this.#composition;
     console.log(
-      `Track loaded: “${title}”${copyright ? ` – ${copyright}` : ""}`
+      `Composition loaded: “${title}”${copyright ? ` – ${copyright}` : ""}`
     );
     const docs = await this.#storage.loadLoops();
     if (docs.length) {
@@ -38,14 +38,14 @@ module.exports = class {
   }
 
   buildRandomScene() {
-    if (!this.#track) {
+    if (!this.#composition) {
       throw new Error("You need to call init before building a scene");
     }
-    return buildRandomScene(this.#track);
+    return buildRandomScene(this.#composition);
   }
 
   buildNewScene() {
-    if (!this.#track) {
+    if (!this.#composition) {
       throw new Error("You need to call init before building a scene");
     }
     if (!this.#trainedNet) {
@@ -53,12 +53,12 @@ module.exports = class {
     }
 
     let scene;
-    let midiCommands;
+    let commands;
     let output;
     let attempts = 0;
 
     do {
-      ({ scene, midiCommands } = buildRandomScene(this.#track));
+      ({ scene, commands } = buildRandomScene(this.#composition));
       output = this.#trainedNet(this.#normalizer.normalizeScene(scene));
     } while (
       ++attempts < maxAttempts &&
@@ -76,6 +76,6 @@ module.exports = class {
         attempts === 1 ? "" : "s"
       })`
     );
-    return { scene, midiCommands };
+    return { scene, commands };
   }
 };

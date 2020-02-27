@@ -1,0 +1,9 @@
+#!/bin/bash
+
+BASEDIR=$(dirname "$0")
+
+python -m compileall ${BASEDIR}/../src
+
+mkdir -p ${BASEDIR}/../dist/Zapperment
+
+mv ${BASEDIR}/../src/*.pyc ${BASEDIR}/../dist/Zapperment

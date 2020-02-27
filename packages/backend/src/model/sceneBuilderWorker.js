@@ -1,7 +1,7 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
 const { Storage } = require("../storage");
 const SceneBuilder = require("./SceneBuilder");
-const { BUILD_SCENE, NEW_SCENE } = require("../constants");
+const { BUILD_SCENE, NEW_SCENE, EXIT } = require("../constants");
 
 if (isMainThread) {
   throw new Error(
@@ -21,13 +21,16 @@ if (isMainThread) {
   const sceneBuilder = new SceneBuilder({ storage });
   await sceneBuilder.init();
 
-  parentPort.on("message", message => {
-    switch (message) {
+  parentPort.on("message", ({ type }) => {
+    switch (type) {
       case BUILD_SCENE:
         parentPort.postMessage({
           type: NEW_SCENE,
           data: sceneBuilder.buildNewScene()
         });
+        break;
+      case EXIT:
+        process.exit(0);
         break;
       default:
     }
