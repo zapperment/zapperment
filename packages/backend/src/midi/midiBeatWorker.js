@@ -107,6 +107,9 @@ if (isMainThread) {
         break;
       case NEW_SCENE:
         ({ scene, commands } = data);
+        if (!midiClock) {
+          sendScene();
+        }
         break;
       case EXIT:
         midiInterface.sendStop();
@@ -153,6 +156,11 @@ if (isMainThread) {
   }
 
   function loop() {
+    sendScene();
+    parentPort.postMessage({ type: NEW_LOOP, data: scene });
+  }
+
+  function sendScene() {
     midiController.changeScene(commands);
     console.info(
       `NEW SCENE:\n${scene.tracks
@@ -161,6 +169,5 @@ if (isMainThread) {
         )
         .join("\n")}`
     );
-    parentPort.postMessage({ type: NEW_LOOP, data: scene });
   }
 })();

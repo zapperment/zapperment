@@ -31,6 +31,7 @@ if (isMainThread) {
         break;
       case EXIT:
         process.exit(0);
+        break;
       default:
     }
   });

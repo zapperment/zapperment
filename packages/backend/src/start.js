@@ -2,13 +2,12 @@ const { Storage } = require("./storage");
 const http = require("http");
 const express = require("express");
 const { Socket } = require("./socket");
-const path = require("path");
-const { Worker } = require("worker_threads");
 const { START_PLAYING, BUILD_SCENE, NEW_SCENE, EXIT } = require("./constants");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const { port, composition } = require("./config");
 const { LoopManager } = require("./model");
 const { loadComposition } = require("./composition");
+const { startWorker } = require("./utils");
 
 module.exports = async () => {
   let threadsRunning = 0;
@@ -30,17 +29,12 @@ module.exports = async () => {
   const loopManager = new LoopManager({ storage });
   const socket = new Socket({ loopManager, server });
 
-  const midiBeat = new Worker(
-    path.join(__dirname, "./midi/midiBeatWorker.js"),
-    {
-      workerData: { barsPerLoop, beatsPerBar, tempo, daw }
-    }
-  );
+  const midiBeat = startWorker("./midi/midiBeatWorker.js", {
+    workerData: { barsPerLoop, beatsPerBar, tempo, daw }
+  });
   threadsRunning++;
 
-  const sceneBuilder = new Worker(
-    path.join(__dirname, "./model/sceneBuilderWorker.js")
-  );
+  const sceneBuilder = startWorker("./model/sceneBuilderWorker.js");
   threadsRunning++;
 
   midiBeat.on("message", ({ type, data }) => {
@@ -69,10 +63,15 @@ module.exports = async () => {
 
   sceneBuilder.on("message", ({ type, data }) => {
     switch (type) {
+      // When the scene builder has created a new scene…
       case NEW_SCENE:
+        // Tell the MIDI beat worker to set the scene (i.e. send controller data to the connected DAW)
         midiBeat.postMessage({ type: NEW_SCENE, data });
+        // If music playback hasn't started yet…
         if (!isPlaying) {
+          // Give the loop manager the data of the scene that has been created
           loopManager.init(data.scene);
+          // Tell the MIDI beat worker to start playing
           midiBeat.postMessage({ type: START_PLAYING });
           isPlaying = true;
         }
