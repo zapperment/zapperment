@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/backend",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Zapperment backend (Express server)",
   "main": "src/index.js",
   "scripts": {
@@ -10,8 +10,8 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/midi": "^0.2.3",
-    "@zapperment/shared": "^0.2.3",
+    "@zapperment/midi": "^0.3.0",
+    "@zapperment/shared": "^0.3.0",
     "brain.js": "^1.6.1",
     "check-prop-types": "^1.1.2",
     "dotenv": "^8.1.0",

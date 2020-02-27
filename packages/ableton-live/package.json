@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/ableton-live",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "MIDI remote script for controlling Ableton Live with Zapperment",
   "main": "src/__init__.py",
   "scripts": {
