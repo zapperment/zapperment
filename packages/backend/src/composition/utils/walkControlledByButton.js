@@ -1,6 +1,6 @@
 const walk = require("./walk");
 
-module.exports = (definitionNode, path, key, valueNode, errorInfo) => {
+module.exports = (definitionNode, path, key, valueNode, context) => {
   for (const k of Object.keys(valueNode[key])) {
     if (k !== "on" && k !== "off") {
       throw new Error(
@@ -16,6 +16,6 @@ module.exports = (definitionNode, path, key, valueNode, errorInfo) => {
       `Illegal control definition at ${path}: you need to define both on and off`
     );
   }
-  walk(definitionNode, path, "on", valueNode[key], errorInfo);
-  walk(definitionNode, path, "off", valueNode[key], errorInfo);
+  walk(definitionNode, path, "on", valueNode[key], context);
+  walk(definitionNode, path, "off", valueNode[key], context);
 };

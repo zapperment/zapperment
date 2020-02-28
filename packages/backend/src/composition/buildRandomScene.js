@@ -1,4 +1,4 @@
-const { processChannel, initErrorInfo, printErrorInfo } = require("./utils");
+const { processChannel, initContext, printContext } = require("./utils");
 
 /**
  * Given a composition object created from a composition definition file with defaults
@@ -13,7 +13,7 @@ const { processChannel, initErrorInfo, printErrorInfo } = require("./utils");
  *                   messages to Reason to set the composition scene
  */
 module.exports = convertedCompositionWithDefaults => {
-  const errorInfo = initErrorInfo(convertedCompositionWithDefaults);
+  const context = initContext(convertedCompositionWithDefaults);
   const compositionScene = {
     ...convertedCompositionWithDefaults
   };
@@ -23,13 +23,13 @@ module.exports = convertedCompositionWithDefaults => {
   try {
     compositionScene.tracks = compositionScene.tracks
       .map(track => {
-        const { commands, scene } = processChannel(track, errorInfo);
+        const { commands, scene } = processChannel(track, context);
         compositionCommands[`track${track.trackNumber}`] = commands;
         return scene;
       })
       .filter(scene => scene.playing === 127);
   } catch (error) {
-    printErrorInfo(error, errorInfo);
+    printContext(error, context);
     process.exit(1);
   }
   return {

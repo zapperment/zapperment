@@ -8,7 +8,7 @@ jest.mock("./walkControlledByClip");
 jest.mock("./walkControlledByRotaryOrMacro");
 
 const definitionNode = "DEFINITION_NODE";
-const errorInfo = "ERROR_INFO";
+const context = "CONTEXT";
 
 describe("The “walkControlled” function", () => {
   describe("given a button control", () => {
@@ -22,14 +22,14 @@ describe("The “walkControlled” function", () => {
           on: true,
           off: false
         },
-        errorInfo
+        context
       );
       expect(walkControlledByButton).toHaveBeenCalledWith(
         "DEFINITION_NODE",
         "foo.bar.button1",
         "button1",
         { button1: { on: true, off: false } },
-        "ERROR_INFO"
+        context
       );
     });
   });
@@ -44,14 +44,14 @@ describe("The “walkControlled” function", () => {
           min: 0,
           max: 127
         },
-        errorInfo
+        context
       );
       expect(walkControlledByRotaryOrMacro).toHaveBeenCalledWith(
         "DEFINITION_NODE",
         "foo.bar.rotary1",
         "rotary1",
         { rotary1: { min: 0, max: 127 } },
-        "ERROR_INFO"
+        context
       );
     });
   });
@@ -66,14 +66,14 @@ describe("The “walkControlled” function", () => {
           min: 0,
           max: 127
         },
-        errorInfo
+        context
       );
       expect(walkControlledByRotaryOrMacro).toHaveBeenCalledWith(
         "DEFINITION_NODE",
         "foo.bar.macro8",
         "macro8",
         { macro8: { min: 0, max: 127 } },
-        "ERROR_INFO"
+        context
       );
     });
   });
@@ -88,14 +88,14 @@ describe("The “walkControlled” function", () => {
           "1": 0,
           "2": 127
         },
-        errorInfo
+        context
       );
       expect(walkControlledByClip).toHaveBeenCalledWith(
         "DEFINITION_NODE",
         "foo.bar.clip",
         "clip",
         { clip: { "1": 0, "2": 127 } },
-        "ERROR_INFO"
+        context
       );
     });
   });
@@ -111,7 +111,7 @@ describe("The “walkControlled” function", () => {
             min: 0,
             max: 127
           },
-          errorInfo
+          context
         )
       ).toThrow(
         "Illegal control type at foo.bar: expected button or rotary, received blafasel1"

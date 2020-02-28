@@ -1,14 +1,14 @@
-const { initErrorInfo, printErrorInfo } = require("./utils");
+const { initContext, printContext } = require("./utils");
 const walk = require("./utils/walk");
 const definition = require("./definition");
 
 module.exports = track => {
   const nextTrack = JSON.parse(JSON.stringify(track));
-  const errorInfo = initErrorInfo(nextTrack);
+  const context = initContext(nextTrack);
   try {
-    walk(definition, "", "", nextTrack, errorInfo);
+    walk(definition, "", "", nextTrack, context);
   } catch (error) {
-    printErrorInfo(error, errorInfo);
+    printContext(error, context);
     process.exit(1);
   }
   return nextTrack;

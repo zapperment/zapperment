@@ -5,7 +5,7 @@ module.exports = (definitionNode, defaultValue = null) => (
   path,
   key,
   valueNode,
-  errorInfo
+  context
 ) => {
   const nextPath = path.length ? `${path}.${key}` : key;
   const nextValueNode = valueNode[key];
@@ -14,9 +14,9 @@ module.exports = (definitionNode, defaultValue = null) => (
     return;
   }
   if (Array.isArray(definitionNode)) {
-    array(nextPath, key, nextValueNode, errorInfo);
+    array(nextPath, key, nextValueNode, context);
     nextValueNode.forEach(curr =>
-      walk(definitionNode[0], nextPath, key, curr, errorInfo)
+      walk(definitionNode[0], nextPath, key, curr, context)
     );
     return;
   }
@@ -31,5 +31,5 @@ module.exports = (definitionNode, defaultValue = null) => (
     }
   }
 
-  walk(definitionNode, nextPath, key, nextValueNode, errorInfo);
+  walk(definitionNode, nextPath, key, nextValueNode, context);
 };

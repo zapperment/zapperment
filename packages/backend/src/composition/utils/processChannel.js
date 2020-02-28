@@ -21,13 +21,13 @@ const nodeIsIgnored = (nodeName, nodeValue) =>
  *                   dispatch MIDI controller commands to Reason to set the
  *                   track scene
  */
-module.exports = (track, errorInfo) => {
-  errorInfo.track = { name: track.meta.name };
+module.exports = (track, context) => {
+  context.track = { name: track.meta.name };
   const controllers = {};
   const commands = {};
   let scene = JSON.parse(JSON.stringify(track));
 
-  const walk = (parent, nodeName, nodeValue, errorInfo) => {
+  const walk = (parent, nodeName, nodeValue, context) => {
     if (nodeIsIgnored(nodeName, nodeValue)) {
       return;
     }
@@ -35,7 +35,7 @@ module.exports = (track, errorInfo) => {
       const setter = value => {
         return (parent[nodeName] = value);
       };
-      errorInfo.track.property = nodeName;
+      context.track.property = nodeName;
       const [controlName, controlOptions] = getControlNameAndOptions(nodeValue);
       if (controlName.startsWith("rotary") || controlName.startsWith("macro")) {
         const [, controlType] = controlName.match(/^([a-z]+).+$/);
@@ -155,11 +155,11 @@ module.exports = (track, errorInfo) => {
       return;
     }
     for (const [key, value] of Object.entries(nodeValue)) {
-      walk(nodeValue, key, value, errorInfo);
+      walk(nodeValue, key, value, context);
     }
   };
 
-  walk(null, null, scene, errorInfo);
+  walk(null, null, scene, context);
 
   for (const [controllerName, valueToSetterMap] of Object.entries(
     controllers

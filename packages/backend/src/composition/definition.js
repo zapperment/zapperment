@@ -1,4 +1,5 @@
 const {
+  dawSpecific,
   required,
   optional,
   string,
@@ -38,43 +39,51 @@ module.exports = {
         name: required(string),
         description: optional(string),
         color: optional(
-          oneOf(
-            "burgundy",
-            "red",
-            "orange",
-            "brown",
-            "ochre",
-            "peach",
-            "wheat",
-            "tangerine",
-            "pineapple",
-            "lemon",
-            "brightLime",
-            "lightOlive",
-            "mossGreen",
-            "kellyGreen",
-            "asparagus",
-            "darkGreen",
-            "camouflageGreen",
-            "turquoise",
-            "blueInGreen",
-            "powderBlue",
-            "lightBlue",
-            "skyBlue",
-            "steelBlue",
-            "slateBlue",
-            "darkBlue",
-            "pink",
-            "lilac",
-            "plum",
-            "neonViolet",
-            "deepPurple",
-            "graphite",
-            "brightGrey"
-          )
+          dawSpecific({
+            reason: oneOf(
+              "burgundy",
+              "red",
+              "orange",
+              "brown",
+              "ochre",
+              "peach",
+              "wheat",
+              "tangerine",
+              "pineapple",
+              "lemon",
+              "brightLime",
+              "lightOlive",
+              "mossGreen",
+              "kellyGreen",
+              "asparagus",
+              "darkGreen",
+              "camouflageGreen",
+              "turquoise",
+              "blueInGreen",
+              "powderBlue",
+              "lightBlue",
+              "skyBlue",
+              "steelBlue",
+              "slateBlue",
+              "darkBlue",
+              "pink",
+              "lilac",
+              "plum",
+              "neonViolet",
+              "deepPurple",
+              "graphite",
+              "brightGrey"
+            ),
+            live: integer(0, 69)
+          })
         )
       }),
-      trackNumber: required(integer(1, 16)),
+      trackNumber: required(
+        dawSpecific({
+          reason: integer(1, 16),
+          live: integer(1, 32)
+        })
+      ),
       playing: controllable(optional(boolean, true)),
       elements: required({
         pitch: controllable(

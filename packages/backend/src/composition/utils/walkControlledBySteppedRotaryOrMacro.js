@@ -1,6 +1,6 @@
 const walk = require("./walk");
 
-module.exports = (definitionNode, path, key, valueNode, errorInfo) => {
+module.exports = (definitionNode, path, key, valueNode, context) => {
   if (Object.keys(valueNode[key]).length === 0) {
     throw new Error(
       `Illegal control option at ${path}: expected at least one key 0-127, received empty object`
@@ -13,6 +13,6 @@ module.exports = (definitionNode, path, key, valueNode, errorInfo) => {
         `Illegal control option at ${path}: expected keys 0-127, received ${k}`
       );
     }
-    walk(definitionNode, path, k, valueNode[key], errorInfo);
+    walk(definitionNode, path, k, valueNode[key], context);
   }
 };

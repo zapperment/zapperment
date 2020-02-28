@@ -1,4 +1,4 @@
-module.exports = (path, key, valueNode, errorInfo) => {
+module.exports = (path, key, valueNode, context) => {
   if (valueNode === null) {
     throw new Error(`Property at ${path} must be a string, received null`);
   }
