@@ -8,3 +8,4 @@ deleteMe**
 delete-me**
 compositions/*.json
 compositions/*.reason
+compositions/*.alp
