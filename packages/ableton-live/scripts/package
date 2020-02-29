@@ -1,0 +1,14 @@
+#!/bin/bash
+
+BASEDIR=$(dirname "$0")
+ZIPFILE=${BASEDIR}/../zapperment-control-surface.zip
+VERSION=$(node -p "require('${BASEDIR}/../package.json').version")
+echo "Packaging Zapperment control surface version $VERSION"
+
+${BASEDIR}/clean/dist && \
+rm -fv ${ZIPFILE} && \
+${BASEDIR}/compile && \
+cd ${BASEDIR}/../dist && \
+sed s/\$VERSION/${VERSION}/ <${BASEDIR}/../resources/readme.txt >readme.txt && \
+zip -r ${ZIPFILE} -xi *
+

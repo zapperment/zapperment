@@ -4,11 +4,14 @@
   "description": "MIDI remote script for controlling Ableton Live with Zapperment",
   "main": "src/__init__.py",
   "scripts": {
-    "clean": "scripty",
+    "clean": "yarn clean:dist && yarn clean:target",
+    "clean:dist": "scripty",
+    "clean:target": "scripty",
     "compile": "scripty",
     "deploy": "scripty",
     "install-live": "scripty",
-    "logs": "scripty"
+    "logs": "scripty",
+    "package": "scripty"
   },
   "scripty": {
     "silent": true

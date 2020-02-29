@@ -2,4 +2,4 @@
 
 BASEDIR=$(dirname "$0")
 
-${BASEDIR}/clean && ${BASEDIR}/compile && ${BASEDIR}/deploy
+${BASEDIR}/clean/dist && ${BASEDIR}/clean/target && ${BASEDIR}/compile && ${BASEDIR}/deploy

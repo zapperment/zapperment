@@ -1,7 +1,7 @@
 # Ableton Live
 
-Python scripts used to control Ableton Live with Zapperment. Installation is
-done using Yarn scripts.
+Python scripts to create an Ableton Live control surface, which can be used to
+control Live with Zapperment. Compilation is done using Yarn scripts.
 
 ## Prerequisites
 
@@ -21,10 +21,23 @@ set an environment variable to this path, like this, for example:
 export MIDI_REMOTE_SCRIPTS_DIR="/Applications/Ableton Live 10 Lite.app/Contents/App-Resources/MIDI Remote Scripts"
 ```
 
-## Installing the MIDI Remote Script
+## Creating a Zip File for Distribution
 
-You can then run the `install-live` script to install the MIDI Remote Script for
-Zapperment:
+The control surface for Ableton Live is contained in the zip file
+[zapperment-control-surface.zip](zapperment-control-surface.zip), along with
+installation instructions.
+
+To build this file, run this command:
+
+```
+yarn package
+```
+
+## Installing the MIDI Remote Script for Local Development
+
+You can run the `install-live` script to install the control surface for
+Zapperment directly from the Python sources without having to bundle the zip
+file and unzip it again in the MIDI Remove Scripts directory:
 
 ```
 yarn install-live
@@ -44,6 +57,19 @@ Script from Ableton Live:
 yarn clean
 ```
 
+To clean up only the `dist` directory:
+
+```
+yarn clean:dist
+```
+
+To clean up only the target directory (remove the Zapperment control surface
+from Ableton Live's MIDI Remote Scripts):
+
+```
+yarn clean:target
+```
+
 ### Compiling
 
 To compile the Python source code files to the `dist` directory:
@@ -61,7 +87,7 @@ Ableton Live:
 yarn deploy
 ```
 
-## Local Development
+## Additional Scripts for Local Development
 
 ### Checking Log Files
 
@@ -93,7 +119,7 @@ viewing the log using key strokes:
 
 - `gg` – skip to the beginning of the log file
 - `G` – skip to the end of the log file
-- `F` – follow mode, show lew log lines as they are written by Live (stop if with `Ctrl+C`)
+- `F` – follow mode, show lew log lines as they are written by Live (stop if
+  with `Ctrl+C`)
 - `/` – enter a search term
 - `q` – exit the log file viewer
-
