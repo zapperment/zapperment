@@ -1,38 +1,38 @@
 const configProps = [
   {
     name: "midiPortName",
-    envVar: "ZAPPERMENT_BACKEND_MIDI_PORT_NAME",
+    envVar: "ZAPPERMENT_MIDI_PORT_NAME",
     type: "string"
   },
-  { name: "port", envVar: "ZAPPERMENT_BACKEND_PORT", type: "integer" },
+  { name: "port", envVar: "ZAPPERMENT_PORT", type: "integer" },
   {
     name: "databaseUrl",
-    envVar: "ZAPPERMENT_BACKEND_DATABASE_URL",
+    envVar: "ZAPPERMENT_DATABASE_URL",
     type: "string"
   },
   {
     name: "sceneQuality",
-    envVar: "ZAPPERMENT_BACKEND_SCENE_QUALITY",
+    envVar: "ZAPPERMENT_SCENE_QUALITY",
     type: "float"
   },
   {
     name: "maxAttempts",
-    envVar: "ZAPPERMENT_BACKEND_MAX_ATTEMPTS",
+    envVar: "ZAPPERMENT_MAX_ATTEMPTS",
     type: "integer"
   },
   {
     name: "composition",
-    envVar: "ZAPPERMENT_BACKEND_COMPOSITION",
+    envVar: "ZAPPERMENT_COMPOSITION",
     type: "string"
   },
   {
     name: "reasonSetSceneInAdvance",
-    envVar: "ZAPPERMENT_BACKEND_REASON_SET_SCENE_IN_ADVANCE",
+    envVar: "ZAPPERMENT_REASON_SET_SCENE_IN_ADVANCE",
     type: "string"
   },
   {
     name: "abletonLiveSetSceneInAdvance",
-    envVar: "ZAPPERMENT_BACKEND_ABLETON_LIVE_SET_SCENE_IN_ADVANCE",
+    envVar: "ZAPPERMENT_ABLETON_LIVE_SET_SCENE_IN_ADVANCE",
     type: "string"
   }
 ];
