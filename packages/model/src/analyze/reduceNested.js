@@ -1,4 +1,4 @@
-const { isObject } = require("../../utils");
+const { isObject } = require("@zapperment/shared");
 
 module.exports = process => ({
   reducer,

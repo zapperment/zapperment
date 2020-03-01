@@ -1,7 +1,6 @@
-const { trainNetwork } = require("./train");
 const { loadComposition, buildRandomScene } = require("../composition");
 const { composition, sceneQuality, maxAttempts } = require("../config");
-const { Normalizer } = require("./normalize");
+const { Normalizer, trainNetwork } = require("@zapperment/model");
 
 module.exports = class {
   /* ----- PRIVATE FIELDS ----- */

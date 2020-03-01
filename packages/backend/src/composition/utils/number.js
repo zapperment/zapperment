@@ -1,4 +1,4 @@
-const { isNumber } = require("../../utils");
+const { isNumber } = require("@zapperment/shared");
 
 module.exports = (path, key, valueNode, context) => {
   if (valueNode === null) {

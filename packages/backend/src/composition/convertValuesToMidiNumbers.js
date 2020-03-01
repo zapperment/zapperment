@@ -1,5 +1,5 @@
 const { getMidiNote, isNote } = require("./utils");
-const { isObject } = require("../utils");
+const { isObject } = require("@zapperment/shared");
 
 const conversion = {
   none: v => v,
