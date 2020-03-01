@@ -1,7 +1,8 @@
-const { isMainThread, parentPort, workerData } = require("worker_threads");
-const { Storage } = require("../storage");
+const { isMainThread, parentPort } = require("worker_threads");
+const { Storage } = require("@zapperment/storage");
 const SceneBuilder = require("./SceneBuilder");
 const { BUILD_SCENE, NEW_SCENE, EXIT } = require("../constants");
+const { databaseUrl } = require("../config");
 
 if (isMainThread) {
   throw new Error(
@@ -12,7 +13,7 @@ if (isMainThread) {
 (async () => {
   const storage = new Storage();
   try {
-    await storage.init();
+    await storage.init({ databaseUrl });
   } catch (err) {
     console.error("Error initializing storage in scene builder worker thread");
     console.error(err);

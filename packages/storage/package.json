@@ -1,0 +1,11 @@
+{
+  "name": "@zapperment/storage",
+  "version": "0.4.0",
+  "description": "Zapperment storage library",
+  "main": "src/index.js",
+  "author": "Patrick Hund",
+  "license": "MIT",
+  "dependencies": {
+    "midi": "^1.0.0"
+  }
+}

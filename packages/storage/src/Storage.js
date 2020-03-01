@@ -1,4 +1,3 @@
-const { databaseUrl } = require("../config");
 const mongo = require("mongodb").MongoClient;
 
 /* ----- CONSTANTS ----- */
@@ -14,7 +13,7 @@ module.exports = class {
 
   /* ----- PUBLIC METHODS ----- */
 
-  async init() {
+  async init({ databaseUrl }) {
     const client = await mongo.connect(databaseUrl, options);
     this.#db = client.db(zappermentDb);
   }
