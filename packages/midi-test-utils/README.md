@@ -1,6 +1,6 @@
-# Zapperment Test Utilities
+# Zapperment MIDI Test Utilities
 
-Various command line scripts for testing Zapperment.
+Various command line scripts for testing Zapperment's MIDI commands.
 
 ## MIDI Scripts
 
