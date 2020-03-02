@@ -1,0 +1,19 @@
+{
+  "name": "@zapperment/midi-test-utils",
+  "version": "0.4.0",
+  "description": "Scripts for testing Zapperment's machine learning algorithms",
+  "scripts": {
+    "run_test": "scripty"
+  },
+  "scripty": {
+    "silent": true
+  },
+  "author": "Patrick Hund",
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^15.1.0"
+  },
+  "devDependencies": {
+    "scripty": "^1.9.1"
+  }
+}
