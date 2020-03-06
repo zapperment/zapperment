@@ -23,6 +23,7 @@ module.exports = class {
 
   #storage = null;
   #loop = null;
+  #savedLoops = 0;
 
   /* ----- CONSTRUCTOR ----- */
 
@@ -54,6 +55,7 @@ module.exports = class {
   async updateScene(scene) {
     if (this.hasFeedback) {
       await this.#storage.saveLoop(this.#loop);
+      console.log(`${++this.#savedLoops} new loops saved in this session`);
     }
     this.#loop.scene = scene;
     this.#loop.stats.claps = 0;

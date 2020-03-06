@@ -1,5 +1,5 @@
 {
-  "name": "@zapperment/midi-test-utils",
+  "name": "@zapperment/model-test-utils",
   "version": "0.4.0",
   "description": "Scripts for testing Zapperment's machine learning algorithms",
   "scripts": {

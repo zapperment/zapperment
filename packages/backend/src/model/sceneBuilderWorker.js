@@ -2,7 +2,7 @@ const { isMainThread, parentPort } = require("worker_threads");
 const { Storage } = require("@zapperment/storage");
 const SceneBuilder = require("./SceneBuilder");
 const { BUILD_SCENE, NEW_SCENE, EXIT } = require("../constants");
-const { databaseUrl } = require("../config");
+const { databaseUrl, useNeuralNetwork } = require("../config");
 
 if (isMainThread) {
   throw new Error(
@@ -19,7 +19,7 @@ if (isMainThread) {
     console.error(err);
     process.exit(1);
   }
-  const sceneBuilder = new SceneBuilder({ storage });
+  const sceneBuilder = new SceneBuilder({ storage, useNeuralNetwork });
   await sceneBuilder.init();
 
   parentPort.on("message", ({ type }) => {

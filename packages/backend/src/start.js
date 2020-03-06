@@ -74,6 +74,7 @@ module.exports = async () => {
           // Tell the MIDI beat worker to start playing
           midiBeat.postMessage({ type: START_PLAYING });
           isPlaying = true;
+          sceneBuilder.postMessage({ type: BUILD_SCENE });
         }
         break;
       default:

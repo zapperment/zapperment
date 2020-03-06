@@ -34,6 +34,11 @@ const configProps = [
     name: "abletonLiveSetSceneInAdvance",
     envVar: "ZAPPERMENT_ABLETON_LIVE_SET_SCENE_IN_ADVANCE",
     type: "string"
+  },
+  {
+    name: "useNeuralNetwork",
+    envVar: "ZAPPERMENT_USE_NEURAL_NETWORK",
+    type: "boolean"
   }
 ];
 
@@ -41,6 +46,7 @@ const converters = {
   string: s => s,
   integer: s => parseInt(s, 10),
   float: s => parseFloat(s),
+  boolean: s => s.toLowerCase() === 'true'
 };
 
 module.exports = configProps.reduce((config, { envVar, type, name }) => {
