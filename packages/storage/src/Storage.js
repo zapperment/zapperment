@@ -33,4 +33,8 @@ module.exports = class {
       .find({})
       .toArray();
   }
+
+  get loops() {
+    return this.#db.collection(loopsCollection);
+  }
 };

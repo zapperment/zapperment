@@ -1,0 +1,88 @@
+#!/usr/bin/env node
+
+require("dotenv").config();
+const initLoops = require("../lib/initLoops");
+const {
+  qtagThresholdVBad,
+  qtagThresholdBad,
+  qtagThresholdGood,
+  qtagThresholdVGood
+} = require("../lib/config");
+
+console.log("Setting quality tags on reference data:");
+console.log(`* vgood: quality > ${qtagThresholdVGood}`);
+console.log(
+  `* good:  quality <= ${qtagThresholdVGood} and >= ${qtagThresholdGood}`
+);
+console.log(
+  `* ambiv: quality < ${qtagThresholdGood} and > ${qtagThresholdBad}`
+);
+console.log(
+  `* bad:   quality >= ${qtagThresholdVBad} and <= ${qtagThresholdBad}`
+);
+console.log(`* vbad:  quality < ${qtagThresholdVBad}`);
+
+(async () => {
+  const loops = await initLoops();
+  let results;
+
+  results = await loops
+    .find({ tags: { $elemMatch: { $eq: "reference" } } })
+    .toArray();
+
+  const taggedResults = results.map(result => {
+    const {
+      stats: { claps, boos }
+    } = result;
+    const quality = claps - boos;
+    let qualityTag = "ambiv";
+    if (quality < qtagThresholdVBad) {
+      qualityTag = "vbad";
+    }
+    if (quality >= qtagThresholdVBad && quality <= qtagThresholdBad) {
+      qualityTag = "bad";
+    }
+    if (quality <= qtagThresholdVGood && quality >= qtagThresholdGood) {
+      qualityTag = "good";
+    }
+    if (quality > qtagThresholdVGood) {
+      qualityTag = "vgood";
+    }
+    return {
+      ...result,
+      stats: {
+        ...result.stats,
+        quality
+      },
+      tags: result.tags
+        .filter(
+          tag =>
+            tag !== "vgood" &&
+            tag !== "good" &&
+            tag !== "ambiv" &&
+            tag !== "bad" &&
+            tag !== "vbad"
+        )
+        .concat([qualityTag])
+    };
+  });
+  const sortedTaggedResults = taggedResults.sort(
+    ({ stats: { quality: q1 } }, { stats: { quality: q2 } }) => q1 - q2
+  );
+  const promises = [];
+  sortedTaggedResults.forEach(
+    ({ _id, stats: { claps, boos, quality }, tags }) => {
+      console.log(
+        `#${_id}: claps=${claps} – boos=${boos} – quality=${quality} – tags=${tags.join(
+          ","
+        )}`
+      );
+      promises.push(
+        loops.updateOne({ _id }, { $set: { tags, "stats.quality": quality } })
+      );
+    }
+  );
+  await Promise.all(promises);
+  console.log("Tag update complete");
+  process.exit(0);
+})();

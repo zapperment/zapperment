@@ -3,6 +3,8 @@
   "version": "0.4.0",
   "description": "Scripts for testing Zapperment's machine learning algorithms",
   "scripts": {
+    "set_quality_tags": "scripty",
+    "export_data": "scripty",
     "run_test": "scripty"
   },
   "scripty": {
@@ -11,6 +13,8 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
+    "@zapperment/storage": "^0.4.0",
+    "dotenv": "^8.2.0",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
