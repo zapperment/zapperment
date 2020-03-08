@@ -1,0 +1,102 @@
+#!/usr/bin/env node
+
+require("dotenv").config();
+const initLoops = require("../lib/initLoops");
+const { refDataPartitions } = require("../lib/config");
+const { qtags } = require("../lib/constants");
+
+console.log(
+  `Setting partition tags on reference data for ${refDataPartitions} partitions`
+);
+
+(async () => {
+  const loops = await initLoops();
+  let results;
+
+  console.log("Fetching original data…");
+  results = shuffle(
+    await loops.find({ tags: { $elemMatch: { $eq: "reference" } } }).toArray()
+  );
+  console.log(`Found ${results.length} sets of reference data`);
+
+  const partitions = [];
+
+  for (let i = 0; i < refDataPartitions; i++) {
+    const item = Object.values(qtags).reduce(
+      (acc, curr) => ({ ...acc, [curr]: [] }),
+      {}
+    );
+    partitions.push(item);
+  }
+
+  for (const result of results) {
+    const qtag = result.tags.find(tag => Object.values(qtags).includes(tag));
+    const partitionWithFewestItems = partitions.reduce((acc, curr) => {
+      const currNumberOfItems = curr[qtag].length;
+      const minNumberOfItems = acc[qtag].length;
+      return currNumberOfItems < minNumberOfItems ? curr : acc;
+    });
+    partitionWithFewestItems[qtag].push(result);
+  }
+
+  for (let i = 0; i < partitions.length; i++) {
+    const partition = partitions[i];
+    console.log(
+      `Partition ${i + 1}: ${Object.values(partition).reduce(
+        (count, curr) => count + curr.length,
+        0
+      )} items`
+    );
+    for (const [key, value] of Object.entries(partition)) {
+      console.log(`* ${key} – ${value.length}`);
+    }
+  }
+
+  console.log("Writing to database…");
+  await Promise.all(
+    partitions
+      .reduce(
+        (accumulator, partition, partitionIndex) =>
+          accumulator.concat(
+            Object.values(partition)
+              .reduce((acc, curr) => acc.concat(curr), [])
+              .map(item => ({
+                ...item,
+                tags: createTagsWithPartition(item, partitionIndex)
+              }))
+          ),
+        []
+      )
+      .map(({ _id, tags }) => {
+        return loops
+          .updateOne({ _id }, { $set: { tags } })
+          .then(() => console.log(`#${_id}: tags=${tags.join(",")}`));
+      })
+  );
+  console.log("Tag update complete");
+  process.exit(0);
+})();
+
+function shuffle(array) {
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+}
+
+function createTagsWithPartition(result, partitionIndex) {
+  return result.tags
+    .filter(isNotAPartitionTag)
+    .concat(`ref${partitionIndex + 1}`);
+}
+
+function isNotAPartitionTag(tag) {
+  return !tag.match(/^ref[1-9][0-9]*$/);
+}

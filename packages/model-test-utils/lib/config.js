@@ -23,6 +23,11 @@ const configProps = [
     name: "qtagThresholdVGood",
     envVar: "ZAPPERMENT_QTAG_THRESHOLD_VGOOD",
     type: "integer"
+  },
+  {
+    name: "refDataPartitions",
+    envVar: "ZAPPERMENT_REF_DATA_PARTITIONS",
+    type: "integer"
   }
 ];
 

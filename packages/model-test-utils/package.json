@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "description": "Scripts for testing Zapperment's machine learning algorithms",
   "scripts": {
+    "set_partition_tags": "scripty",
     "set_quality_tags": "scripty",
     "export_data": "scripty",
     "run_test": "scripty"
