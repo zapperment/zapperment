@@ -8,81 +8,73 @@ const {
   qtagThresholdGood,
   qtagThresholdVGood
 } = require("../lib/config");
+const { qtags } = require("../lib/constants");
 
 console.log("Setting quality tags on reference data:");
-console.log(`* vgood: quality > ${qtagThresholdVGood}`);
+console.log(`* ${qtags.vgood}: quality > ${qtagThresholdVGood}`);
 console.log(
-  `* good:  quality <= ${qtagThresholdVGood} and >= ${qtagThresholdGood}`
+  `* ${qtags.good}:  quality <= ${qtagThresholdVGood} and >= ${qtagThresholdGood}`
 );
 console.log(
-  `* ambiv: quality < ${qtagThresholdGood} and > ${qtagThresholdBad}`
+  `* ${qtags.ambiv}: quality < ${qtagThresholdGood} and > ${qtagThresholdBad}`
 );
 console.log(
-  `* bad:   quality >= ${qtagThresholdVBad} and <= ${qtagThresholdBad}`
+  `* ${qtags.bad}:   quality <= ${qtagThresholdBad} and >= ${qtagThresholdVBad}`
 );
-console.log(`* vbad:  quality < ${qtagThresholdVBad}`);
+console.log(`* ${qtags.vbad}:  quality < ${qtagThresholdVBad}`);
 
 (async () => {
   const loops = await initLoops();
   let results;
 
+  console.log("Fetching original data…");
   results = await loops
     .find({ tags: { $elemMatch: { $eq: "reference" } } })
     .toArray();
+  console.log(`Found ${results.length} sets of reference data`);
 
-  const taggedResults = results.map(result => {
-    const {
-      stats: { claps, boos }
-    } = result;
-    const quality = claps - boos;
-    let qualityTag = "ambiv";
-    if (quality < qtagThresholdVBad) {
-      qualityTag = "vbad";
-    }
-    if (quality >= qtagThresholdVBad && quality <= qtagThresholdBad) {
-      qualityTag = "bad";
-    }
-    if (quality <= qtagThresholdVGood && quality >= qtagThresholdGood) {
-      qualityTag = "good";
-    }
-    if (quality > qtagThresholdVGood) {
-      qualityTag = "vgood";
-    }
-    return {
-      ...result,
-      stats: {
-        ...result.stats,
-        quality
-      },
-      tags: result.tags
-        .filter(
-          tag =>
-            tag !== "vgood" &&
-            tag !== "good" &&
-            tag !== "ambiv" &&
-            tag !== "bad" &&
-            tag !== "vbad"
-        )
-        .concat([qualityTag])
-    };
-  });
-  const sortedTaggedResults = taggedResults.sort(
-    ({ stats: { quality: q1 } }, { stats: { quality: q2 } }) => q1 - q2
+  console.log("Writing to database…");
+  await Promise.all(
+    results.map(result => {
+      const { _id } = result;
+      const quality = getQuality(result);
+      const tags = createTagsWithQuality(result);
+      return loops
+        .updateOne({ _id }, { $set: { tags, "stats.quality": quality } })
+        .then(() =>
+          console.log(`#${_id}: quality=${quality} – tags=${tags.join(",")}`)
+        );
+    })
   );
-  const promises = [];
-  sortedTaggedResults.forEach(
-    ({ _id, stats: { claps, boos, quality }, tags }) => {
-      console.log(
-        `#${_id}: claps=${claps} – boos=${boos} – quality=${quality} – tags=${tags.join(
-          ","
-        )}`
-      );
-      promises.push(
-        loops.updateOne({ _id }, { $set: { tags, "stats.quality": quality } })
-      );
-    }
-  );
-  await Promise.all(promises);
   console.log("Tag update complete");
   process.exit(0);
 })();
+
+function isNotAQualityTag(tag) {
+  return !Object.values(qtags).includes(tag);
+}
+
+function getQualityTag(result) {
+  const quality = getQuality(result);
+  if (quality < qtagThresholdVBad) {
+    return qtags.vbad;
+  }
+  if (quality >= qtagThresholdVBad && quality <= qtagThresholdBad) {
+    return qtags.bad;
+  }
+  if (quality <= qtagThresholdVGood && quality >= qtagThresholdGood) {
+    return qtags.good;
+  }
+  if (quality > qtagThresholdVGood) {
+    return qtags.vgood;
+  }
+  return qtags.ambiv;
+}
+
+function createTagsWithQuality(result) {
+  return result.tags.filter(isNotAQualityTag).concat(getQualityTag(result));
+}
+
+function getQuality({ stats: { claps, boos } }) {
+  return claps - boos;
+}
