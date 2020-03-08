@@ -19,24 +19,15 @@ console.log(
   );
   console.log(`Found ${results.length} sets of reference data`);
 
-  const partitions = [];
-
-  for (let i = 0; i < refDataPartitions; i++) {
-    const item = Object.values(qtags).reduce(
-      (acc, curr) => ({ ...acc, [curr]: [] }),
-      {}
-    );
-    partitions.push(item);
-  }
+  const partitions = Array(refDataPartitions).fill(null).map(createPartition);
 
   for (const result of results) {
-    const qtag = result.tags.find(tag => Object.values(qtags).includes(tag));
-    const partitionWithFewestItems = partitions.reduce((acc, curr) => {
-      const currNumberOfItems = curr[qtag].length;
-      const minNumberOfItems = acc[qtag].length;
-      return currNumberOfItems < minNumberOfItems ? curr : acc;
-    });
-    partitionWithFewestItems[qtag].push(result);
+    const qtag = getQTag(result);
+    partitions
+      .reduce((acc, curr) =>
+        curr[qtag].length < acc[qtag].length ? curr : acc
+      )
+      [qtag].push(result);
   }
 
   for (let i = 0; i < partitions.length; i++) {
@@ -99,4 +90,15 @@ function createTagsWithPartition(result, partitionIndex) {
 
 function isNotAPartitionTag(tag) {
   return !tag.match(/^ref[1-9][0-9]*$/);
+}
+
+function getQTag(result) {
+  return result.tags.find(tag => Object.values(qtags).includes(tag));
+}
+
+function createPartition() {
+  return Object.values(qtags).reduce(
+    (acc, curr) => ({ ...acc, [curr]: [] }),
+    {}
+  )
 }
