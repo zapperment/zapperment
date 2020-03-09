@@ -1,0 +1,11 @@
+{
+  "name": "@zapperment/command-line-utils",
+  "version": "0.4.0",
+  "description": "Utility modules used by Zapperment command line tools",
+  "main": "src/index.js",
+  "author": "Patrick Hund",
+  "license": "MIT",
+  "dependencies": {
+    "yargs": "^15.1.0"
+  }
+}

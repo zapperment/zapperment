@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-const { MidiInterface, AbletonLiveController } = require("@zapperment/midi");
 const { argv } = require("yargs");
-const { initStrParameter, initJsonParameter } = require("./utils");
-const { DEFAULT_PORT, DEFAULT_ABLETON_LIVE_SCENE } = require("./constants");
+const { MidiInterface, AbletonLiveController } = require("@zapperment/midi");
+const { initStrParameter, initJsonParameter } = require("@zapperment/command-line-utils");
+const { DEFAULT_PORT, DEFAULT_ABLETON_LIVE_SCENE } = require("../lib/constants");
 
 const midiPortName = initStrParameter({
   name: "port",

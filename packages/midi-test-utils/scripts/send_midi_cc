@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-const { MidiInterface } = require("@zapperment/midi");
 const { argv } = require("yargs");
-const { initIntParameter, initStrParameter } = require("./utils");
+const { MidiInterface } = require("@zapperment/midi");
+const { initIntParameter, initStrParameter } = require("@zapperment/command-line-utils");
 const {
   DEFAULT_PORT,
   DEFAULT_CHANNEL,
   DEFAULT_CONTROLLER,
   DEFAULT_VALUE
-} = require("./constants");
+} = require("../lib/constants");
 
 const midiPortName = initStrParameter({
   name: "port",
@@ -47,4 +47,4 @@ console.info(`Control:    ${control}`);
 console.info(`Value:      ${value}`);
 
 const midiInterface = new MidiInterface({ midiPortName });
-midiInterface.sendControl(channel, control, value);
+midiInterface.sendControlChange(channel, control, value);

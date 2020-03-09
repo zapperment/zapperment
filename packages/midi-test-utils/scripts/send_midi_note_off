@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 
-const { MidiInterface } = require("@zapperment/midi");
 const { argv } = require("yargs");
+const { MidiInterface } = require("@zapperment/midi");
 const {
   initIntParameter,
-  initStrParameter,
-  initBoolParameter
-} = require("./utils");
+  initStrParameter
+} = require("@zapperment/command-line-utils");
 const {
   DEFAULT_PORT,
   DEFAULT_CHANNEL,
   DEFAULT_NOTE,
   DEFAULT_VELOCITY
-} = require("./constants");
+} = require("../lib/constants");
 
 const midiPortName = initStrParameter({
   name: "port",
