@@ -1,4 +1,5 @@
 const mongo = require("mongodb").MongoClient;
+const { parseSelectorExpression } = require("./utils");
 
 /* ----- CONSTANTS ----- */
 
@@ -27,14 +28,31 @@ module.exports = class {
   }
 
   // async, returns a promise resolving to docs
-  loadLoops() {
+  loadLoops(selectorExpression) {
     return this.#db
       .collection(loopsCollection)
-      .find({})
+      .find(parseSelectorExpression(selectorExpression))
       .toArray();
   }
 
   get loops() {
     return this.#db.collection(loopsCollection);
+  }
+
+  async getMaxNumberOfTags() {
+    const result = await this.loops
+      .aggregate([
+        {
+          $project: { _id: 0, count: { $size: "$tags" } }
+        }
+      ])
+      .toArray();
+
+    // The free Atlas plan won't allow us to create a max aggregation
+    // so we have to get the maximum number of tags locally here
+    return result.reduce(
+      (max, { count }) => (count > max ? count : max),
+      0
+    );
   }
 };

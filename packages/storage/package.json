@@ -4,5 +4,8 @@
   "description": "Zapperment storage library",
   "main": "src/index.js",
   "author": "Patrick Hund",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "jsep": "^0.3.4"
+  }
 }

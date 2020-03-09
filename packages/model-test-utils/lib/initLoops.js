@@ -1,8 +1,3 @@
-const { databaseUrl } = require("./config");
-const { Storage } = require("@zapperment/storage");
+const initStorage = require("./initStorage");
 
-module.exports = async () => {
-  const storage = new Storage();
-  await storage.init({ databaseUrl });
-  return storage.loops;
-};
+module.exports = async () => (await initStorage()).loops;

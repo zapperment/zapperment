@@ -1,47 +1,37 @@
 #!/usr/bin/env node
 
 require("dotenv").config();
-const initLoops = require('../lib/initLoops');
+const { argv } = require("yargs");
+const initStorage = require("../lib/initStorage");
+const { initStrParameter } = require("@zapperment/command-line-utils");
+
+const selEx = initStrParameter({
+  name: "select",
+  argv
+});
 
 (async () => {
-  const loops = await initLoops();
+  const storage = await initStorage();
   let result;
 
-  result = await loops
-    .aggregate([
-      {
-        $project: { _id: 0, count: { $size: "$tags" } }
-      }
-    ])
-    .toArray();
+  const maxNumberOfTags = await storage.getMaxNumberOfTags();
 
-  // The free Atlas plan won't allow us to create a max aggregation
-  // so we have to get the maximum number of tags locally here
-  const maxNumberOfTags = result.reduce(
-    (max, { count }) => (count > max ? count : max),
-    0
-  );
-
-  const columnHeaders = [];
+  const columnHeaders = ["id"];
 
   for (let i = 0; i < maxNumberOfTags; i++) {
     columnHeaders.push(`tag${i + 1}`);
   }
-  columnHeaders.push("claps");
-  columnHeaders.push("boos");
+  columnHeaders.push("claps", "boos", "quality");
 
-  result = await loops
-    .find({ tags: { $elemMatch: { $eq: "reference" } } })
-    .toArray();
+  result = await storage.loadLoops(selEx);
 
   console.log(columnHeaders.join(";"));
-  result.forEach(({ tags, stats: { claps, boos } }) => {
-    const columns = [];
+  result.forEach(({ _id, tags, stats: { claps, boos, quality } }) => {
+    const columns = [_id];
     for (let i = 0; i < maxNumberOfTags; i++) {
       columns.push(tags[i] ? tags[i] : "");
     }
-    columns.push(claps);
-    columns.push(boos);
+    columns.push(claps, boos, quality);
     console.log(columns.join(";"));
   });
   process.exit(0);
