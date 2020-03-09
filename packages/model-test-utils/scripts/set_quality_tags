@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+
+require("dotenv").config();
+const initLoops = require("../lib/initLoops");
+const {
+  qtagThresholdVBad,
+  qtagThresholdBad,
+  qtagThresholdGood,
+  qtagThresholdVGood
+} = require("../lib/config");
+const { qtags } = require("../lib/constants");
+
+console.log("Setting quality tags on reference data:");
+console.log(`* ${qtags.vgood}: quality > ${qtagThresholdVGood}`);
+console.log(
+  `* ${qtags.good}:  quality <= ${qtagThresholdVGood} and >= ${qtagThresholdGood}`
+);
+console.log(
+  `* ${qtags.ambiv}: quality < ${qtagThresholdGood} and > ${qtagThresholdBad}`
+);
+console.log(
+  `* ${qtags.bad}:   quality <= ${qtagThresholdBad} and >= ${qtagThresholdVBad}`
+);
+console.log(`* ${qtags.vbad}:  quality < ${qtagThresholdVBad}`);
+
+(async () => {
+  const loops = await initLoops();
+  let results;
+
+  console.log("Fetching original data…");
+  results = await loops
+    .find({ tags: { $elemMatch: { $eq: "reference" } } })
+    .toArray();
+  console.log(`Found ${results.length} sets of reference data`);
+
+  console.log("Writing to database…");
+  await Promise.all(
+    results.map(result => {
+      const { _id } = result;
+      const quality = getQuality(result);
+      const tags = createTagsWithQuality(result);
+      return loops
+        .updateOne({ _id }, { $set: { tags, "stats.quality": quality } })
+        .then(() =>
+          console.log(`#${_id}: quality=${quality} – tags=${tags.join(",")}`)
+        );
+    })
+  );
+  console.log("Tag update complete");
+  process.exit(0);
+})();
+
+function isNotAQualityTag(tag) {
+  return !Object.values(qtags).includes(tag);
+}
+
+function getQualityTag(result) {
+  const quality = getQuality(result);
+  if (quality < qtagThresholdVBad) {
+    return qtags.vbad;
+  }
+  if (quality >= qtagThresholdVBad && quality <= qtagThresholdBad) {
+    return qtags.bad;
+  }
+  if (quality <= qtagThresholdVGood && quality >= qtagThresholdGood) {
+    return qtags.good;
+  }
+  if (quality > qtagThresholdVGood) {
+    return qtags.vgood;
+  }
+  return qtags.ambiv;
+}
+
+function createTagsWithQuality(result) {
+  return result.tags.filter(isNotAQualityTag).concat(getQualityTag(result));
+}
+
+function getQuality({ stats: { claps, boos } }) {
+  return claps - boos;
+}

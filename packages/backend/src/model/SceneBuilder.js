@@ -1,7 +1,6 @@
-const { trainNetwork } = require("./train");
 const { loadComposition, buildRandomScene } = require("../composition");
 const { composition, sceneQuality, maxAttempts } = require("../config");
-const { Normalizer } = require("./normalize");
+const { Normalizer, trainNetwork } = require("@zapperment/model");
 
 module.exports = class {
   /* ----- PRIVATE FIELDS ----- */
@@ -10,14 +9,16 @@ module.exports = class {
   #trainedNet = null;
   #composition = null;
   #normalizer = null;
+  #useNeuralNetwork = false;
 
   /* ----- CONSTRUCTOR ----- */
 
-  constructor({ storage }) {
+  constructor({ storage, useNeuralNetwork }) {
     this.#storage = storage;
     this.#trainedNet = null;
     this.#composition = null;
     this.#normalizer = null;
+    this.#useNeuralNetwork = useNeuralNetwork;
   }
 
   /* ----- PUBLIC METHODS ----- */
@@ -30,10 +31,14 @@ module.exports = class {
     console.log(
       `Composition loaded: “${title}”${copyright ? ` – ${copyright}` : ""}`
     );
-    const docs = await this.#storage.loadLoops();
-    if (docs.length) {
-      this.#normalizer = new Normalizer(docs);
-      this.#trainedNet = trainNetwork(this.#normalizer.createTrainingData());
+    if (this.#useNeuralNetwork) {
+      const docs = await this.#storage.loadLoops();
+      if (docs.length) {
+        this.#normalizer = new Normalizer(docs);
+        this.#trainedNet = trainNetwork(this.#normalizer.createTrainingData());
+      }
+    } else {
+      console.log("Neural network has been disabled, building random scenes");
     }
   }
 
@@ -72,9 +77,9 @@ module.exports = class {
     console.log(
       `NEW SCENE PREDICTION:\n${prettyClaps} clap${
         prettyClaps === "1" ? "" : "s"
-      }, ${prettyBoos} boo${prettyBoos === "1" ? "" : "s"} (${attempts} attempt${
-        attempts === 1 ? "" : "s"
-      })`
+      }, ${prettyBoos} boo${
+        prettyBoos === "1" ? "" : "s"
+      } (${attempts} attempt${attempts === 1 ? "" : "s"})`
     );
     return { scene, commands };
   }

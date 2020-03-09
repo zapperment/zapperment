@@ -1,0 +1,107 @@
+#!/usr/bin/env node
+
+require("dotenv").config();
+const { argv } = require("yargs");
+const initStorage = require("../lib/initStorage");
+const { initStrParameter } = require("@zapperment/command-line-utils");
+const { Normalizer, trainNetwork } = require("@zapperment/model");
+
+const trainingSelEx = initStrParameter({
+  name: "select-training",
+  argv
+});
+
+const inputSelEx = initStrParameter({
+  name: "select-input",
+  argv
+});
+
+(async () => {
+  const storage = await initStorage();
+
+  console.log("Loading data…");
+  const [trainingData, inputData] = await Promise.all([
+    storage.loadLoops(trainingSelEx),
+    storage.loadLoops(inputSelEx)
+  ]);
+
+  console.log("Data loaded:");
+  console.log(
+    `* ${trainingData.length} sets of training data${
+      trainingSelEx ? ` (${trainingSelEx})` : ""
+    }`
+  );
+  console.log(
+    `* ${inputData.length} sets of input data${
+      inputSelEx ? ` (${inputSelEx})` : ""
+    }`
+  );
+
+  const normalizer = new Normalizer(trainingData);
+  console.log("Training network…");
+  const trainedNet = trainNetwork(normalizer.createTrainingData());
+  const total = {
+    testRuns: 0,
+    error: {
+      claps: 0,
+      boos: 0,
+      quality: 0
+    }
+  };
+  for (const input of inputData) {
+    const { _id, tags, scene, stats: expected } = input;
+    const output = trainedNet(normalizer.normalizeScene(scene));
+    const actual = normalizer.denormalizeStats(output);
+    const error = calculateError(expected, actual);
+    expected.quality = expected.claps - expected.boos;
+    actual.quality = actual.claps - actual.boos;
+    console.log(`+++ Test Run ${++total.testRuns} +++`);
+    console.log("    Input");
+    console.log(`    * ID:      ${_id}`);
+    console.log(`    * Tags:    ${tags.join(", ")}`);
+    console.log("               Expected  Actual    Error");
+    console.log(
+      `    * Claps:   ${formatNumber(expected.claps)}${formatNumber(
+        actual.claps
+      )}${formatNumber(error.claps)}`
+    );
+    console.log(
+      `    * Boos:    ${formatNumber(expected.boos)}${formatNumber(
+        actual.boos
+      )}${formatNumber(error.boos)}`
+    );
+    console.log(
+      `    * Quality: ${formatNumber(expected.quality)}${formatNumber(
+        actual.quality
+      )}${formatNumber(error.quality)}`
+    );
+    total.error.claps += error.claps;
+    total.error.boos += error.boos;
+    total.error.quality += error.quality;
+  }
+  console.log("+++ Summary +++");
+  console.log(`    Average Error`);
+  console.log(
+    `    * Claps:   ${formatNumber(total.error.claps / total.testRuns)}`
+  );
+  console.log(
+    `    * Boos:    ${formatNumber(total.error.boos / total.testRuns)}`
+  );
+  console.log(
+    `    * Quality: ${formatNumber(total.error.quality / total.testRuns)}`
+  );
+  process.exit(0);
+})();
+
+function formatNumber(n) {
+  return `${n.toFixed(2)}`.padStart(10);
+}
+
+function calculateError(expected, actual) {
+  const error = {
+    claps: Math.abs(expected.claps - actual.claps),
+    boos: Math.abs(expected.boos - actual.boos)
+  };
+  error.quality = Math.abs(error.claps - error.boos);
+  return error;
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@zapperment/midi-test-utils",
+  "version": "0.4.0",
+  "description": "Scripts for testing Zapperment's MIDI commands",
+  "scripts": {
+    "send_midi_cc": "scripty",
+    "send_midi_note": "scripty",
+    "send_midi_note_off": "scripty",
+    "send_reason_scene": "scripty",
+    "send_ableton_live_scene": "scripty"
+  },
+  "scripty": {
+    "silent": true
+  },
+  "author": "Patrick Hund",
+  "license": "MIT",
+  "dependencies": {
+    "@zapperment/midi": "^0.4.0",
+    "@zapperment/command-line-utils": "^0.4.0",
+    "yargs": "^15.1.0"
+  },
+  "devDependencies": {
+    "scripty": "^1.9.1"
+  }
+}

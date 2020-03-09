@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+const { argv } = require("yargs");
+const { MidiInterface, ReasonController } = require("@zapperment/midi");
+const {
+  initStrParameter,
+  initJsonParameter
+} = require("@zapperment/command-line-utils");
+const { DEFAULT_PORT, DEFAULT_REASON_SCENE } = require("../lib/constants");
+
+const midiPortName = initStrParameter({
+  name: "port",
+  def: process.env.ZAPPERMENT_MIDI_PORT || DEFAULT_PORT,
+  argv
+});
+
+const scene = initJsonParameter({
+  name: "scene",
+  def: DEFAULT_REASON_SCENE,
+  argv
+});
+
+const midiInterface = new MidiInterface({ midiPortName });
+const controller = new ReasonController({ midiInterface });
+controller.changeScene(scene);

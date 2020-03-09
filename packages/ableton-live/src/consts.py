@@ -1,4 +1,4 @@
-software_version = "0.3.0"
+software_version = "0.4.0"
 
 midi_note_on_offset = 0x90
 midi_note_off_offset = 0x80

@@ -1,5 +1,4 @@
 const { isMainThread, parentPort, workerData } = require("worker_threads");
-const { Storage } = require("../storage");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
 const {
   START_PLAYING,
@@ -15,7 +14,8 @@ const {
 const {
   midiPortName,
   abletonLiveSetSceneInAdvance,
-  reasonSetSceneInAdvance
+  reasonSetSceneInAdvance,
+  databaseUrl
 } = require("../config");
 
 const {
@@ -75,14 +75,6 @@ if (isMainThread) {
 (async () => {
   let scene = null;
   let commands = null;
-  const storage = new Storage();
-  try {
-    await storage.init();
-  } catch (err) {
-    console.error("Error initializing storage in midi beat worker thread");
-    console.error(err);
-    process.exit(1);
-  }
   let running = true;
   let midiClock = null;
   const midiInterface = new MidiInterface({ midiPortName });

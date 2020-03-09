@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+require("dotenv").config();
+const { argv } = require("yargs");
+const initStorage = require("../lib/initStorage");
+const { initStrParameter } = require("@zapperment/command-line-utils");
+
+const selEx = initStrParameter({
+  name: "select",
+  argv
+});
+
+(async () => {
+  const storage = await initStorage();
+  let result;
+
+  const maxNumberOfTags = await storage.getMaxNumberOfTags();
+
+  const columnHeaders = ["id"];
+
+  for (let i = 0; i < maxNumberOfTags; i++) {
+    columnHeaders.push(`tag${i + 1}`);
+  }
+  columnHeaders.push("claps", "boos", "quality");
+
+  result = await storage.loadLoops(selEx);
+
+  console.log(columnHeaders.join(";"));
+  result.forEach(({ _id, tags, stats: { claps, boos, quality } }) => {
+    const columns = [_id];
+    for (let i = 0; i < maxNumberOfTags; i++) {
+      columns.push(tags[i] ? tags[i] : "");
+    }
+    columns.push(claps, boos, quality);
+    console.log(columns.join(";"));
+  });
+  process.exit(0);
+})();

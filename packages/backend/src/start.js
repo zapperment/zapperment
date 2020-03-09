@@ -1,10 +1,10 @@
-const { Storage } = require("./storage");
+const { Storage } = require("@zapperment/storage");
 const http = require("http");
 const express = require("express");
 const { Socket } = require("./socket");
 const { START_PLAYING, BUILD_SCENE, NEW_SCENE, EXIT } = require("./constants");
 const { BEAT, NEW_LOOP } = require("@zapperment/shared");
-const { port, composition } = require("./config");
+const { port, composition, databaseUrl } = require("./config");
 const { LoopManager } = require("./model");
 const { loadComposition } = require("./composition");
 const { startWorker } = require("./utils");
@@ -19,7 +19,7 @@ module.exports = async () => {
   app.use("/", express.static(`${__dirname}/../../frontend/build`));
 
   try {
-    await storage.init();
+    await storage.init({ databaseUrl });
   } catch (err) {
     console.error("Error initializing storage in main app");
     console.error(err);
@@ -74,6 +74,7 @@ module.exports = async () => {
           // Tell the MIDI beat worker to start playing
           midiBeat.postMessage({ type: START_PLAYING });
           isPlaying = true;
+          sceneBuilder.postMessage({ type: BUILD_SCENE });
         }
         break;
       default:
