@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/midi-test-utils",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Scripts for testing Zapperment's MIDI commands",
   "scripts": {
     "send_midi_cc": "scripty",
@@ -15,8 +15,8 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/midi": "^0.4.0",
-    "@zapperment/command-line-utils": "^0.4.0",
+    "@zapperment/midi": "^0.5.0",
+    "@zapperment/command-line-utils": "^0.5.0",
     "yargs": "^15.1.0"
   },
   "devDependencies": {

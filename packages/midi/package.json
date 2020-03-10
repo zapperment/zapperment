@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/midi",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Zapperment MIDI library",
   "main": "src/index.js",
   "author": "Patrick Hund",

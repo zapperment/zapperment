@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/model-test-utils",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Scripts for testing Zapperment's machine learning algorithms",
   "scripts": {
     "set_partition_tags": "scripty",
@@ -14,8 +14,8 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/storage": "^0.4.0",
-    "@zapperment/command-line-utils": "^0.4.0",
+    "@zapperment/storage": "^0.5.0",
+    "@zapperment/command-line-utils": "^0.5.0",
     "dotenv": "^8.2.0",
     "yargs": "^15.1.0"
   },
