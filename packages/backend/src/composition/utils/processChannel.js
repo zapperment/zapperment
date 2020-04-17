@@ -115,14 +115,14 @@ module.exports = (track, context) => {
             Object.keys(controllers[controlName]).length !== nodeKeys.length
           ) {
             throw new Error(
-              "Expected all slice controllers to have same number of options"
+              "Expected all clip controllers to have same number of options"
             );
           }
           nodeKeys.forEach(key => {
             const setters = controllers[controlName][key];
             if (!setters) {
               throw new Error(
-                "Expected all slice controllers to have same options for the same MIDI values"
+                "Expected all clip controllers to have same options for the same MIDI values"
               );
             }
             setters.push(() => setter(nodeValue[key]));
