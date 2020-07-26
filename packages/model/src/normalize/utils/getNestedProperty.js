@@ -1,12 +1,24 @@
 module.exports = (data, path) => {
-  const segments = path.split(".");
-  const walk = (remainingSegments, currentNode) => {
+  const walk = (remainingSegments, currentNode, values = []) => {
+    if (currentNode === null) {
+      return values;
+    }
+    if (Array.isArray(currentNode)) {
+      return values.concat(
+        currentNode.reduce(
+          (acc, curr) => acc.concat(walk(remainingSegments, curr)),
+          []
+        )
+      );
+    }
     if (remainingSegments.length === 1) {
-      return currentNode[remainingSegments[0]];
+      return values.concat(currentNode[remainingSegments[0]]);
     }
     const currentSegment = remainingSegments[0];
     const nextNode = currentNode[currentSegment];
-    return walk(remainingSegments.slice(1), nextNode);
+    return values.concat(walk(remainingSegments.slice(1), nextNode));
   };
-  return walk(segments, data);
+  return walk(path.split("."), data);
+  // const result = walk(path.split("."), data);
+  // return result.length === 1 ? result[0] : result;
 };

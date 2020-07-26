@@ -1,4 +1,4 @@
-const reduceNested = require("./reduceNested");
+const reduceNested = require("./reduceNested2");
 const { isNumber } = require("@zapperment/shared");
 
 module.exports = reduceNested(value => {
