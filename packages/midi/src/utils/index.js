@@ -1,3 +1,5 @@
 module.exports = {
-  openMidiOut: require("./openMidiOut")
+  openMidiOut: require("./openMidiOut"),
+  openMidiIn: require("./openMidiIn"),
+  splitSysEx: require("./splitSysEx")
 };
