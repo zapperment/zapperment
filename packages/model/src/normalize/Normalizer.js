@@ -369,12 +369,20 @@ module.exports = class {
     return this.#data.map(item => {
       const normalizedItem = { input: {}, output: {} };
       Object.entries(this.#properties).forEach(
-        ([name, { type, path, analyzer, min, max }]) =>
-          (normalizedItem[type][name] = normalizeValue(
-            analyzer(getNestedProperty(item, path)),
-            min,
-            max
-          ))
+        ([name, { type, path, analyzer, min, max }]) => {
+          try {
+            return (normalizedItem[type][name] = normalizeValue(
+              analyzer(getNestedProperty(item, path)),
+              min,
+              max
+            ));
+          } catch (err ){
+            console.error(err);
+            console.log('[PH_LOG] path:', path); // PH_TODO
+            console.log(`[PH_LOG] item\n${JSON.stringify(item, null, 4)}`); // PH_TODO
+            process.exit(1);
+          }
+        }
       );
       return normalizedItem;
     });
