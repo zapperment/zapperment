@@ -6,7 +6,8 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "midi": "^1.0.0",
-    "@zapperment/shared": "^0.4.0"
+    "@zapperment/shared": "^0.4.0",
+    "debug": "^4.3.2",
+    "midi": "^1.0.0"
   }
 }

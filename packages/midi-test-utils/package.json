@@ -8,6 +8,7 @@
     "send_midi_note_off": "scripty",
     "send_reason_scene": "scripty",
     "send_ableton_live_scene": "scripty",
+    "receive_midi_cc": "scripty",
     "receive_midi_sys_ex": "scripty"
   },
   "scripty": {

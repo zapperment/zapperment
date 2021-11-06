@@ -1,3 +1,4 @@
+const debug = require("debug")("zapperment:midi:MidiInterface");
 const { openMidiOut, openMidiIn, splitSysEx } = require("./utils");
 const {
   CONTROL_CHANGE,
@@ -7,16 +8,19 @@ const {
   SYSEX_END,
   START,
   STOP,
-  CLOCK
+  CLOCK,
 } = require("./constants");
 const { convertBytesToString } = require("@zapperment/shared");
 
-const createKeyCreator = type => (bytes = []) =>
-  convertBytesToString([type].concat(bytes));
+const createKeyCreator =
+  (type) =>
+  (bytes = []) =>
+    convertBytesToString([type].concat(bytes));
 const createSysExKey = createKeyCreator(SYSEX_START);
 const stopKey = createKeyCreator(STOP)();
 const startKey = createKeyCreator(START)();
 const clockKey = createKeyCreator(CLOCK)();
+const createControlChangeKey = createKeyCreator(CONTROL_CHANGE);
 
 module.exports = class {
   #midiOut = null;
@@ -84,19 +88,19 @@ module.exports = class {
     this.#midiOut.sendMessage([
       CONTROL_CHANGE + channel - 1,
       controller,
-      value
+      value,
     ]);
   }
 
   receiveControlChange(channel, controller, callback) {
     this.#receivers.set(
-      { channel, controller, type: CONTROL_CHANGE },
+      createControlChangeKey([channel, controller]),
       callback
     );
   }
 
   dontReceiveControlChange(channel, controller) {
-    this.#receivers.delete({ channel, controller, type: CONTROL_CHANGE });
+    this.#receivers.delete(createControlChangeKey([channel, controller]));
   }
 
   sendNoteOn(channel, note, velocity = 127) {
@@ -128,30 +132,27 @@ module.exports = class {
       SYSEX_START,
       ...manufacturerId,
       ...data,
-      SYSEX_END
+      SYSEX_END,
     ]);
   }
 
   receiveSysEx(manufacturerId, callback) {
-    console.log(
-      "[PH_LOG] setting sys ex receiver",
-      createSysExKey(manufacturerId)
-    ); // PH_TODO
+    debug("setting sys ex receiver", createSysExKey(manufacturerId));
     this.#receivers.set(createSysExKey(manufacturerId), callback);
   }
 
-  dontReceiveSysEx(manufacturerId, callback) {
-    this.#receivers.delete({ type: SYSEX_START });
+  dontReceiveSysEx(manufacturerId) {
+    this.#receivers.delete(createSysExKey(manufacturerId));
   }
 
-  #fatalError = error => {
+  #fatalError = (error) => {
     console.error(`Fatal error in MIDI interface module: ${error.message}`);
     process.exit(1);
   };
 
   #handleMessage = (message, deltaTime) => {
     const status = message[0];
-    let type = null;
+    let type;
     let channel = null;
     if (status < SYSEX_START) {
       type = (status >> 4) << 4;
@@ -162,21 +163,27 @@ module.exports = class {
     switch (type) {
       case NOTE_ON: {
         const [, note, velocity] = message;
-        console.log(
+        debug(
           `note on, channel ${channel}, note ${note}, velocity ${velocity}`
-        ); // PH_TODO
+        );
         break;
       }
       case NOTE_OFF: {
         const [, note] = message;
-        console.log(`note off, channel ${channel}, note ${note}`); // PH_TODO
+        debug(`note off, channel ${channel}, note ${note}`);
         break;
       }
       case CONTROL_CHANGE: {
         const [, controller, value] = message;
-        console.log(
+        const key = createControlChangeKey([channel, controller]);
+        debug("key:", key);
+        debug(
           `control change, channel ${channel}, controller ${controller}, value ${value}`
-        ); // PH_TODO
+        );
+        const receiver = this.#receivers.get(key);
+        if (receiver) {
+          receiver(value, deltaTime);
+        }
         break;
       }
       case SYSEX_START: {
@@ -188,19 +195,19 @@ module.exports = class {
         break;
       }
       case CLOCK: {
-        console.log("clock"); // PH_TODO
+        debug("clock");
         break;
       }
       case STOP: {
-        console.log("stop"); // PH_TODO
+        debug("stop");
         break;
       }
       case START: {
-        console.log("start"); // PH_TODO
+        debug("start");
         break;
       }
       default:
-        console.log("unknown"); // PH_TODO
+        debug("unknown type", type);
     }
   };
 };
