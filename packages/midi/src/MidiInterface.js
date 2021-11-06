@@ -16,11 +16,15 @@ const createKeyCreator =
   (type) =>
   (bytes = []) =>
     convertBytesToString([type].concat(bytes));
-const createSysExKey = createKeyCreator(SYSEX_START);
 const stopKey = createKeyCreator(STOP)();
 const startKey = createKeyCreator(START)();
 const clockKey = createKeyCreator(CLOCK)();
-const createControlChangeKey = createKeyCreator(CONTROL_CHANGE);
+const [
+  createSysExKey,
+  createControlChangeKey,
+  createNoteOnKey,
+  createNoteOffKey,
+] = [SYSEX_START, CONTROL_CHANGE, NOTE_ON, NOTE_OFF].map(createKeyCreator);
 
 module.exports = class {
   #midiOut = null;
@@ -64,8 +68,8 @@ module.exports = class {
     this.#midiOut.sendMessage([START]);
   }
 
-  receiveStart() {
-    this.#receivers.set(startKey);
+  receiveStart(callback) {
+    this.#receivers.set(startKey, callback);
   }
 
   dontReceiveStart() {
@@ -76,8 +80,8 @@ module.exports = class {
     this.#midiOut.sendMessage([CLOCK]);
   }
 
-  receiveClock() {
-    this.#receivers.set(clockKey);
+  receiveClock(callback) {
+    this.#receivers.set(clockKey, callback);
   }
 
   dontReceiveClock() {
@@ -107,24 +111,24 @@ module.exports = class {
     this.#midiOut.sendMessage([NOTE_ON + channel - 1, note, velocity]);
   }
 
-  receiveNoteOn(channel, note, callback) {
-    this.#receivers.set({ channel, note, type: NOTE_ON }, callback);
+  receiveNoteOn(channel, callback) {
+    this.#receivers.set(createNoteOnKey([channel]), callback);
   }
 
-  dontReceiveNoteOn(channel, note) {
-    this.#receivers.delete({ channel, note, type: NOTE_ON });
+  dontReceiveNoteOn(channel) {
+    this.#receivers.delete(createNoteOnKey([channel]));
   }
 
   sendNoteOff(channel, note, velocity = 0) {
     this.#midiOut.sendMessage([NOTE_OFF + channel - 1, note, velocity]);
   }
 
-  receiveNoteOff(channel, note, callback) {
-    this.#receivers.set({ channel, note, type: NOTE_OFF }, callback);
+  receiveNoteOff(channel, callback) {
+    this.#receivers.set(createNoteOffKey([channel]), callback);
   }
 
-  dontReceiveNoteOff(channel, note) {
-    this.#receivers.delete({ channel, note, type: NOTE_OFF });
+  dontReceiveNoteOff(channel) {
+    this.#receivers.delete(createNoteOffKey([channel]));
   }
 
   sendSysEx(manufacturerId, data) {
@@ -160,26 +164,38 @@ module.exports = class {
     } else {
       type = status;
     }
+    // noinspection FallThroughInSwitchStatementJS
     switch (type) {
       case NOTE_ON: {
         const [, note, velocity] = message;
-        debug(
-          `note on, channel ${channel}, note ${note}, velocity ${velocity}`
-        );
-        break;
+        if (velocity > 0) {
+          debug(
+            `note on, channel ${channel}, note ${note}, velocity ${velocity}`
+          );
+          const key = createNoteOnKey([channel]);
+          const receiver = this.#receivers.get(key);
+          if (receiver) {
+            receiver(note, velocity, deltaTime);
+          }
+          break;
+        }
       }
       case NOTE_OFF: {
         const [, note] = message;
         debug(`note off, channel ${channel}, note ${note}`);
+        const key = createNoteOffKey([channel]);
+        const receiver = this.#receivers.get(key);
+        if (receiver) {
+          receiver(note, deltaTime);
+        }
         break;
       }
       case CONTROL_CHANGE: {
         const [, controller, value] = message;
-        const key = createControlChangeKey([channel, controller]);
-        debug("key:", key);
         debug(
           `control change, channel ${channel}, controller ${controller}, value ${value}`
         );
+        const key = createControlChangeKey([channel, controller]);
         const receiver = this.#receivers.get(key);
         if (receiver) {
           receiver(value, deltaTime);
