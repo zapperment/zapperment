@@ -1,8 +1,8 @@
 const { Output } = require("midi");
-const openMidiPort = require('./openMidiPort');
+const openMidiPort = require("./openMidiPort");
 
-module.exports = midiPortName => {
+module.exports = (midiPortName, isVirtual = false) => {
   const output = new Output();
-  openMidiPort(midiPortName, output, "output");
+  openMidiPort(midiPortName, output, "output", isVirtual);
   return output;
 };

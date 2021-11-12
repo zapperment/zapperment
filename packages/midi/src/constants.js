@@ -6,5 +6,6 @@ module.exports = {
   SYSEX_END: 0xf7,
   CLOCK: 0xf8,
   STOP: 0xfc,
-  START: 0xfa
+  START: 0xfa,
+  PITCH_WHEEL:0xe0
 };

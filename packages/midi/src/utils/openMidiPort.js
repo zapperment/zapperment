@@ -1,5 +1,11 @@
-module.exports = (midiPortName, inputOrOutput, type) => {
+module.exports = (midiPortName, inputOrOutput, type, isVirtual) => {
+  if (isVirtual) {
+    inputOrOutput.openVirtualPort(midiPortName);
+    return;
+  }
+
   const numberOfPorts = inputOrOutput.getPortCount();
+
   if (numberOfPorts === 0) {
     throw new Error(`No MIDI ${type} ports available`);
   }

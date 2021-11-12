@@ -1,5 +1,10 @@
 const debug = require("debug")("zapperment:midi:MidiInterface");
-const { openMidiOut, openMidiIn, splitSysEx } = require("./utils");
+const {
+  openMidiOut,
+  openMidiIn,
+  splitSysEx,
+  getTypeAndChannel,
+} = require("./utils");
 const {
   CONTROL_CHANGE,
   NOTE_ON,
@@ -9,6 +14,7 @@ const {
   START,
   STOP,
   CLOCK,
+  PITCH_WHEEL,
 } = require("./constants");
 const { convertBytesToString } = require("@zapperment/shared");
 
@@ -30,11 +36,12 @@ module.exports = class {
   #midiOut = null;
   #midiIn = null;
   #receivers = new Map();
+  #genericReceiver = () => {};
 
-  constructor({ midiPortName }) {
+  constructor({ midiPortName, isVirtual = false }) {
     try {
-      this.#midiOut = openMidiOut(midiPortName);
-      this.#midiIn = openMidiIn(midiPortName);
+      this.#midiOut = openMidiOut(midiPortName, isVirtual);
+      this.#midiIn = openMidiIn(midiPortName, isVirtual);
     } catch (error) {
       this.#fatalError(error);
     }
@@ -88,6 +95,18 @@ module.exports = class {
     this.#receivers.delete(clockKey);
   }
 
+  sendMidiMessage(message) {
+    this.#midiOut.sendMessage(message);
+  }
+
+  receiveMidiMessage(callback) {
+    this.#genericReceiver = callback;
+  }
+
+  dontReceiveMidiMessage() {
+    this.#genericReceiver = () => {};
+  }
+
   sendControlChange(channel, controller, value) {
     this.#midiOut.sendMessage([
       CONTROL_CHANGE + channel - 1,
@@ -109,6 +128,11 @@ module.exports = class {
 
   sendNoteOn(channel, note, velocity = 127) {
     this.#midiOut.sendMessage([NOTE_ON + channel - 1, note, velocity]);
+  }
+
+  sendBeep(channel, note) {
+    this.#midiOut.sendMessage([NOTE_ON + channel - 1, note, 127]);
+    this.#midiOut.sendMessage([NOTE_OFF + channel - 1, note, 0]);
   }
 
   receiveNoteOn(channel, callback) {
@@ -155,15 +179,10 @@ module.exports = class {
   };
 
   #handleMessage = (message, deltaTime) => {
-    const status = message[0];
-    let type;
-    let channel = null;
-    if (status < SYSEX_START) {
-      type = (status >> 4) << 4;
-      channel = (status & 0x0f) + 1;
-    } else {
-      type = status;
-    }
+    const { type, channel } = getTypeAndChannel(message);
+
+    this.#genericReceiver(message, deltaTime);
+
     // noinspection FallThroughInSwitchStatementJS
     switch (type) {
       case NOTE_ON: {
@@ -220,6 +239,10 @@ module.exports = class {
       }
       case START: {
         debug("start");
+        break;
+      }
+      case PITCH_WHEEL: {
+        debug("pitch wheel");
         break;
       }
       default:
