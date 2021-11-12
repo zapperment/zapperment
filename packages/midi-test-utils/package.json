@@ -18,11 +18,11 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/midi": "^0.4.0",
     "@zapperment/command-line-utils": "^0.4.0",
+    "@zapperment/midi": "^0.4.0",
     "@zapperment/shared": "^0.4.0",
-    "yargs": "^15.1.0",
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "yargs": "^15.1.0"
   },
   "devDependencies": {
     "scripty": "^1.9.1"
