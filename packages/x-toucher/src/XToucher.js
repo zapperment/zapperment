@@ -1,8 +1,6 @@
 const debug = require("debug")("zapperment:x-toucher");
 const { MidiInterface } = require("@zapperment/midi");
-const {
-  SYSEX_MANUFACTURER,
-} = require("./constants");
+const { SYSEX_MANUFACTURER } = require("./constants");
 const { markCurrentScene } = require("./methods");
 
 function isRotaryKnobPush(note) {
@@ -27,7 +25,7 @@ class XToucher {
       isVirtual: true,
     });
     this.#markCurrentScene = markCurrentScene.bind(this);
-    debug('X-Toucher created');
+    debug("X-Toucher created");
   }
 
   start() {
@@ -52,11 +50,11 @@ class XToucher {
     });
 
     this.#reasonInterface.receiveSysEx(SYSEX_MANUFACTURER, (message) => {
-      const data = JSON.parse(String.fromCharCode(...message))
-      debug("Data received from Reason:")
-      debug(data)
-      if (data["Device Name"]) {
-        this.#currentDeviceName = data["Device Name"]
+      const data = JSON.parse(String.fromCharCode(...message));
+      debug("Data received from Reason:");
+      debug(data);
+      if (data.deviceName) {
+        this.#currentDeviceName = data.deviceName;
         debug(`Received device name: “${this.#currentDeviceName}”`);
         if (!this.#devices[this.#currentDeviceName]) {
           this.#devices[this.#currentDeviceName] = {
@@ -65,7 +63,7 @@ class XToucher {
         }
       }
     });
-    debug('X-Toucher started');
+    debug("X-Toucher started");
   }
 
   get currentScene() {
