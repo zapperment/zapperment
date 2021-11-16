@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "update-remote": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"1FFA0E1C-BAC4-48FD-A59D-789D10F68EFB\"'"
+    "update-remote": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"1FFA0E1C-BAC4-48FD-A59D-789D10F68EFB\"'",
+    "test": "jest"
   },
   "author": "Patrick Hund",
   "license": "MIT",
@@ -13,6 +14,7 @@
     "@zapperment/midi": "^0.4.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.14",
+    "jest": "^24.9.0"
   }
 }
