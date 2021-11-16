@@ -40,10 +40,11 @@ class XToucher {
       if (!isRotaryKnobPush(note)) {
         return;
       }
-      const scene = getSceneFromRotaryKnobPushNote(note);
-      debug(`Scene ${scene} selected for Combinator “${this.#currentCombinatorName}”`);
-      this.currentScene = scene;
+      const sceneNumber = getSceneFromRotaryKnobPushNote(note);
+      debug(`Scene ${sceneNumber} selected for Combinator “${this.#currentCombinatorName}”`);
+      this.currentSceneNumber = sceneNumber;
       this.#markCurrentScene();
+      this.#updateReason();
     });
 
     this.#reasonInterface.receiveMidiMessage((message) => {
@@ -53,7 +54,7 @@ class XToucher {
 
     this.#reasonInterface.receiveSysEx(SYSEX_MANUFACTURER, (message) => {
       const data = JSON.parse(String.fromCharCode(...message));
-      debug("Data received from Reason:");
+      debug("Data received from Reason");
       debug(data);
       if (data.deviceName) {
         this.switchCombinator(data.deviceName);
@@ -80,12 +81,20 @@ class XToucher {
     debug("X-Toucher started");
   }
 
-  get currentScene() {
-    return this.currentCombinator.scene;
+  /**
+   * Sends the current scene of the current Combinator over to Reason using a
+   * MIDI system exclusive message.
+   */
+  #updateReason() {
+    this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, this.currentCombinator.toSysExData())
   }
 
-  set currentScene(scene) {
-    this.currentCombinator.scene = scene;
+  get currentSceneNumber() {
+    return this.currentCombinator.currentSceneNumber;
+  }
+
+  set currentSceneNumber(sceneNumber) {
+    this.currentCombinator.currentSceneNumber = sceneNumber;
   }
 
   get currentCombinator() {

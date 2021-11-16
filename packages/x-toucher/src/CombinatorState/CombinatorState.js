@@ -295,8 +295,8 @@ class CombinatorState {
 
   toObject() {
     return {
-      currentSceneIndex: this.#currentSceneIndex,
-      scenes: this.#scenes[0],
+      currentSceneNumber: this.currentSceneNumber,
+      scenes: this.#scenes,
       runPatternDevices: this.runPatternDevices,
       bypassAllFX: this.bypassAllFX,
     };
@@ -304,6 +304,44 @@ class CombinatorState {
 
   toString() {
     return JSON.stringify(this.toObject(), null, 2);
+  }
+
+  toSysExData() {
+    return [...Buffer.from(JSON.stringify({
+      button1: this.button1,
+      button2: this.button2,
+      button3: this.button3,
+      button4: this.button4,
+      button5: this.button5,
+      button6: this.button6,
+      button7: this.button7,
+      button8: this.button8,
+      leftButton: this.variantA === 1,
+      rightButton: this.variantA === 2,
+      rewindButton: this.variantA === 3,
+      fastFwdButton: this.variantB === 1,
+      loopButton: this.variantB === 2,
+      stopButton: this.variantB === 3,
+      playButton: this.runPatternDevices,
+      recordButton: this.bypassAllFX,
+      rotary1: this.rotary1,
+      rotary2: this.rotary2,
+      rotary3: this.rotary3,
+      rotary4: this.rotary4,
+      rotary5: this.rotary5,
+      rotary6: this.rotary6,
+      rotary7: this.rotary7,
+      rotary8: this.rotary8,
+      masterFader: this.masterFader
+    }))]
+  }
+
+  set currentSceneNumber(sceneNumber) {
+    this.#currentSceneIndex = sceneNumber - 1;
+  }
+
+  get currentSceneNumber() {
+    return this.#currentSceneIndex + 1;
   }
 }
 
