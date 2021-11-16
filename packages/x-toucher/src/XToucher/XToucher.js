@@ -2,7 +2,7 @@ const debug = require("debug")("zapperment:x-toucher");
 const { MidiInterface } = require("@zapperment/midi");
 const { SYSEX_MANUFACTURER } = require("../constants");
 const { markCurrentScene } = require("./methods");
-const DeviceState = require("../DeviceState");
+const CombinatorState = require("../CombinatorState");
 
 function isRotaryKnobPush(note) {
   return note <= 7 || (note >= 24 && note <= 31);
@@ -15,9 +15,9 @@ function getSceneFromRotaryKnobPushNote(note) {
 class XToucher {
   #xTouchInterface;
   #reasonInterface;
-  #currentDeviceName;
-  #previousDeviceName;
-  #devices = {};
+  #currentCombinatorName;
+  #previousCombinatorName;
+  #combinators = {};
   #markCurrentScene;
 
   constructor() {
@@ -41,7 +41,7 @@ class XToucher {
         return;
       }
       const scene = getSceneFromRotaryKnobPushNote(note);
-      debug(`Scene ${scene} selected for device “${this.#currentDeviceName}”`);
+      debug(`Scene ${scene} selected for Combinator “${this.#currentCombinatorName}”`);
       this.currentScene = scene;
       this.#markCurrentScene();
     });
@@ -56,67 +56,67 @@ class XToucher {
       debug("Data received from Reason:");
       debug(data);
       if (data.deviceName) {
-        this.switchDevice(data.deviceName);
-        if (!this.currentDevice) {
-          debug(`Switched to new device: “${this.#currentDeviceName}”`);
-          this.currentDevice = new DeviceState();
+        this.switchCombinator(data.deviceName);
+        if (!this.currentCombinator) {
+          debug(`Switched to new Combinator: “${this.#currentCombinatorName}”`);
+          this.currentCombinator = new CombinatorState();
         } else {
-          debug(`Switched to existing device: “${this.#currentDeviceName}”`);
+          debug(`Switched to existing Combinator: “${this.#currentCombinatorName}”`);
         }
         debug(
-          `Previous device: ${
-            this.#previousDeviceName ? `“${this.#previousDeviceName}”` : "none"
+          `Previous Combinator: ${
+            this.#previousCombinatorName ? `“${this.#previousCombinatorName}”` : "none"
           }`
         );
-        if (this.previousDevice) {
-          debug("Calling “switch” to set device data")
-          this.currentDevice.switch(data, this.previousDevice);
+        if (this.previousCombinator) {
+          debug("Calling “switch” to set Combinator state")
+          this.currentCombinator.switch(data, this.previousCombinator);
           return;
         }
       }
-      debug("Calling “update” to set device data")
-      this.currentDevice.update(data);
+      debug("Calling “update” to set Combinator state")
+      this.currentCombinator.update(data);
     });
     debug("X-Toucher started");
   }
 
   get currentScene() {
-    return this.currentDevice.scene;
+    return this.currentCombinator.scene;
   }
 
   set currentScene(scene) {
-    this.currentDevice.scene = scene;
+    this.currentCombinator.scene = scene;
   }
 
-  get currentDevice() {
-    return this.#devices[this.#currentDeviceName];
+  get currentCombinator() {
+    return this.#combinators[this.#currentCombinatorName];
   }
 
-  set currentDevice(device) {
-    this.#devices[this.#currentDeviceName] = device;
+  set currentCombinator(combinatorState) {
+    this.#combinators[this.#currentCombinatorName] = combinatorState;
   }
 
-  get previousDevice() {
-    return this.#devices[this.#previousDeviceName];
+  get previousCombinator() {
+    return this.#combinators[this.#previousCombinatorName];
   }
 
-  set previousDevice(device) {
-    this.#devices[this.#previousDeviceName] = device;
+  set previousCombinator(combinatorState) {
+    this.#combinators[this.#previousCombinatorName] = combinatorState;
   }
 
-  switchDevice(deviceName) {
-    this.#previousDeviceName = this.#currentDeviceName;
-    this.#currentDeviceName = deviceName;
+  switchCombinator(combinatorName) {
+    this.#previousCombinatorName = this.#currentCombinatorName;
+    this.#currentCombinatorName = combinatorName;
   }
 
   toObject() {
     return {
-      currentDeviceName: this.#currentDeviceName,
-      previousDeviceName: this.#previousDeviceName,
-      devices: Object.entries(this.#devices).reduce(
-        (devices, [deviceName, device]) => ({
-          ...devices,
-          [deviceName]: device.toObject(),
+      currentCombinatorName: this.#currentCombinatorName,
+      previousCombinatorName: this.#previousCombinatorName,
+      combinators: Object.entries(this.#combinators).reduce(
+        (combinators, [combinatorName, combinatorState]) => ({
+          ...combinators,
+          [combinatorName]: combinatorState.toObject(),
         }),
         {}
       ),

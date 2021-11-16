@@ -1,13 +1,13 @@
-const getDeviceStateProperty = require("./getDeviceStateProperty");
+const getCombinatorStateProperty = require("./getCombinatorStateProperty");
 
-describe("When I get a device state property", () => {
+describe("When I get a Combinator state property", () => {
   describe("and the specified property is not set on the provided data object", () => {
     describe("the resulting value", () => {
       let result;
       beforeEach(
-        () => (result = getDeviceStateProperty("foo", {}, { foo: "FOO" }))
+        () => (result = getCombinatorStateProperty("foo", {}, { foo: "FOO" }))
       );
-      it("is the property's value from the previous device", () => {
+      it("is the property's value from the previous Combinator", () => {
         expect(result).toBe("FOO");
       });
     });
@@ -17,7 +17,7 @@ describe("When I get a device state property", () => {
       let result;
       beforeEach(
         () =>
-          (result = getDeviceStateProperty("foo", { foo: 666 }, { foo: "FOO" }))
+          (result = getCombinatorStateProperty("foo", { foo: 666 }, { foo: "FOO" }))
       );
       it("is the property's value from the data object", () => {
         expect(result).toBe(666);
@@ -29,7 +29,7 @@ describe("When I get a device state property", () => {
       let result;
       beforeEach(
         () =>
-          (result = getDeviceStateProperty("foo", { foo: 0 }, { foo: "FOO" }))
+          (result = getCombinatorStateProperty("foo", { foo: 0 }, { foo: "FOO" }))
       );
       it("is 0", () => {
         expect(result).toBe(0);
@@ -41,7 +41,7 @@ describe("When I get a device state property", () => {
       let result;
       beforeEach(
         () =>
-          (result = getDeviceStateProperty(
+          (result = getCombinatorStateProperty(
             "foo",
             { foo: true },
             { foo: "FOO" }
@@ -57,7 +57,7 @@ describe("When I get a device state property", () => {
       let result;
       beforeEach(
         () =>
-          (result = getDeviceStateProperty(
+          (result = getCombinatorStateProperty(
             "foo",
             { foo: false },
             { foo: "FOO" }

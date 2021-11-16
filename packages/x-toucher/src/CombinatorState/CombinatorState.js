@@ -3,15 +3,15 @@ const {
   DEFAULT_VALUE_RUN_PATTERN_DEVICES,
   DEFAULT_VALUE_BYPASS_ALL_FX,
 } = require("../constants");
-const { getDeviceStateProperty } = require("./utils");
+const { getCombinatorStateProperty } = require("./utils");
 
-class DeviceState {
+class CombinatorState {
   #currentSceneIndex = 0;
   #scenes = new Array(8).fill(null).map(() => ({ ...DEFAULT_SCENE }));
   runPatternDevices = DEFAULT_VALUE_RUN_PATTERN_DEVICES;
   bypassAllFX = DEFAULT_VALUE_BYPASS_ALL_FX;
 
-  switch(data, previousDevice) {
+  switch(data, previousCombinator) {
     [
       "button1",
       "button2",
@@ -32,10 +32,10 @@ class DeviceState {
       "masterFader",
     ].forEach(
       (propertyName) =>
-        (this[propertyName] = getDeviceStateProperty(
+        (this[propertyName] = getCombinatorStateProperty(
           propertyName,
           data,
-          previousDevice
+          previousCombinator
         ))
     );
     if (
@@ -43,7 +43,7 @@ class DeviceState {
       data.rightButton === undefined &&
       data.rewindButton === undefined
     ) {
-      this.variantA = previousDevice.variantA;
+      this.variantA = previousCombinator.variantA;
     } else {
       this.setVariantAFromReasonData(
         data.leftButton,
@@ -56,7 +56,7 @@ class DeviceState {
       data.loopButton === undefined &&
       data.stopButton === undefined
     ) {
-      this.variantB = previousDevice.variantB;
+      this.variantB = previousCombinator.variantB;
     } else {
       this.setVariantBFromReasonData(
         data.fastFwdButton,
@@ -66,11 +66,11 @@ class DeviceState {
     }
     this.runPatternDevices =
       data.playButton === undefined
-        ? previousDevice.runPatternDevices
+        ? previousCombinator.runPatternDevices
         : data.playButton;
     this.bypassAllFX =
       data.recordButton === undefined
-        ? previousDevice.bypassAllFX
+        ? previousCombinator.bypassAllFX
         : data.recordButton;
   }
 
@@ -307,4 +307,4 @@ class DeviceState {
   }
 }
 
-module.exports = DeviceState;
+module.exports = CombinatorState;
