@@ -1,4 +1,5 @@
 const debug = require("debug")("zapperment:x-toucher");
+const debugReason = require("debug")("zapperment:x-toucher:reason");
 const { MidiInterface } = require("@zapperment/midi");
 const { SYSEX_MANUFACTURER } = require("../constants");
 const { markCurrentScene } = require("./methods");
@@ -41,7 +42,11 @@ class XToucher {
         return;
       }
       const sceneNumber = getSceneFromRotaryKnobPushNote(note);
-      debug(`Scene ${sceneNumber} selected for Combinator “${this.#currentCombinatorName}”`);
+      debug(
+        `Scene ${sceneNumber} selected for Combinator “${
+          this.#currentCombinatorName
+        }”`
+      );
       this.currentSceneNumber = sceneNumber;
       this.#markCurrentScene();
       this.#updateReason();
@@ -54,6 +59,14 @@ class XToucher {
 
     this.#reasonInterface.receiveSysEx(SYSEX_MANUFACTURER, (message) => {
       const data = JSON.parse(String.fromCharCode(...message));
+      if (data.debugMessage) {
+        debugReason(data.debugMessage);
+        if (Object.values(data).length === 1){
+          return;
+        } else {
+          delete data.debugMessage;
+        }
+      }
       debug("Data received from Reason");
       debug(data);
       if (data.deviceName) {
@@ -62,20 +75,24 @@ class XToucher {
           debug(`Switched to new Combinator: “${this.#currentCombinatorName}”`);
           this.currentCombinator = new CombinatorState();
         } else {
-          debug(`Switched to existing Combinator: “${this.#currentCombinatorName}”`);
+          debug(
+            `Switched to existing Combinator: “${this.#currentCombinatorName}”`
+          );
         }
         debug(
           `Previous Combinator: ${
-            this.#previousCombinatorName ? `“${this.#previousCombinatorName}”` : "none"
+            this.#previousCombinatorName
+              ? `“${this.#previousCombinatorName}”`
+              : "none"
           }`
         );
         if (this.previousCombinator) {
-          debug("Calling “switch” to set Combinator state")
+          debug("Calling “switch” to set Combinator state");
           this.currentCombinator.switch(data, this.previousCombinator);
           return;
         }
       }
-      debug("Calling “update” to set Combinator state")
+      debug("Calling “update” to set Combinator state");
       this.currentCombinator.update(data);
     });
     debug("X-Toucher started");
@@ -83,10 +100,25 @@ class XToucher {
 
   /**
    * Sends the current scene of the current Combinator over to Reason using a
-   * MIDI system exclusive message.
+   * series of MIDI system exclusive message.
    */
   #updateReason() {
-    this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, this.currentCombinator.toSysExData())
+    let timeOut = 0;
+    const interval = 100;
+    Promise.all(
+      this.currentCombinator.toSysExData().map(
+        (value, index) =>
+          new Promise((resolve) =>
+            setTimeout(() => {
+              this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
+                index,
+                value,
+              ]);
+              resolve();
+            }, (timeOut += interval))
+          )
+      )
+    );
   }
 
   get currentSceneNumber() {

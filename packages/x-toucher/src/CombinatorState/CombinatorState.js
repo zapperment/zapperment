@@ -306,34 +306,45 @@ class CombinatorState {
     return JSON.stringify(this.toObject(), null, 2);
   }
 
+  // Reason's remote API won't allow us to send arbitrary length
+  // sysex data, so we have to send a series of sysex messages, one
+  // for each control
   toSysExData() {
-    return [...Buffer.from(JSON.stringify({
-      button1: this.button1,
-      button2: this.button2,
-      button3: this.button3,
-      button4: this.button4,
-      button5: this.button5,
-      button6: this.button6,
-      button7: this.button7,
-      button8: this.button8,
-      leftButton: this.variantA === 1,
-      rightButton: this.variantA === 2,
-      rewindButton: this.variantA === 3,
-      fastFwdButton: this.variantB === 1,
-      loopButton: this.variantB === 2,
-      stopButton: this.variantB === 3,
-      playButton: this.runPatternDevices,
-      recordButton: this.bypassAllFX,
-      rotary1: this.rotary1,
-      rotary2: this.rotary2,
-      rotary3: this.rotary3,
-      rotary4: this.rotary4,
-      rotary5: this.rotary5,
-      rotary6: this.rotary6,
-      rotary7: this.rotary7,
-      rotary8: this.rotary8,
-      masterFader: this.masterFader
-    }))]
+    return [
+      this.button1 ? 127 : 0,
+      this.button2 ? 127 : 0,
+      this.button3 ? 127 : 0,
+      this.button4 ? 127 : 0,
+      this.button5 ? 127 : 0,
+      this.button6 ? 127 : 0,
+      this.button7 ? 127 : 0,
+      this.button8 ? 127 : 0,
+      // leftButton
+      this.variantA === 1 ? 127: 0,
+      // rightButton
+      this.variantA === 2 ? 127 : 0,
+      // rewindButton
+      this.variantA === 3 ? 127 : 0,
+      // fastFwdButton
+      this.variantB === 1 ? 127 : 0,
+      // loopButton
+      this.variantB === 2 ? 127 : 0,
+      // stopButton
+      this.variantB === 3 ? 127 : 0,
+      // playButton
+      this.runPatternDevices ? 127 :0,
+      // recordButton
+      this.bypassAllFX ? 127 : 0,
+      this.rotary1,
+      this.rotary2,
+      this.rotary3,
+      this.rotary5,
+      this.rotary5,
+      this.rotary6,
+      this.rotary7,
+      this.rotary8,
+      this.masterFader
+    ]
   }
 
   set currentSceneNumber(sceneNumber) {
