@@ -5,6 +5,10 @@ const {
   SYSEX_MANUFACTURER,
   ROTARY_COARSE_INCREMENT,
   ROTARY_FINE_INCREMENT,
+  FADER_STATUS_ABOVE,
+  FADER_STATUS_IN_SYNC,
+  FADER_STATUS_BELOW,
+  FADER_STATUS_UNKNOWN,
 } = require("../constants");
 const { markCurrentScene } = require("./methods");
 const CombinatorState = require("../CombinatorState");
@@ -23,6 +27,7 @@ class XToucher {
   #previousCombinatorName;
   #combinators = {};
   #markCurrentScene;
+  #faderStatus = FADER_STATUS_UNKNOWN;
 
   constructor() {
     this.#xTouchInterface = new MidiInterface({ midiPortName: "X-TOUCH MINI" });
@@ -35,11 +40,6 @@ class XToucher {
   }
 
   start() {
-    // this.#xTouchInterface.receiveMidiMessage((message) => {
-    //   debug("X-Touch → Reason:", message);
-    //   this.#reasonInterface.sendMidiMessage(message);
-    // });
-
     // turn off all LEDs on all rotary knobs
     for (let i = 9; i <= 16; i++) {
       this.#xTouchInterface.sendControlChange(1, i, 0);
@@ -95,10 +95,11 @@ class XToucher {
       );
     });
 
-    // this.#reasonInterface.receiveMidiMessage((message) => {
-    // debug("Reason → X-Touch:", message);
-    // this.#xTouchInterface.sendMidiMessage(message);
-    // });
+    this.#xTouchInterface.receiveControlChange(
+      11,
+      9,
+      this.#handleMasterFaderChange.bind(this)
+    );
 
     this.#reasonInterface.receiveSysEx(SYSEX_MANUFACTURER, (message) => {
       const data = JSON.parse(String.fromCharCode(...message));
@@ -110,34 +111,20 @@ class XToucher {
           delete data.debugMessage;
         }
       }
-      debug("Data received from Reason");
-      debug(data);
+
       if (data.deviceName) {
+        this.#faderStatus = FADER_STATUS_UNKNOWN;
         this.switchCombinator(data.deviceName);
         if (!this.currentCombinator) {
-          debug(`Switched to new Combinator: “${this.#currentCombinatorName}”`);
           this.currentCombinator = new CombinatorState();
-        } else {
-          debug(
-            `Switched to existing Combinator: “${this.#currentCombinatorName}”`
-          );
         }
-        debug(
-          `Previous Combinator: ${
-            this.#previousCombinatorName
-              ? `“${this.#previousCombinatorName}”`
-              : "none"
-          }`
-        );
         if (this.previousCombinator) {
-          debug("Calling “switch” to set Combinator state");
           this.currentCombinator.switch(data, this.previousCombinator);
           this.#updateXTouchRotaryLeds();
           this.#updateXTouchMainButtonLeds();
           return;
         }
       }
-      debug("Calling “update” to set Combinator state");
       this.currentCombinator.update(data);
       this.#updateXTouchRotaryLeds();
       this.#updateXTouchMainButtonLeds();
@@ -145,21 +132,51 @@ class XToucher {
     debug("X-Toucher started");
   }
 
+  #handleMasterFaderChange(nextValue) {
+    const prevValue = this.currentCombinator.masterFader;
+    switch (this.#faderStatus) {
+      case FADER_STATUS_IN_SYNC:
+        this.currentCombinator.masterFader = nextValue;
+        this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [24, nextValue]);
+        return;
+      case FADER_STATUS_UNKNOWN:
+        switch (true) {
+          case nextValue > prevValue:
+            this.#faderStatus = FADER_STATUS_ABOVE;
+            break;
+          case nextValue < prevValue:
+            this.#faderStatus = FADER_STATUS_BELOW;
+            break;
+          default:
+            this.#faderStatus = FADER_STATUS_IN_SYNC;
+        }
+        return;
+      case FADER_STATUS_ABOVE:
+        if (nextValue > prevValue) {
+          return;
+        }
+        break;
+      case FADER_STATUS_BELOW:
+        if (nextValue < prevValue) {
+          return;
+        }
+        break;
+      default:
+    }
+    this.#faderStatus = FADER_STATUS_IN_SYNC;
+    this.currentCombinator.masterFader = nextValue;
+    this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [24, nextValue]);
+  }
+
   #handleRotaryKnobPush(note) {
-    const sceneNumber = getSceneFromRotaryKnobPushNote(note);
-    debug(
-      `Scene ${sceneNumber} selected for Combinator “${
-        this.#currentCombinatorName
-      }”`
-    );
-    this.currentSceneNumber = sceneNumber;
+    this.currentSceneNumber = getSceneFromRotaryKnobPushNote(note);
+    this.#faderStatus = FADER_STATUS_UNKNOWN;
     this.#markCurrentScene();
     this.#updateReason();
   }
 
   #handleMainButtonPush(note) {
     const { buttonName, sysexControllerNumber } = getButtonPushInfo(note);
-    debug(`Main button push ${buttonName}`);
     const nextValue = !this.currentCombinator[buttonName];
     this.currentCombinator[buttonName] = nextValue;
     this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
@@ -235,12 +252,10 @@ class XToucher {
 
       if (interactionType === TURN_CLOCKWISE) {
         nextCombinatorValue = Math.min(127, prevCombinatorValue + increment);
-        debug(`${controllerName} ↑ ${nextCombinatorValue}`);
       }
 
       if (interactionType === TURN_COUNTERCLOCKWISE) {
         nextCombinatorValue = Math.max(0, prevCombinatorValue - increment);
-        debug(`${controllerName} ↓ ${nextCombinatorValue}`);
       }
       this.currentCombinator[controllerName] = nextCombinatorValue;
       this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
@@ -274,17 +289,10 @@ class XToucher {
   }
 
   #updateXTouchMainButtonLed(buttonNumber, value) {
-    debug(
-      `button number: ${buttonNumber}; value: ${value}; sent value: ${
-        value ? 1 : 0
-      }`
-    );
     const note = buttonNumber - 1;
     if (value) {
-      debug(`Note on ${note}`);
       this.#xTouchInterface.sendNoteOn(1, note, 1);
     } else {
-      debug(`Note off ${note}`);
       this.#xTouchInterface.sendNoteOff(1, note);
     }
   }
