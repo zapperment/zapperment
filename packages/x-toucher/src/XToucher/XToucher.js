@@ -8,15 +8,13 @@ const {
 } = require("../constants");
 const { markCurrentScene } = require("./methods");
 const CombinatorState = require("../CombinatorState");
-const { getLedNumber } = require("../utils");
-
-function isRotaryKnobPush(note) {
-  return note <= 7 || (note >= 24 && note <= 31);
-}
-
-function getSceneFromRotaryKnobPushNote(note) {
-  return note <= 7 ? note + 1 : note - 23;
-}
+const {
+  getButtonPushInfo,
+  getLedNumber,
+  isRotaryKnobPush,
+  isMainButtonPush,
+  getSceneFromRotaryKnobPushNote,
+} = require("../utils");
 
 class XToucher {
   #xTouchInterface;
@@ -48,18 +46,24 @@ class XToucher {
     }
 
     this.#xTouchInterface.receiveNoteOn(11, (note) => {
-      if (!isRotaryKnobPush(note)) {
-        return;
+      switch (true) {
+        case isRotaryKnobPush(note):
+          this.#handleRotaryKnobPush(note);
+          break;
+        case isMainButtonPush(note):
+          this.#handleMainButtonPush(note);
+          break;
+        default:
       }
-      const sceneNumber = getSceneFromRotaryKnobPushNote(note);
-      debug(
-        `Scene ${sceneNumber} selected for Combinator “${
-          this.#currentCombinatorName
-        }”`
-      );
-      this.currentSceneNumber = sceneNumber;
-      this.#markCurrentScene();
-      this.#updateReason();
+    });
+
+    this.#xTouchInterface.receiveNoteOff(11, (note) => {
+      switch (true) {
+        case isMainButtonPush(note):
+          this.#handleMainButtonNoteOff(note);
+          break;
+        default:
+      }
     });
 
     const rotaryReceiverConfigs = [];
@@ -83,102 +87,13 @@ class XToucher {
       });
     }
 
-    rotaryReceiverConfigs.forEach(
-      ({
-        controllerNumber,
-        rotaryNumber,
-        controllerName,
-        increment,
-        sysexControllerNumber,
-        xTouchLedControlNumber,
-      }) => {
-        this.#xTouchInterface.receiveControlChange(
-          11,
-          controllerNumber,
-          (() => {
-            let prevXTouchValue = null;
-            const FIRST_TIME = 0;
-            const TURN_CLOCKWISE = 1;
-            const TURN_COUNTERCLOCKWISE = 2;
-
-            // We are not simply passing the CC values coming from the X-Touch rotary
-            // encoder knobs through to Reason, because we want precise control over
-            // the knob behavior. We're only interested in two things: which direction
-            // a know was twisted (clockwise / counterclockwise) and which encoder mode
-            // we are using (fine or coarse), selected through the X-Touch's layer buttons
-            return (nextXTouchValue) => {
-              let interactionType;
-              switch (true) {
-                case prevXTouchValue === null:
-                  interactionType = FIRST_TIME;
-                  break;
-                case nextXTouchValue === 127 ||
-                  nextXTouchValue > prevXTouchValue:
-                  interactionType = TURN_CLOCKWISE;
-                  break;
-                default:
-                  interactionType = TURN_COUNTERCLOCKWISE;
-              }
-              prevXTouchValue = nextXTouchValue;
-              const prevCombinatorValue =
-                this.currentCombinator[controllerName];
-
-              // turn off all LEDs on the rotary knob
-              this.#xTouchInterface.sendControlChange(
-                1,
-                xTouchLedControlNumber,
-                0
-              );
-
-              // This FIRST_TIME condition is a bit ugly – when we receive the first
-              // CC for a knob, we have to return early without doing anything, because
-              // we have no way of knowing which direction the knob was twisted
-              if (interactionType === FIRST_TIME) {
-                return;
-              }
-
-              if (
-                interactionType === TURN_CLOCKWISE &&
-                prevCombinatorValue === 127
-              ) {
-                this.#updateXTouchRotaryLed(rotaryNumber, 127);
-                return;
-              }
-
-              if (
-                interactionType === TURN_COUNTERCLOCKWISE &&
-                prevCombinatorValue === 0
-              ) {
-                this.#updateXTouchRotaryLed(rotaryNumber, 0);
-                return;
-              }
-
-              let nextCombinatorValue;
-
-              if (interactionType === TURN_CLOCKWISE) {
-                nextCombinatorValue = Math.min(
-                  127,
-                  prevCombinatorValue + increment
-                );
-                debug(`${controllerName} ↑ ${nextCombinatorValue}`);
-              }
-              if (interactionType === TURN_COUNTERCLOCKWISE) {
-                nextCombinatorValue = Math.max(
-                  0,
-                  prevCombinatorValue - increment
-                );
-                debug(`${controllerName} ↓ ${nextCombinatorValue}`);
-              }
-              this.currentCombinator[controllerName] = nextCombinatorValue;
-              this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
-                sysexControllerNumber,
-                nextCombinatorValue,
-              ]);
-            };
-          })()
-        );
-      }
-    );
+    rotaryReceiverConfigs.forEach((rotaryReceiverConfig) => {
+      this.#xTouchInterface.receiveControlChange(
+        11,
+        rotaryReceiverConfig.controllerNumber,
+        this.#makeRotaryKnobTwistHandler(rotaryReceiverConfig)
+      );
+    });
 
     // this.#reasonInterface.receiveMidiMessage((message) => {
     // debug("Reason → X-Touch:", message);
@@ -218,14 +133,121 @@ class XToucher {
           debug("Calling “switch” to set Combinator state");
           this.currentCombinator.switch(data, this.previousCombinator);
           this.#updateXTouchRotaryLeds();
+          this.#updateXTouchMainButtonLeds();
           return;
         }
       }
       debug("Calling “update” to set Combinator state");
       this.currentCombinator.update(data);
       this.#updateXTouchRotaryLeds();
+      this.#updateXTouchMainButtonLeds();
     });
     debug("X-Toucher started");
+  }
+
+  #handleRotaryKnobPush(note) {
+    const sceneNumber = getSceneFromRotaryKnobPushNote(note);
+    debug(
+      `Scene ${sceneNumber} selected for Combinator “${
+        this.#currentCombinatorName
+      }”`
+    );
+    this.currentSceneNumber = sceneNumber;
+    this.#markCurrentScene();
+    this.#updateReason();
+  }
+
+  #handleMainButtonPush(note) {
+    const { buttonName, sysexControllerNumber } = getButtonPushInfo(note);
+    debug(`Main button push ${buttonName}`);
+    const nextValue = !this.currentCombinator[buttonName];
+    this.currentCombinator[buttonName] = nextValue;
+    this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
+      sysexControllerNumber,
+      nextValue ? 127 : 0,
+    ]);
+  }
+
+  #handleMainButtonNoteOff(note) {
+    const { buttonName, buttonNumber } = getButtonPushInfo(note);
+    this.#updateXTouchMainButtonLed(
+      buttonNumber,
+      this.currentCombinator[buttonName]
+    );
+  }
+
+  #makeRotaryKnobTwistHandler({
+    rotaryNumber,
+    controllerName,
+    increment,
+    sysexControllerNumber,
+    xTouchLedControlNumber,
+  }) {
+    let prevXTouchValue = null;
+    const FIRST_TIME = 0;
+    const TURN_CLOCKWISE = 1;
+    const TURN_COUNTERCLOCKWISE = 2;
+
+    // We are not simply passing the CC values coming from the X-Touch rotary
+    // encoder knobs through to Reason, because we want precise control over
+    // the knob behavior. We're only interested in two things: which direction
+    // a know was twisted (clockwise / counterclockwise) and which encoder mode
+    // we are using (fine or coarse), selected through the X-Touch's layer buttons
+    return (nextXTouchValue) => {
+      let interactionType;
+      switch (true) {
+        case prevXTouchValue === null:
+          interactionType = FIRST_TIME;
+          break;
+        case nextXTouchValue === 127 || nextXTouchValue > prevXTouchValue:
+          interactionType = TURN_CLOCKWISE;
+          break;
+        default:
+          interactionType = TURN_COUNTERCLOCKWISE;
+      }
+      prevXTouchValue = nextXTouchValue;
+      const prevCombinatorValue = this.currentCombinator[controllerName];
+
+      // turn off all LEDs on the rotary knob
+      this.#xTouchInterface.sendControlChange(1, xTouchLedControlNumber, 0);
+
+      // This FIRST_TIME condition is a bit ugly – when we receive the first
+      // CC for a knob, we have to return early without doing anything, because
+      // we have no way of knowing which direction the knob was twisted
+      if (interactionType === FIRST_TIME) {
+        return;
+      }
+
+      if (interactionType === TURN_CLOCKWISE && prevCombinatorValue === 127) {
+        this.#updateXTouchRotaryLed(rotaryNumber, 127);
+        return;
+      }
+
+      if (
+        interactionType === TURN_COUNTERCLOCKWISE &&
+        prevCombinatorValue === 0
+      ) {
+        this.#updateXTouchRotaryLed(rotaryNumber, 0);
+        return;
+      }
+
+      let nextCombinatorValue;
+
+      if (interactionType === TURN_CLOCKWISE) {
+        nextCombinatorValue = Math.min(127, prevCombinatorValue + increment);
+        debug(`${controllerName} ↑ ${nextCombinatorValue}`);
+      }
+
+      if (interactionType === TURN_COUNTERCLOCKWISE) {
+        nextCombinatorValue = Math.max(0, prevCombinatorValue - increment);
+        debug(`${controllerName} ↓ ${nextCombinatorValue}`);
+      }
+      this.currentCombinator[controllerName] = nextCombinatorValue;
+      this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
+        sysexControllerNumber,
+        nextCombinatorValue,
+      ]);
+    };
   }
 
   #updateXTouchRotaryLeds() {
@@ -241,6 +263,30 @@ class XToucher {
     const ledValue =
       rotaryNumber !== this.currentSceneNumber ? ledNumber : ledNumber + 13;
     this.#xTouchInterface.sendControlChange(1, rotaryNumber + 8, ledValue);
+  }
+
+  #updateXTouchMainButtonLeds() {
+    for (let buttonNumber = 1; buttonNumber <= 8; buttonNumber++) {
+      const buttonName = `button${buttonNumber}`;
+      const value = this.currentCombinator[buttonName];
+      this.#updateXTouchMainButtonLed(buttonNumber, value);
+    }
+  }
+
+  #updateXTouchMainButtonLed(buttonNumber, value) {
+    debug(
+      `button number: ${buttonNumber}; value: ${value}; sent value: ${
+        value ? 1 : 0
+      }`
+    );
+    const note = buttonNumber - 1;
+    if (value) {
+      debug(`Note on ${note}`);
+      this.#xTouchInterface.sendNoteOn(1, note, 1);
+    } else {
+      debug(`Note off ${note}`);
+      this.#xTouchInterface.sendNoteOff(1, note);
+    }
   }
 
   /**

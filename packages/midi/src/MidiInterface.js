@@ -196,8 +196,8 @@ module.exports = class {
           if (receiver) {
             receiver(note, velocity, deltaTime);
           }
-          break;
         }
+        break;
       }
       case NOTE_OFF: {
         const [, note] = message;
