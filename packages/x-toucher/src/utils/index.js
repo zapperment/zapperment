@@ -6,4 +6,5 @@ module.exports = {
   isRotaryKnobPush: require("./isRotaryKnobPush"),
   isNoteOn: require("./isNoteOn"),
   isMainButtonPush: require("./isMainButtonPush"),
+  isRunOrBypassFxButtonPush: require("./isRunOrBypassFxButtonPush"),
 };

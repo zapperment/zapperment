@@ -10,13 +10,13 @@ const {
   FADER_STATUS_BELOW,
   FADER_STATUS_UNKNOWN,
 } = require("../constants");
-const { markCurrentScene } = require("./methods");
 const CombinatorState = require("../CombinatorState");
 const {
   getButtonPushInfo,
   getLedNumber,
   isRotaryKnobPush,
   isMainButtonPush,
+  isRunOrBypassFxButtonPush,
   getSceneFromRotaryKnobPushNote,
 } = require("../utils");
 
@@ -26,7 +26,6 @@ class XToucher {
   #currentCombinatorName;
   #previousCombinatorName;
   #combinators = {};
-  #markCurrentScene;
   #faderStatus = FADER_STATUS_UNKNOWN;
 
   constructor() {
@@ -35,7 +34,6 @@ class XToucher {
       midiPortName: "Zapperment X-Toucher",
       isVirtual: true,
     });
-    this.#markCurrentScene = markCurrentScene.bind(this);
     debug("X-Toucher created");
   }
 
@@ -51,7 +49,8 @@ class XToucher {
           this.#handleRotaryKnobPush(note);
           break;
         case isMainButtonPush(note):
-          this.#handleMainButtonPush(note);
+        case isRunOrBypassFxButtonPush(note):
+          this.#handleButtonPush(note);
           break;
         default:
       }
@@ -60,7 +59,8 @@ class XToucher {
     this.#xTouchInterface.receiveNoteOff(11, (note) => {
       switch (true) {
         case isMainButtonPush(note):
-          this.#handleMainButtonNoteOff(note);
+        case isRunOrBypassFxButtonPush(note):
+          this.#handleButtonNoteOff(note);
           break;
         default:
       }
@@ -121,13 +121,14 @@ class XToucher {
         if (this.previousCombinator) {
           this.currentCombinator.switch(data, this.previousCombinator);
           this.#updateXTouchRotaryLeds();
-          this.#updateXTouchMainButtonLeds();
+          this.#updateXTouchButtonLeds();
           return;
         }
       }
+
       this.currentCombinator.update(data);
       this.#updateXTouchRotaryLeds();
-      this.#updateXTouchMainButtonLeds();
+      this.#updateXTouchButtonLeds();
     });
     debug("X-Toucher started");
   }
@@ -169,27 +170,30 @@ class XToucher {
   }
 
   #handleRotaryKnobPush(note) {
+    debug(`[handleRotaryKnobPush] Run pattern devices before: ${this.currentCombinator.runPatternDevices}`);
     this.currentSceneNumber = getSceneFromRotaryKnobPushNote(note);
+    debug(`[handleRotaryKnobPush] Run pattern devices after: ${this.currentCombinator.runPatternDevices}`);
     this.#faderStatus = FADER_STATUS_UNKNOWN;
-    this.#markCurrentScene();
     this.#updateReason();
   }
 
-  #handleMainButtonPush(note) {
-    const { buttonName, sysexControllerNumber } = getButtonPushInfo(note);
-    const nextValue = !this.currentCombinator[buttonName];
-    this.currentCombinator[buttonName] = nextValue;
+  #handleButtonPush(note) {
+    const { combinatorButtonName, sysexControllerNumber } =
+      getButtonPushInfo(note);
+    const nextValue = !this.currentCombinator[combinatorButtonName];
+    this.currentCombinator[combinatorButtonName] = nextValue;
     this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
       sysexControllerNumber,
       nextValue ? 127 : 0,
     ]);
   }
 
-  #handleMainButtonNoteOff(note) {
-    const { buttonName, buttonNumber } = getButtonPushInfo(note);
-    this.#updateXTouchMainButtonLed(
+  #handleButtonNoteOff(note) {
+    const { combinatorButtonName, buttonNumber } =
+      getButtonPushInfo(note);
+    this.#updateXTouchButtonLed(
       buttonNumber,
-      this.currentCombinator[buttonName]
+      this.currentCombinator[combinatorButtonName]
     );
   }
 
@@ -280,15 +284,17 @@ class XToucher {
     this.#xTouchInterface.sendControlChange(1, rotaryNumber + 8, ledValue);
   }
 
-  #updateXTouchMainButtonLeds() {
+  #updateXTouchButtonLeds() {
     for (let buttonNumber = 1; buttonNumber <= 8; buttonNumber++) {
       const buttonName = `button${buttonNumber}`;
       const value = this.currentCombinator[buttonName];
-      this.#updateXTouchMainButtonLed(buttonNumber, value);
+      this.#updateXTouchButtonLed(buttonNumber, value);
     }
+    this.#updateXTouchButtonLed(15, this.currentCombinator.runPatternDevices);
+    this.#updateXTouchButtonLed(16, this.currentCombinator.bypassAllFX);
   }
 
-  #updateXTouchMainButtonLed(buttonNumber, value) {
+  #updateXTouchButtonLed(buttonNumber, value) {
     const note = buttonNumber - 1;
     if (value) {
       this.#xTouchInterface.sendNoteOn(1, note, 1);
@@ -302,6 +308,8 @@ class XToucher {
    * series of MIDI system exclusive message.
    */
   #updateReason() {
+    const sysExData = this.currentCombinator.toSysExData();
+    debug(`[updateReason] sysex data ${sysExData[14]}`);
     this.currentCombinator
       .toSysExData()
       .forEach((value, index) =>
