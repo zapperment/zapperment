@@ -68,43 +68,67 @@ function getButtonPushInfo(note) {
     case 40:
       return {
         xTouchButtonName: "leftButton",
+        combinatorButtonName: "variantA",
+        variantValue: 1,
         sysexControllerNumber: 8,
+        otherSysexControllerNumbers: [9, 10],
         buttonNumber: 9,
+        otherButtonNumbers: [10,11]
       };
     case 17:
     case 41:
       return {
         xTouchButtonName: "rightButton",
+        combinatorButtonName: "variantA",
+        variantValue: 2,
         sysexControllerNumber: 9,
+        otherSysexControllerNumbers: [8, 10],
         buttonNumber: 10,
+        otherButtonNumbers: [9,11]
       };
     case 18:
     case 42:
       return {
         xTouchButtonName: "rewindButton",
+        combinatorButtonName: "variantA",
+        variantValue: 3,
         sysexControllerNumber: 10,
+        otherSysexControllerNumbers: [8, 9],
         buttonNumber: 11,
+        otherButtonNumbers: [9,10]
       };
     case 19:
     case 43:
       return {
         xTouchButtonName: "fastFwdButton",
+        combinatorButtonName: "variantB",
+        variantValue: 1,
         sysexControllerNumber: 11,
+        otherSysexControllerNumbers: [12, 13],
         buttonNumber: 12,
+        otherButtonNumbers: [13,14]
       };
     case 20:
     case 44:
       return {
         xTouchButtonName: "loopButton",
+        combinatorButtonName: "variantB",
+        variantValue: 2,
         sysexControllerNumber: 12,
+        otherSysexControllerNumbers: [11, 13],
         buttonNumber: 13,
+        otherButtonNumbers: [12,14]
       };
     case 21:
     case 45:
       return {
         xTouchButtonName: "stopButton",
+        combinatorButtonName: "variantB",
+        variantValue: 3,
         sysexControllerNumber: 13,
+        otherSysexControllerNumbers: [11, 12],
         buttonNumber: 14,
+        otherButtonNumbers: [12,13]
       };
     case 22:
     case 46:

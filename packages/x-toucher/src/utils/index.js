@@ -7,4 +7,5 @@ module.exports = {
   isNoteOn: require("./isNoteOn"),
   isMainButtonPush: require("./isMainButtonPush"),
   isRunOrBypassFxButtonPush: require("./isRunOrBypassFxButtonPush"),
+  isVariantButtonPush: require('./isVariantButtonPush')
 };

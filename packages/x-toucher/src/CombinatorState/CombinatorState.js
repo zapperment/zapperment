@@ -3,7 +3,10 @@ const {
   DEFAULT_VALUE_RUN_PATTERN_DEVICES,
   DEFAULT_VALUE_BYPASS_ALL_FX,
 } = require("../constants");
-const { getCombinatorStateProperty } = require("./utils");
+const {
+  getCombinatorStateProperty,
+  getVariantFromReasonData,
+} = require("./utils");
 
 class CombinatorState {
   #currentSceneIndex = 0;
@@ -206,11 +209,17 @@ class CombinatorState {
   }
 
   setVariantAFromReasonData(...values) {
-    this.currentScene.variantA = values.findIndex((curr) => curr) + 1;
+    this.currentScene.variantA = getVariantFromReasonData(
+      this.currentScene.variantA,
+      ...values
+    );
   }
 
   setVariantBFromReasonData(...values) {
-    this.currentScene.variantB = values.findIndex((curr) => curr) + 1;
+    this.currentScene.variantB = getVariantFromReasonData(
+      this.currentScene.variantB,
+      ...values
+    );
   }
 
   set masterFader(value) {
@@ -320,7 +329,7 @@ class CombinatorState {
       this.button7 ? 127 : 0,
       this.button8 ? 127 : 0,
       // leftButton
-      this.variantA === 1 ? 127: 0,
+      this.variantA === 1 ? 127 : 0,
       // rightButton
       this.variantA === 2 ? 127 : 0,
       // rewindButton
@@ -332,7 +341,7 @@ class CombinatorState {
       // stopButton
       this.variantB === 3 ? 127 : 0,
       // playButton
-      this.runPatternDevices ? 127 :0,
+      this.runPatternDevices ? 127 : 0,
       // recordButton
       this.bypassAllFX ? 127 : 0,
       this.rotary1,
@@ -343,8 +352,8 @@ class CombinatorState {
       this.rotary6,
       this.rotary7,
       this.rotary8,
-      this.masterFader
-    ]
+      this.masterFader,
+    ];
   }
 
   set currentSceneNumber(sceneNumber) {

@@ -17,6 +17,7 @@ const {
   isRotaryKnobPush,
   isMainButtonPush,
   isRunOrBypassFxButtonPush,
+  isVariantButtonPush,
   getSceneFromRotaryKnobPushNote,
 } = require("../utils");
 
@@ -52,6 +53,9 @@ class XToucher {
         case isRunOrBypassFxButtonPush(note):
           this.#handleButtonPush(note);
           break;
+        case isVariantButtonPush(note):
+          this.#handleVariantButtonPush(note);
+          break;
         default:
       }
     });
@@ -61,6 +65,9 @@ class XToucher {
         case isMainButtonPush(note):
         case isRunOrBypassFxButtonPush(note):
           this.#handleButtonNoteOff(note);
+          break;
+        case isVariantButtonPush(note):
+          this.#handleVariantButtonNoteOff(note);
           break;
         default:
       }
@@ -126,11 +133,50 @@ class XToucher {
         }
       }
 
+      this.#switchOfCombinatorButtonsOfInactiveVariant(data)
       this.currentCombinator.update(data);
       this.#updateXTouchRotaryLeds();
       this.#updateXTouchButtonLeds();
     });
     debug("X-Toucher started");
+  }
+
+  #switchOfCombinatorButtonsOfInactiveVariant(data){
+    [
+      {
+        name: "leftButton",
+        otherSysExControllerNumbers: [9, 10],
+      },
+      {
+        name: "rightButton",
+        otherSysExControllerNumbers: [8, 10],
+      },
+      {
+        name: "rewindButton",
+        otherSysExControllerNumbers: [8, 9],
+      },
+      {
+        name: "fastFwdButton",
+        otherSysExControllerNumbers: [12, 13],
+      },
+      {
+        name: "loopButton",
+        otherSysExControllerNumbers: [11, 13],
+      },
+      {
+        name: "stopButton",
+        otherSysExControllerNumbers: [11, 12],
+      },
+    ].forEach(({ name, otherSysExControllerNumbers }) => {
+      if (data[name]) {
+        otherSysExControllerNumbers.forEach((otherSysExControllerNumber) =>
+          this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
+            otherSysExControllerNumber,
+            0,
+          ])
+        );
+      }
+    });
   }
 
   #handleMasterFaderChange(nextValue) {
@@ -170,9 +216,7 @@ class XToucher {
   }
 
   #handleRotaryKnobPush(note) {
-    debug(`[handleRotaryKnobPush] Run pattern devices before: ${this.currentCombinator.runPatternDevices}`);
     this.currentSceneNumber = getSceneFromRotaryKnobPushNote(note);
-    debug(`[handleRotaryKnobPush] Run pattern devices after: ${this.currentCombinator.runPatternDevices}`);
     this.#faderStatus = FADER_STATUS_UNKNOWN;
     this.#updateReason();
   }
@@ -189,11 +233,43 @@ class XToucher {
   }
 
   #handleButtonNoteOff(note) {
-    const { combinatorButtonName, buttonNumber } =
-      getButtonPushInfo(note);
+    const { combinatorButtonName, buttonNumber } = getButtonPushInfo(note);
     this.#updateXTouchButtonLed(
       buttonNumber,
       this.currentCombinator[combinatorButtonName]
+    );
+  }
+
+  #handleVariantButtonPush(note) {
+    const {
+      combinatorButtonName,
+      sysexControllerNumber,
+      otherSysexControllerNumbers,
+      variantValue: nextValue,
+    } = getButtonPushInfo(note);
+    this.currentCombinator[combinatorButtonName] = nextValue;
+    this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
+      sysexControllerNumber,
+      127,
+    ]);
+    otherSysexControllerNumbers.forEach((otherSysexControllerNumber) =>
+      this.#reasonInterface.sendSysEx(SYSEX_MANUFACTURER, [
+        otherSysexControllerNumber,
+        0,
+      ])
+    );
+  }
+
+  #handleVariantButtonNoteOff(note) {
+    const {
+      combinatorButtonName,
+      variantValue,
+      buttonNumber,
+    } = getButtonPushInfo(note);
+
+    this.#updateXTouchButtonLed(
+      buttonNumber,
+      this.currentCombinator[combinatorButtonName] === variantValue
     );
   }
 
@@ -290,6 +366,12 @@ class XToucher {
       const value = this.currentCombinator[buttonName];
       this.#updateXTouchButtonLed(buttonNumber, value);
     }
+    this.#updateXTouchButtonLed(9, this.currentCombinator.variantA === 1);
+    this.#updateXTouchButtonLed(10, this.currentCombinator.variantA === 2);
+    this.#updateXTouchButtonLed(11, this.currentCombinator.variantA === 3);
+    this.#updateXTouchButtonLed(12, this.currentCombinator.variantB === 1);
+    this.#updateXTouchButtonLed(13, this.currentCombinator.variantB === 2);
+    this.#updateXTouchButtonLed(14, this.currentCombinator.variantB === 3);
     this.#updateXTouchButtonLed(15, this.currentCombinator.runPatternDevices);
     this.#updateXTouchButtonLed(16, this.currentCombinator.bypassAllFX);
   }
@@ -308,8 +390,6 @@ class XToucher {
    * series of MIDI system exclusive message.
    */
   #updateReason() {
-    const sysExData = this.currentCombinator.toSysExData();
-    debug(`[updateReason] sysex data ${sysExData[14]}`);
     this.currentCombinator
       .toSysExData()
       .forEach((value, index) =>
