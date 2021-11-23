@@ -5,6 +5,7 @@ const {
   SYSEX_MANUFACTURER,
   ROTARY_COARSE_INCREMENT,
   ROTARY_FINE_INCREMENT,
+  ROTARY_PUSH_INTERVAL,
   FADER_STATUS_ABOVE,
   FADER_STATUS_IN_SYNC,
   FADER_STATUS_BELOW,
@@ -28,6 +29,7 @@ class XToucher {
   #previousCombinatorName;
   #combinators = {};
   #faderStatus = FADER_STATUS_UNKNOWN;
+  #rotaryKnobPushStartTime;
 
   constructor({ combinators } = {}) {
     if (combinators) {
@@ -85,7 +87,7 @@ class XToucher {
     this.#xTouchInterface.receiveNoteOn(11, (note) => {
       switch (true) {
         case isRotaryKnobPush(note):
-          this.#handleRotaryKnobPush(note);
+          this.#rotaryKnobPushStartTime = Date.now();
           break;
         case isMainButtonPush(note):
         case isRunOrBypassFxButtonPush(note):
@@ -103,6 +105,9 @@ class XToucher {
         return;
       }
       switch (true) {
+        case isRotaryKnobPush(note):
+          this.#handleRotaryKnobPush(note);
+          break;
         case isMainButtonPush(note):
         case isRunOrBypassFxButtonPush(note):
           this.#handleButtonNoteOff(note);
@@ -269,7 +274,17 @@ class XToucher {
     if (this.reasonIsNotReady) {
       return;
     }
-    this.currentSceneNumber = getSceneFromRotaryKnobPushNote(note);
+    const nextSceneNumber = getSceneFromRotaryKnobPushNote(note);
+    if (Date.now() > this.#rotaryKnobPushStartTime + ROTARY_PUSH_INTERVAL) {
+      debug(
+        `Rotary knob long push, copying scene ${this.currentSceneNumber} to ${nextSceneNumber}`
+      );
+      this.currentCombinator.copyScene(
+        this.currentSceneNumber,
+        nextSceneNumber
+      );
+    }
+    this.currentSceneNumber = nextSceneNumber;
     this.#faderStatus = FADER_STATUS_UNKNOWN;
     this.#updateReason();
     this.#updateXTouchRotaryLeds();

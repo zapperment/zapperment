@@ -33,6 +33,12 @@ class CombinatorState {
     }
   }
 
+  copyScene(sourceSceneNumber, targetSceneNumber) {
+    this.#scenes[targetSceneNumber - 1] = {
+      ...this.#scenes[sourceSceneNumber - 1],
+    };
+  }
+
   switch(data, previousCombinator) {
     [
       "button1",
