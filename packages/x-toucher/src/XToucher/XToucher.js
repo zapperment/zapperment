@@ -276,9 +276,6 @@ class XToucher {
     }
     const nextSceneNumber = getSceneFromRotaryKnobPushNote(note);
     if (Date.now() > this.#rotaryKnobPushStartTime + ROTARY_PUSH_INTERVAL) {
-      debug(
-        `Rotary knob long push, copying scene ${this.currentSceneNumber} to ${nextSceneNumber}`
-      );
       this.currentCombinator.copyScene(
         this.currentSceneNumber,
         nextSceneNumber
