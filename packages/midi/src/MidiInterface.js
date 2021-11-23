@@ -9,6 +9,7 @@ const {
   CONTROL_CHANGE,
   NOTE_ON,
   NOTE_OFF,
+  PROGRAM_CHANGE,
   SYSEX_START,
   SYSEX_END,
   START,
@@ -111,6 +112,13 @@ module.exports = class {
     this.#midiOut.sendMessage([
       CONTROL_CHANGE + channel - 1,
       controller,
+      value,
+    ]);
+  }
+
+  sendProgramChange(channel, value) {
+    this.#midiOut.sendMessage([
+      PROGRAM_CHANGE + channel - 1,
       value,
     ]);
   }

@@ -39,6 +39,8 @@ class XToucher {
   }
 
   start() {
+    // Turn of MC MODE
+    this.#xTouchInterface.sendControlChange(1, 127, 0);
     // turn off all LEDs on all rotary knobs
     for (let i = 9; i <= 16; i++) {
       this.#xTouchInterface.sendControlChange(1, i, 0);
@@ -61,6 +63,9 @@ class XToucher {
     });
 
     this.#xTouchInterface.receiveNoteOff(11, (note) => {
+      if (this.reasonIsNotReady) {
+        return;
+      }
       switch (true) {
         case isMainButtonPush(note):
         case isRunOrBypassFxButtonPush(note):
@@ -133,15 +138,16 @@ class XToucher {
         }
       }
 
-      this.#switchOfCombinatorButtonsOfInactiveVariant(data)
+      this.#switchOfCombinatorButtonsOfInactiveVariant(data);
       this.currentCombinator.update(data);
       this.#updateXTouchRotaryLeds();
       this.#updateXTouchButtonLeds();
     });
+
     debug("X-Toucher started");
   }
 
-  #switchOfCombinatorButtonsOfInactiveVariant(data){
+  #switchOfCombinatorButtonsOfInactiveVariant(data) {
     [
       {
         name: "leftButton",
@@ -180,6 +186,9 @@ class XToucher {
   }
 
   #handleMasterFaderChange(nextValue) {
+    if (this.reasonIsNotReady) {
+      return;
+    }
     const prevValue = this.currentCombinator.masterFader;
     switch (this.#faderStatus) {
       case FADER_STATUS_IN_SYNC:
@@ -216,12 +225,19 @@ class XToucher {
   }
 
   #handleRotaryKnobPush(note) {
+    if (this.reasonIsNotReady) {
+      return;
+    }
     this.currentSceneNumber = getSceneFromRotaryKnobPushNote(note);
     this.#faderStatus = FADER_STATUS_UNKNOWN;
     this.#updateReason();
+    this.#updateXTouchRotaryLeds();
   }
 
   #handleButtonPush(note) {
+    if (this.reasonIsNotReady) {
+      return;
+    }
     const { combinatorButtonName, sysexControllerNumber } =
       getButtonPushInfo(note);
     const nextValue = !this.currentCombinator[combinatorButtonName];
@@ -233,6 +249,9 @@ class XToucher {
   }
 
   #handleButtonNoteOff(note) {
+    if (this.reasonIsNotReady) {
+      return;
+    }
     const { combinatorButtonName, buttonNumber } = getButtonPushInfo(note);
     this.#updateXTouchButtonLed(
       buttonNumber,
@@ -241,6 +260,9 @@ class XToucher {
   }
 
   #handleVariantButtonPush(note) {
+    if (this.reasonIsNotReady) {
+      return;
+    }
     const {
       combinatorButtonName,
       sysexControllerNumber,
@@ -261,11 +283,11 @@ class XToucher {
   }
 
   #handleVariantButtonNoteOff(note) {
-    const {
-      combinatorButtonName,
-      variantValue,
-      buttonNumber,
-    } = getButtonPushInfo(note);
+    if (this.reasonIsNotReady) {
+      return;
+    }
+    const { combinatorButtonName, variantValue, buttonNumber } =
+      getButtonPushInfo(note);
 
     this.#updateXTouchButtonLed(
       buttonNumber,
@@ -291,6 +313,9 @@ class XToucher {
     // a know was twisted (clockwise / counterclockwise) and which encoder mode
     // we are using (fine or coarse), selected through the X-Touch's layer buttons
     return (nextXTouchValue) => {
+      if (this.reasonIsNotReady) {
+        return;
+      }
       let interactionType;
       switch (true) {
         case prevXTouchValue === null:
@@ -442,6 +467,10 @@ class XToucher {
 
   toString() {
     return JSON.stringify(this.toObject(), null, 2);
+  }
+
+  get reasonIsNotReady() {
+    return this.#currentCombinatorName === undefined;
   }
 }
 
