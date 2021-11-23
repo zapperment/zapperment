@@ -14,6 +14,25 @@ class CombinatorState {
   runPatternDevices = DEFAULT_VALUE_RUN_PATTERN_DEVICES;
   bypassAllFX = DEFAULT_VALUE_BYPASS_ALL_FX;
 
+  constructor({
+    currentSceneNumber,
+    scenes,
+    runPatternDevices,
+    bypassAllFX,
+  } = {}) {
+    if (
+      currentSceneNumber !== undefined &&
+      scenes !== undefined &&
+      runPatternDevices !== undefined &&
+      bypassAllFX !== undefined
+    ) {
+      this.#currentSceneIndex = currentSceneNumber - 1;
+      this.#scenes = scenes;
+      this.runPatternDevices = runPatternDevices;
+      this.bypassAllFX = bypassAllFX;
+    }
+  }
+
   switch(data, previousCombinator) {
     [
       "button1",

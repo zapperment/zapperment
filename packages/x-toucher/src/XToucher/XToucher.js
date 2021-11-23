@@ -29,7 +29,16 @@ class XToucher {
   #combinators = {};
   #faderStatus = FADER_STATUS_UNKNOWN;
 
-  constructor() {
+  constructor({ combinators } = {}) {
+    if (combinators) {
+      this.#combinators = Object.entries(combinators).reduce(
+        (acc, [combinatorName, combinatorData]) => ({
+          ...acc,
+          [combinatorName]: new CombinatorState(combinatorData),
+        }),
+        {}
+      );
+    }
     this.#xTouchInterface = new MidiInterface({ midiPortName: "X-TOUCH MINI" });
     this.#reasonInterface = new MidiInterface({
       midiPortName: "Zapperment X-Toucher",
@@ -41,10 +50,37 @@ class XToucher {
   start() {
     // Turn of MC MODE
     this.#xTouchInterface.sendControlChange(1, 127, 0);
-    // turn off all LEDs on all rotary knobs
-    for (let i = 9; i <= 16; i++) {
-      this.#xTouchInterface.sendControlChange(1, i, 0);
-    }
+    setInterval(
+      (() => {
+        let prevReasonIsReady = this.reasonIsReady;
+        return () => {
+          if (this.reasonIsReady) {
+            if (!prevReasonIsReady) {
+              debug(
+                "Reason has connected to X-Toucher, let's make some music!"
+              );
+            }
+            prevReasonIsReady = this.reasonIsReady;
+            return;
+          }
+          if (prevReasonIsReady) {
+            debug(
+              "Reason has disconnected from X-Toucher, going to standby mode…"
+            );
+          }
+          prevReasonIsReady = this.reasonIsReady;
+          // turn off LEDs on all rotary knobs when Reason is not connected
+          for (let i = 9; i <= 16; i++) {
+            this.#xTouchInterface.sendControlChange(1, i, 0);
+          }
+          // turn off all buttons
+          for (let i = 0; i <= 15; i++) {
+            this.#xTouchInterface.sendNoteOff(1, i);
+          }
+        };
+      })(),
+      100
+    );
 
     this.#xTouchInterface.receiveNoteOn(11, (note) => {
       switch (true) {
@@ -122,6 +158,11 @@ class XToucher {
         } else {
           delete data.debugMessage;
         }
+      }
+
+      if (data.goodbye) {
+        this.reasonIsReady = false;
+        return;
       }
 
       if (data.deviceName) {
@@ -467,6 +508,22 @@ class XToucher {
 
   toString() {
     return JSON.stringify(this.toObject(), null, 2);
+  }
+
+  get reasonIsReady() {
+    return this.#currentCombinatorName !== undefined;
+  }
+
+  set reasonIsReady(isReady) {
+    if (!isReady) {
+      this.#currentCombinatorName = undefined;
+    }
+  }
+
+  set reasonIsNotReady(isNotReady) {
+    if (isNotReady) {
+      this.#currentCombinatorName = undefined;
+    }
   }
 
   get reasonIsNotReady() {
