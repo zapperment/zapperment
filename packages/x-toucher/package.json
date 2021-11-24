@@ -1,6 +1,6 @@
 {
   "name": "@zapperment/x-toucher",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A command line utility that adds functionality to the Behringer X-Touch Mini MIDI controller",
   "main": "src/XToucher/XToucher.js",
   "scripts": {
