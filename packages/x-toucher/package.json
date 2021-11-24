@@ -1,7 +1,8 @@
 {
   "name": "@zapperment/x-toucher",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "A command line utility that adds functionality to the Behringer X-Touch Mini MIDI controller",
+  "main": "src/XToucher/XToucher.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
@@ -12,10 +13,10 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/midi": "^0.4.0"
+    "@zapperment/midi": "^1.0.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "nodemon": "^2.0.14"
   }
 }
