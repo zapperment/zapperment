@@ -9,3 +9,4 @@ delete-me**
 compositions/*.json
 compositions/*.reason
 compositions/*.alp
+xtoucher.json

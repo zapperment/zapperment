@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+
+const { argv } = require("yargs");
+const { MidiInterface } = require("@zapperment/midi");
+const chalk = require("chalk");
+const {
+  initStrParameter,
+  initManufacturerParameter
+} = require("@zapperment/command-line-utils");
+const { DEFAULT_PORT, DEFAULT_MANUFACTURER } = require("../lib/constants");
+const {
+  convertStringToBytes,
+  convertBytesToString,
+  chunkString
+} = require("@zapperment/shared");
+
+const midiPortName = initStrParameter({
+  name: "port",
+  def: process.env.ZAPPERMENT_MIDI_PORT || DEFAULT_PORT,
+  argv
+});
+
+const manufacturer = initManufacturerParameter({
+  name: "manufacturer",
+  def: DEFAULT_MANUFACTURER,
+  argv
+});
+
+console.info("Receiving MIDI system exclusive…");
+console.info(`Port:         ${midiPortName}`);
+console.info(`Manufacturer: ${manufacturer}`);
+
+let prevMessage = [];
+
+const midiInterface = new MidiInterface({ midiPortName });
+midiInterface.receiveSysEx(convertStringToBytes(manufacturer), message => {
+  let hexChunks = [];
+  let asciiChunks = [];
+  for (let i = 0; i < message.length; i++) {
+    const prev = prevMessage.length > i ? prevMessage[i] : null;
+    const curr = message[i];
+    const hexChunk = `0x${curr.toString(16).padStart(2, "0")}`;
+    const asciiChunk =
+      curr < 32 || curr > 126 ? "·" : String.fromCharCode(curr);
+    hexChunks.push(curr === prev ? hexChunk : chalk`{inverse ${hexChunk}}`);
+    asciiChunks.push(
+      curr === prev ? asciiChunk : chalk`{inverse ${asciiChunk}}`
+    );
+  }
+  console.log(
+    chalk`{bgWhite ${hexChunks.join(" ")}} | {bgWhite ${asciiChunks.join("")}}`
+  );
+  prevMessage = message;
+});
+
+function run() {
+  setImmediate(run);
+}
+setTimeout(run, 100);
