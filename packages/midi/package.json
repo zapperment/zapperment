@@ -1,12 +1,12 @@
 {
   "name": "@zapperment/midi",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "Zapperment MIDI library",
   "main": "src/index.js",
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/shared": "^0.4.0",
+    "@zapperment/shared": "^1.0.0",
     "debug": "^4.3.2",
     "midi": "^1.0.0"
   }
