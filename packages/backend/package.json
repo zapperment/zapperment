@@ -10,8 +10,8 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/midi": "^0.4.0",
-    "@zapperment/shared": "^0.4.0",
+    "@zapperment/midi": "^1.0.1",
+    "@zapperment/shared": "^1.0.0",
     "@zapperment/storage": "^0.4.0",
     "brain.js": "^1.6.1",
     "check-prop-types": "^1.1.2",

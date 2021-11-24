@@ -19,8 +19,8 @@
   "license": "MIT",
   "dependencies": {
     "@zapperment/command-line-utils": "^0.4.0",
-    "@zapperment/midi": "^0.4.0",
-    "@zapperment/shared": "^0.4.0",
+    "@zapperment/midi": "^1.0.1",
+    "@zapperment/shared": "^1.0.0",
     "chalk": "^4.1.0",
     "yargs": "^15.1.0"
   },

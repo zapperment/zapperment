@@ -8,8 +8,7 @@
     "dev": "nodemon src/index.js",
     "monitor": "node src/monitor.js",
     "update-remote": "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"1FFA0E1C-BAC4-48FD-A59D-789D10F68EFB\"'",
-    "test": "jest",
-    "create-type-definitions": "npx -p typescript tsc src/**/*.js --declaration --allowJs --emitDeclarationOnly --outDir types"
+    "test": "jest"
   },
   "author": "Patrick Hund",
   "license": "MIT",
