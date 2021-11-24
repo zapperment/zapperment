@@ -1,3 +1,6 @@
 module.exports = {
-  openMidiOut: require("./openMidiOut")
+  getTypeAndChannel: require('./getTypeAndChannel'),
+  openMidiOut: require("./openMidiOut"),
+  openMidiIn: require("./openMidiIn"),
+  splitSysEx: require("./splitSysEx")
 };

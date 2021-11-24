@@ -7,7 +7,10 @@
     "send_midi_note": "scripty",
     "send_midi_note_off": "scripty",
     "send_reason_scene": "scripty",
-    "send_ableton_live_scene": "scripty"
+    "send_ableton_live_scene": "scripty",
+    "receive_midi_cc": "scripty",
+    "receive_midi_note": "scripty",
+    "receive_midi_sys_ex": "scripty"
   },
   "scripty": {
     "silent": true
@@ -15,8 +18,10 @@
   "author": "Patrick Hund",
   "license": "MIT",
   "dependencies": {
-    "@zapperment/midi": "^0.4.0",
     "@zapperment/command-line-utils": "^0.4.0",
+    "@zapperment/midi": "^1.0.1",
+    "@zapperment/shared": "^1.0.0",
+    "chalk": "^4.1.0",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
